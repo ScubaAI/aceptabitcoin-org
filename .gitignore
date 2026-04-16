@@ -1,0 +1,61 @@
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# Dependencias
+/node_modules
+/.pnp
+.pnp.js
+.yarn/install-state.gz
+
+# Testing
+/coverage
+
+# Next.js
+/.next/
+/out/
+.next
+out
+
+# Producción
+/build
+/dist
+
+# Varios
+.DS_Store
+*.pem
+
+# Debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Variables de entorno locales
+.env*.local
+.env
+.env.production
+.env.development
+# NOTA: Mantén .env.example para que otros sepan qué variables necesitan
+
+# Vercel
+.vercel
+
+# TypeScript
+*.tsbuildinfo
+next-env.d.ts
+
+# Turborepo
+.turbo
+
+# Logs de bases de datos y sistema
+logs
+*.log
+
+# EditorConfig (Opcional, pero buena práctica)
+.vscode/*
+!.vscode/extensions.json
+.idea
+*.swp
+*.swo
+*~
+
+# OS (Windows)
+Thumbs.db

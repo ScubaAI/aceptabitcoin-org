@@ -1,0 +1,16 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 15 23 42;
+    --foreground: 248 250 252;
+    --bitcoin: 247 147 26;
+    --turquesa: 0 196 180;
+  }
+}
+
+body {
+  font-feature-settings: "rlig" 1, "calt" 1;
+}
