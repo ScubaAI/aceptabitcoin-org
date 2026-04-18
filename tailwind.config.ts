@@ -3,24 +3,19 @@ import type { Config } from "tailwindcss";
 const config: Config = {
   darkMode: ["class"],
   content: [
-    "./pages/**/*.{js,ts,jsx,tsx,mdx}",
-    "./components/**/*.{js,ts,jsx,tsx,mdx}",
     "./app/**/*.{js,ts,jsx,tsx,mdx}",
+    "./components/**/*.{js,ts,jsx,tsx,mdx}",
   ],
   theme: {
-    container: {
-      center: true,
-      padding: "2rem",
-      screens: {
-        "2xl": "1400px",
-      },
-    },
-extend: {
-        colors: {
-          dark: "hsl(var(--background))",
-          bitcoin: "hsl(var(--bitcoin))",
-          turquesa: "hsl(var(--turquesa))",
-          border: "hsl(var(--border))",
+    extend: {
+      colors: {
+        // Colores personalizados (los que usamos en el sitio)
+        bitcoin: "#F7931A",
+        turquesa: "#00C4B4",
+        dark: "#0F172A",
+
+        // Colores del sistema shadcn/ui (mantener para componentes)
+        border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
         background: "hsl(var(--background))",
@@ -61,7 +56,7 @@ extend: {
       },
     },
   },
-  plugins: [],
+  plugins: [require("tailwindcss-animate")],
 };
 
 export default config;

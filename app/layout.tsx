@@ -4,23 +4,24 @@ import "./globals.css";
 import { cn } from "@/lib/utils";
 import { Toaster } from "sonner";
 
-// 1. Tipografía: Inter para cuerpo, Space Grotesk para títulos
 const inter = Inter({
   subsets: ["latin"],
-  variable: "--font-inter", // Renombrado para ser específico
+  variable: "--font-inter",
   display: "swap",
+  weight: ["400", "500", "600", "700"],
 });
 
 const spaceGrotesk = Space_Grotesk({
   subsets: ["latin"],
   variable: "--font-space",
   display: "swap",
+  weight: ["400", "500", "600", "700"],
 });
 
 export const metadata: Metadata = {
   title: "Acepta Bitcoin México",
-  description: "Directorio de negocios y educación Bitcoin en Yucatán, México",
-  icons: { icon: "/favicon.ico" }, // Asegúrate de tener un favicon
+  description: "Educación, tiendas y adopción real de Bitcoin desde Mérida, Yucatán",
+  icons: { icon: "/favicon.ico" },
 };
 
 export default function RootLayout({
@@ -30,15 +31,14 @@ export default function RootLayout({
 }) {
   return (
     <html lang="es" className="dark">
-      <body className={cn(
-        // 2. Variables de fuente
-        inter.variable,
-        spaceGrotesk.variable,
-        // 3. Estilos base de Tailwind (Fondo y Texto de globals.css)
-        "bg-background text-foreground antialiased font-sans"
-      )}>
+      <body
+        className={cn(
+          inter.variable,
+          spaceGrotesk.variable,
+          "bg-background text-foreground antialiased font-sans min-h-screen"
+        )}
+      >
         {children}
-        {/* Notificaiones flotantes estilizadas */}
         <Toaster position="top-center" richColors closeButton />
       </body>
     </html>

@@ -4,47 +4,62 @@
 
 @layer base {
   :root {
-    /* --- FONDOS --- */
-    --background: 15 23 42;
-    --card: 30 41 59;
-    --card-foreground: 248 250 252;
-    --popover: 30 41 59;
-    --popover-foreground: 248 250 252;
+    /* Fondo Azul Muy Oscuro (Deep Navy) */
+    --background: 222 47% 6%;
+    --foreground: 210 40% 98%;
 
-    /* --- TEXTO --- */
-    --foreground: 248 250 252;
-    --muted: 203 213 225;
-    --muted-foreground: 148 163 184;
+    /* Tarjetas y Popovers */
+    --card: 222 47% 11%;
+    --card-foreground: 210 40% 98%;
+    --popover: 222 47% 11%;
+    --popover-foreground: 210 40% 98%;
 
-    /* --- TU MARCA (CORREGIDO A HSL) --- */
-    --bitcoin: 30 93% 53%;
-    --turquesa: 174 100% 38%;
-
-    /* --- BORDES Y INPUTS --- */
-    --border: 51 65 85;
-    --input: 51 65 85;
+    /* Bordes y estados */
+    --border: 217 33% 18%;
+    --input: 217 33% 18%;
     --ring: 30 93% 53%;
-    /* Actualicé el ring para que coincida con el bitcoin */
+    --radius: 0.75rem;
 
-    /* --- COLORES PRINCIPALES --- */
+    /* Colores de Marca (HSL) */
+    --bitcoin: 30 93% 53%;      /* #F7931A */
+    --turquesa: 174 100% 38%;   /* #00C4B4 */
+
+    /* Mapeo de Componentes principales */
     --primary: 30 93% 53%;
-    --primary-foreground: 15 23 42;
-
+    --primary-foreground: 222 47% 6%;
     --secondary: 174 100% 38%;
-    --secondary-foreground: 15 23 42;
+    --secondary-foreground: 222 47% 6%;
 
-    /* --- ESTADOS --- */
-    --destructive: 220 38 38;
-    --destructive-foreground: 248 250 252;
-    --accent: 51 65 85;
-    --accent-foreground: 248 250 252;
-
-    /* --- FORMAS --- */
-    --radius: 0.5rem;
+    /* Estados adicionales */
+    --muted: 217 33% 18%;
+    --muted-foreground: 215 20% 65%;
+    --accent: 217 33% 18%;
+    --accent-foreground: 210 40% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
   }
 }
 
 body {
   @apply bg-background text-foreground antialiased;
   font-feature-settings: "rlig" 1, "calt" 1;
+}
+
+/* Clases personalizadas útiles */
+@layer utilities {
+  .text-bitcoin {
+    color: hsl(var(--bitcoin));
+  }
+
+  .bg-bitcoin {
+    background-color: hsl(var(--bitcoin));
+  }
+
+  .text-turquesa {
+    color: hsl(var(--turquesa));
+  }
+
+  .bg-turquesa {
+    background-color: hsl(var(--turquesa));
+  }
 }
