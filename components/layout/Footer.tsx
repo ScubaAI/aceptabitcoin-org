@@ -2,54 +2,89 @@ import Link from "next/link";
 
 export default function Footer() {
   return (
-    <footer className="bg-black border-t border-white/10 py-16">
-      <div className="max-w-7xl mx-auto px-6 grid md:grid-cols-4 gap-10">
-        <div>
-          <div className="flex items-center gap-3 mb-4">
-            <div className="w-8 h-8 bg-bitcoin rounded-full flex items-center justify-center text-black font-bold">₿</div>
-            <span className="text-2xl font-bold">aceptabitcoin</span>
+    <footer className="bg-background border-t border-border py-12">
+      <div className="container mx-auto px-4">
+        <div className="grid grid-cols-1 gap-10 md:grid-cols-4">
+
+          {/* --- Columna 1: Branding --- */}
+          <div className="space-y-4">
+            <div className="flex items-center gap-3">
+              <div className="flex h-8 w-8 items-center justify-center rounded-full bg-bitcoin text-primary-foreground text-lg font-bold">
+                ₿
+              </div>
+              <span className="text-xl font-bold tracking-tight text-foreground">
+                aceptabitcoin
+              </span>
+            </div>
+            <p className="text-sm text-muted-foreground">
+              Educación y adopción real de Bitcoin desde Mérida, Yucatán.
+            </p>
           </div>
-          <p className="text-gray-500 text-sm">
-            Educación y adopción real de Bitcoin desde Mérida, Yucatán.
-          </p>
-        </div>
 
-        <div>
-          <h4 className="font-semibold mb-4">Enlaces Rápidos</h4>
-          <ul className="space-y-2 text-gray-400 text-sm">
-            <li><Link href="/aprende" className="hover:text-white">Aprende</Link></li>
-            <li><Link href="/tianguis" className="hover:text-white">Tianguis</Link></li>
-            <li><Link href="/crea-tu-tienda" className="hover:text-white">Crea tu Tienda</Link></li>
-            <li><Link href="/mapa" className="hover:text-white">Mapa de Comercios</Link></li>
-            <li><Link href="/nuestra-historia" className="hover:text-white">Nuestra Historia</Link></li>
-          </ul>
-        </div>
-
-        <div>
-          <h4 className="font-semibold mb-4">Recursos</h4>
-          <ul className="space-y-2 text-gray-400 text-sm">
-            <li><a href="https://btcmap.org" target="_blank" className="hover:text-white">BTC Map</a></li>
-            <li><a href="https://voltage.cloud" target="_blank" className="hover:text-white">Voltage Cloud</a></li>
-            <li><Link href="/proyectos" className="hover:text-white">Proyectos</Link></li>
-          </ul>
-        </div>
-
-        <div>
-          <h4 className="font-semibold mb-4">Contacto</h4>
-          <p className="text-gray-400 text-sm">
-            Mérida, Yucatán<br />
-            hola@aceptabitcoin.org
-          </p>
-          <div className="mt-6">
-            <a href="#tipjar" className="text-turquesa text-sm hover:underline">
-              Donar con Lightning →
-            </a>
+          {/* --- Columna 2: Enlaces --- */}
+          <div>
+            <h4 className="mb-4 text-sm font-semibold text-foreground">Explorar</h4>
+            <ul className="space-y-3 text-sm text-muted-foreground">
+              <li><Link href="/aprende" className="hover:text-bitcoin transition-colors">Aprende</Link></li>
+              <li><Link href="/tianguis" className="hover:text-bitcoin transition-colors">Tianguis</Link></li>
+              <li><Link href="/crea-tu-tienda" className="hover:text-bitcoin transition-colors">Crea tu Tienda</Link></li>
+              <li><Link href="/mapa" className="hover:text-bitcoin transition-colors">Mapa</Link></li>
+              <li><Link href="/nuestra-historia" className="hover:text-bitcoin transition-colors">Nuestra Historia</Link></li>
+            </ul>
           </div>
-        </div>
-      </div>
 
-      <div className="text-center text-xs text-gray-600 mt-16">
-        © 2026 Acepta Bitcoin • Señal en la red ⚡
+          {/* --- Columna 3: Recursos --- */}
+          <div>
+            <h4 className="mb-4 text-sm font-semibold text-foreground">Tecnología</h4>
+            <ul className="space-y-3 text-sm text-muted-foreground">
+              <li>
+                <a href="https://btcmap.org" target="_blank" rel="noopener noreferrer" className="hover:text-secondary transition-colors">
+                  BTC Map
+                </a>
+              </li>
+              <li>
+                <a href="https://voltage.cloud" target="_blank" rel="noopener noreferrer" className="hover:text-secondary transition-colors">
+                  Voltage Cloud
+                </a>
+              </li>
+              <li><Link href="/proyectos" className="hover:text-secondary transition-colors">Proyectos</Link></li>
+            </ul>
+          </div>
+
+          {/* --- Columna 4: Contacto & Social --- */}
+          <div>
+            <h4 className="mb-4 text-sm font-semibold text-foreground">Conecta</h4>
+            <p className="mb-4 text-sm text-muted-foreground">
+              Mérida, Yucatán<br />
+              hola@aceptabitcoin.org
+            </p>
+
+            <div className="flex flex-col gap-3">
+              <a
+                href="https://x.com/AceptaBitcoin21"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-2 text-sm font-medium text-secondary hover:underline"
+              >
+                <svg className="h-4 w-4" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+                </svg>
+                @AceptaBitcoin21
+              </a>
+
+              <Link href="/#tipjar" className="text-sm text-muted-foreground hover:text-bitcoin transition-colors">
+                Tip Jar ⚡
+              </Link>
+            </div>
+          </div>
+
+        </div>
+
+        {/* --- Copyright --- */}
+        <div className="mt-12 border-t border-border pt-8 text-center text-xs text-muted-foreground">
+          <p>© {new Date().getFullYear()} Acepta Bitcoin. Construyendo la economía circular.</p>
+          <p className="mt-1 text-[10px] opacity-50">Señal en la red • Running on Voltage</p>
+        </div>
       </div>
     </footer>
   );

@@ -4,7 +4,8 @@ import { useState, useEffect } from "react";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { ArrowRightLeft } from "lucide-react";
+import { ArrowRightLeft, TrendingUp } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 export default function PriceConverter() {
   const [btc, setBtc] = useState<number>(1);
@@ -33,7 +34,7 @@ export default function PriceConverter() {
     fetchPrice();
     const interval = setInterval(fetchPrice, 45000);
     return () => clearInterval(interval);
-  }, [btc]);
+  }, []);
 
   const handleBtcChange = (value: number) => {
     setBtc(value);
@@ -46,51 +47,85 @@ export default function PriceConverter() {
   };
 
   return (
-    <Card className="p-8 bg-zinc-900 border-turquesa/30">
-      <div className="flex items-center justify-center gap-3 mb-8">
-        <h3 className="text-3xl font-bold">Calculadora</h3>
-        <ArrowRightLeft className="text-turquesa" />
-        <h3 className="text-3xl font-bold">Bitcoin ↔ MXN</h3>
-      </div>
-
-      <div className="space-y-10">
-        <div>
-          <Label className="text-gray-400 text-sm">Cantidad en Bitcoin</Label>
-          <div className="mt-2 flex items-center gap-4">
-            <Input
-              type="number"
-              step="0.000001"
-              value={btc}
-              onChange={(e) => handleBtcChange(parseFloat(e.target.value) || 0)}
-              className="text-4xl font-mono h-16 bg-black border-white/10"
-            />
-            <span className="text-5xl">₿</span>
+    <Card className="relative overflow-hidden border-border bg-card/50 p-8 backdrop-blur-sm">
+      {/* Glow Effect */}
+      <div className="absolute -right-20 -top-20 h-64 w-64 rounded-full bg-bitcoin/5 blur-3xl" />
+      
+      <div className="relative z-10">
+        <div className="mb-10 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-bitcoin/10 text-bitcoin">
+              <TrendingUp className="h-6 w-6" />
+            </div>
+            <h3 className="font-space text-2xl font-bold tracking-tight">Conversor</h3>
+          </div>
+          <div className="rounded-full bg-secondary/10 px-3 py-1 text-xs font-bold text-secondary">
+            LIVE BTC/MXN
           </div>
         </div>
 
-        <div className="text-center text-turquesa text-4xl my-2">↓</div>
+        <div className="grid gap-8 md:grid-cols-[1fr,auto,1fr] md:items-center">
+          <div className="space-y-2">
+            <Label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
+              Bitcoin
+            </Label>
+            <div className="relative">
+              <Input
+                type="number"
+                step="0.000001"
+                value={btc}
+                onChange={(e) => handleBtcChange(parseFloat(e.target.value) || 0)}
+                className="h-20 border-border bg-background/50 px-6 font-mono text-3xl font-bold focus-visible:ring-bitcoin"
+              />
+              <div className="absolute right-6 top-1/2 -translate-y-1/2 text-3xl font-bold text-bitcoin/50">
+                ₿
+              </div>
+            </div>
+          </div>
 
-        <div>
-          <Label className="text-gray-400 text-sm">Cantidad en Pesos Mexicanos</Label>
-          <div className="mt-2 flex items-center gap-4">
-            <Input
-              type="number"
-              value={Math.round(mxn)}
-              onChange={(e) => handleMxnChange(parseFloat(e.target.value) || 0)}
-              className="text-4xl font-mono h-16 bg-black border-white/10"
-            />
-            <span className="text-4xl">MX$</span>
+          <div className="flex justify-center md:pt-6">
+            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-border/50 text-muted-foreground transition-all hover:bg-bitcoin/20 hover:text-bitcoin">
+              <ArrowRightLeft className="h-6 w-6" />
+            </div>
+          </div>
+
+          <div className="space-y-2">
+            <Label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
+              Pesos Mexicanos
+            </Label>
+            <div className="relative">
+              <Input
+                type="number"
+                value={Math.round(mxn)}
+                onChange={(e) => handleMxnChange(parseFloat(e.target.value) || 0)}
+                className="h-20 border-border bg-background/50 px-6 font-mono text-3xl font-bold focus-visible:ring-secondary"
+              />
+              <div className="absolute right-6 top-1/2 -translate-y-1/2 text-2xl font-bold text-secondary/50">
+                MX$
+              </div>
+            </div>
           </div>
         </div>
-      </div>
 
-      <div className="mt-10 text-center text-sm text-gray-400">
-        1 BTC = <span className="font-mono text-turquesa text-lg">
-          ${btcPrice.toLocaleString("es-MX")}
-        </span> MXN
-        <br />
-        {loading ? "Actualizando precio..." : "Precio en tiempo real • Coingecko"}
+        <div className="mt-10 flex flex-col items-center justify-between gap-4 border-t border-border pt-6 sm:flex-row">
+          <div className="text-sm text-muted-foreground">
+            {loading ? (
+              <span className="animate-pulse">Sincronizando con la red...</span>
+            ) : (
+              <>
+                Precio actual: <span className="font-bold text-foreground">${btcPrice.toLocaleString("es-MX")}</span>
+                <span className="ml-2 text-[10px] opacity-70">powered by Coingecko</span>
+              </>
+            )}
+          </div>
+          <div className="flex items-center gap-2">
+            <div className="h-2 w-2 animate-pulse rounded-full bg-green-500" />
+            <span className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
+              Conexión Activa
+            </span>
+          </div>
+        </div>
       </div>
     </Card>
   );
-}
+}

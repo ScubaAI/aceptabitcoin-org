@@ -2,16 +2,14 @@
 
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Copy, Heart, ExternalLink } from "lucide-react";
+import { Copy, Heart, ExternalLink, Zap } from "lucide-react";
 import { useState } from "react";
 import { QRCodeCanvas as QRCode } from "qrcode.react";
 
 export default function TipJarSection() {
   const [copied, setCopied] = useState(false);
 
-  const nodeUrl = "https://967f1caad8.d.voltageapp.io";
   const lightningAddress = "sitioweb@967f1caad8.d.voltageapp.io";
-  const readKey = "745ddc33f6534a029ee29b99ee7cbe4b";
 
   const copyAddress = () => {
     navigator.clipboard.writeText(lightningAddress);
@@ -20,49 +18,92 @@ export default function TipJarSection() {
   };
 
   return (
-    <section id="tipjar" className="py-20 bg-gradient-to-b from-zinc-950 to-black">
-      <div className="max-w-2xl mx-auto px-6 text-center">
-        <Heart className="w-20 h-20 text-turquesa mx-auto mb-6" />
-        
-        <h2 className="text-4xl font-bold mb-3">Apoya la Educación Bitcoin</h2>
-        <p className="text-gray-400 mb-10 max-w-md mx-auto">
-          Cada satoshi ayuda a mantener gratis los cursos, el Tianguis y la plataforma Bitcoin Agent
-        </p>
+    <section id="tipjar" className="relative py-24 overflow-hidden bg-background">
+      {/* Background radial glow */}
+      <div className="absolute left-1/2 top-0 -translate-x-1/2 h-px w-full max-w-4xl bg-gradient-to-r from-transparent via-bitcoin/50 to-transparent" />
+      
+      <div className="container relative z-10 px-4">
+        <div className="max-w-4xl mx-auto">
+          <div className="grid gap-12 lg:grid-cols-2 lg:items-center">
+            
+            {/* Text Content */}
+            <div className="text-center lg:text-left">
+              <div className="inline-flex h-16 w-16 items-center justify-center rounded-2xl bg-bitcoin/10 text-bitcoin mb-6 shadow-glow border border-bitcoin/20">
+                <Heart className="h-8 w-8 fill-bitcoin" />
+              </div>
+              
+              <h2 className="font-space text-4xl font-bold tracking-tight text-foreground sm:text-5xl mb-6">
+                Apoya la <span className="text-bitcoin">Educación</span> Bitcoin
+              </h2>
+              
+              <p className="text-lg text-muted-foreground mb-8">
+                Cada satoshi enviado ayuda a mantener gratuita nuestra infraestructura educativa, 
+                los laboratorios de Bitcoin Agent y la organización del Tianguis Bitcoin.
+              </p>
 
-        <Card className="p-10 bg-black border-turquesa/40">
-          <div className="flex justify-center mb-8">
-            <div className="bg-white p-5 rounded-2xl shadow-inner">
-              <QRCode 
-                value={`lightning:${lightningAddress}`} 
-                size={280} 
-                fgColor="#000000"
-                bgColor="#ffffff"
-              />
+              <div className="flex flex-col gap-4 sm:flex-row lg:justify-start justify-center">
+                <div className="flex items-center gap-3 px-4 py-2 rounded-full bg-secondary/10 border border-secondary/20 text-secondary text-sm font-bold">
+                  <Zap className="h-4 w-4 fill-secondary" />
+                  Lightning Network
+                </div>
+                <div className="flex items-center gap-3 px-4 py-2 rounded-full bg-bitcoin/10 border border-bitcoin/20 text-bitcoin text-sm font-bold">
+                  Circular Economy
+                </div>
+              </div>
             </div>
+
+            {/* Donation Card */}
+            <Card className="relative overflow-hidden border-border bg-card/50 p-8 backdrop-blur-xl shadow-2xl">
+              <div className="flex flex-col items-center">
+                {/* QR Code Container */}
+                <div className="relative mb-8 group">
+                  <div className="absolute -inset-4 rounded-3xl bg-bitcoin/10 blur-xl transition-all group-hover:bg-bitcoin/20" />
+                  <div className="relative rounded-2xl bg-white p-4 shadow-inner">
+                    <QRCode 
+                      value={`lightning:${lightningAddress}`} 
+                      size={240} 
+                      fgColor="#000000"
+                      bgColor="#ffffff"
+                      level="H"
+                    />
+                  </div>
+                </div>
+
+                {/* Lightning Address Display */}
+                <div className="w-full space-y-4">
+                  <div className="relative">
+                    <div className="flex h-14 w-full items-center justify-between rounded-xl border border-border bg-background/50 px-4 font-mono text-xs sm:text-sm">
+                      <span className="truncate text-muted-foreground mr-2">{lightningAddress}</span>
+                      <Button 
+                        variant="ghost" 
+                        size="icon" 
+                        onClick={copyAddress}
+                        className="h-8 w-8 shrink-0 hover:bg-bitcoin/10 hover:text-bitcoin"
+                      >
+                        <Copy className={copied ? "text-green-500 h-4 w-4" : "h-4 w-4"} />
+                      </Button>
+                    </div>
+                  </div>
+
+                  <Button 
+                    asChild
+                    className="w-full h-12 bg-bitcoin text-primary-foreground font-bold hover:bg-bitcoin/90"
+                  >
+                    <a 
+                      href={`https://www.lnurlpay.com/?lightning=${lightningAddress}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      Pagar con Wallet Externa <ExternalLink className="ml-2 h-4 w-4" />
+                    </a>
+                  </Button>
+                </div>
+              </div>
+            </Card>
+
           </div>
-
-          <div className="font-mono text-lg break-all bg-zinc-900 p-4 rounded-xl mb-6">
-            {lightningAddress}
-          </div>
-
-          <Button onClick={copyAddress} size="lg" className="w-full mb-4">
-            {copied ? "¡Copiado ✓" : "Copiar Lightning Address"}
-            <Copy className="ml-2 w-5 h-5" />
-          </Button>
-
-          <a 
-            href={`https://www.lnurlpay.com/?lightning=${lightningAddress}`}
-            target="_blank"
-            className="text-turquesa hover:underline flex items-center justify-center gap-2 text-sm"
-          >
-            Pagar con cualquier wallet <ExternalLink className="w-4 h-4" />
-          </a>
-        </Card>
-
-        <p className="text-xs text-gray-600 mt-8">
-          Wallet: <span className="font-mono">sitioweb</span> • Voltage Cloud
-        </p>
+        </div>
       </div>
     </section>
   );
-}
+}

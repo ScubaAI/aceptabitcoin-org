@@ -4,13 +4,54 @@
 
 @layer base {
   :root {
+    /* --- FONDOS --- */
     --background: 15 23 42;
+    /* Tu fondo azul oscuro */
+    --card: 30 41 59;
+    /* Un gris azulado más claro para las tarjetas */
+    --card-foreground: 248 250 252;
+    --popover: 30 41 59;
+    --popover-foreground: 248 250 252;
+
+    /* --- TEXTO --- */
     --foreground: 248 250 252;
+    /* Tu texto blanco */
+    --muted: 203 213 225;
+    --muted-foreground: 148 163 184;
+
+    /* --- TU MARCA --- */
     --bitcoin: 247 147 26;
     --turquesa: 0 196 180;
+
+    /* --- BORDES Y INPUTS --- */
+    --border: 51 65 85;
+    --input: 51 65 85;
+    --ring: 247 147 26;
+    /* El borde al enfocar será Naranja Bitcoin */
+
+    /* --- COLORES PRINCIPALES (Componentes) --- */
+    --primary: 247 147 26;
+    /* Botones principales = Bitcoin */
+    --primary-foreground: 15 23 42;
+    /* Texto sobre botón naranja = Oscuro */
+
+    --secondary: 0 196 180;
+    /* Botones secundarios = Turquesa */
+    --secondary-foreground: 15 23 42;
+    /* Texto sobre botón turquesa = Oscuro */
+
+    /* --- ESTADOS --- */
+    --destructive: 220 38 38;
+    --destructive-foreground: 248 250 252;
+    --accent: 51 65 85;
+    --accent-foreground: 248 250 252;
+
+    /* --- FORMAS --- */
+    --radius: 0.5rem;
   }
 }
 
 body {
+  @apply bg-background text-foreground antialiased;
   font-feature-settings: "rlig" 1, "calt" 1;
 }
