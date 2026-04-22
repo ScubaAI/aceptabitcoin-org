@@ -54,9 +54,31 @@ const config: Config = {
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
       },
+      fontFamily: {
+        sans: ["var(--font-inter)", "sans-serif"],
+        space: ["var(--font-space)", "sans-serif"],
+        vt323: ["var(--font-vt323)", "monospace"],
+      },
+      keyframes: {
+        scanline: {
+          "0%": { top: "0%", opacity: "0" },
+          "5%": { opacity: "0.5" },
+          "95%": { opacity: "0.5" },
+          "100%": { top: "100%", opacity: "0" },
+        },
+        tilt: {
+          "0%, 50%, 100%": { transform: "rotate(0deg)" },
+          "25%": { transform: "rotate(1deg)" },
+          "75%": { transform: "rotate(-1deg)" },
+        },
+      },
+      animation: {
+        tilt: "tilt 10s infinite linear",
+      },
     },
   },
   plugins: [require("tailwindcss-animate")],
 };
+
 
 export default config;
