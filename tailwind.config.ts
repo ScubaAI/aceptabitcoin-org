@@ -92,12 +92,17 @@ const config = {
           "25%": { transform: "rotate(1deg)" },
           "75%": { transform: "rotate(-1deg)" },
         },
+        blink: {
+          "0%, 100%": { opacity: "1", backgroundColor: "rgb(6, 182, 212)" }, // Cyan encendido
+          "50%": { opacity: "0", backgroundColor: "transparent" }, // Apagado
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
         "scanline": "scanline 2s linear infinite",
         "tilt": "tilt 10s infinite linear",
+        blink: "blink 1s step-end infinite",
       },
     },
   },
