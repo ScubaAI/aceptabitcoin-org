@@ -4,9 +4,10 @@ import React from "react";
 interface ArcadeButtonProps {
   href: string;
   children: React.ReactNode;
+  target?: string;
 }
 
-export default function ArcadeButton({ href, children }: ArcadeButtonProps) {
+export default function ArcadeButton({ href, children, target = "_blank" }: ArcadeButtonProps) {
   return (
     <div className="relative group z-10">
       {/* Efecto de resplandor (Glow) detrás del botón */}
@@ -14,7 +15,7 @@ export default function ArcadeButton({ href, children }: ArcadeButtonProps) {
       
       <Link
         href={href}
-        target="_blank"
+        target={target}
         rel="noopener noreferrer"
         className="relative inline-flex items-center justify-center px-12 py-6 text-3xl font-bold text-white transition-all duration-200 bg-gray-900 font-vt323 border-2 border-orange-500 rounded-lg hover:bg-black focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500 hover:scale-105 active:scale-95"
         style={{
