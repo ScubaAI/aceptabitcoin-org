@@ -1,6 +1,6 @@
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
-import { ExternalLink, Github } from "lucide-react";
+import { ExternalLink, GitBranch as Github } from "lucide-react";
 
 const projects = [
   {

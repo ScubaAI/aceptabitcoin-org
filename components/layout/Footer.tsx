@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Terminal, MapPin, Mail, Twitter, Cpu, Hash } from "lucide-react";
+import { Terminal, MapPin, Mail, X, Cpu, Hash } from "lucide-react";
 
 export default function Footer() {
   return (
@@ -130,7 +130,7 @@ export default function Footer() {
                   rel="noopener noreferrer"
                   className="flex items-center gap-2 text-gray-400 hover:text-cyan-400 transition-colors group"
                 >
-                  <Twitter className="h-4 w-4 group-hover:scale-110 transition-transform" />
+                  <X className="h-4 w-4 group-hover:scale-110 transition-transform" />
                   <span>@AceptaBitcoin21</span>
                 </a>
 
