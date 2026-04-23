@@ -1,6 +1,5 @@
 import { Hero } from "@/components/layout/Hero";
 import PriceConverter from "@/components/sections/PriceConverter";
-import BitcoinAgentEmbed from "@/components/embeds/BitcoinAgentEmbed";
 import TipJarSection from "@/components/sections/TipJarSection";
 import BtcMapSection from "@/components/sections/BtcMapSection";
 import { AgendaSection } from "@/components/sections/AgendaSection";
@@ -8,7 +7,8 @@ import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { ArrowRight, Store, LayoutGrid } from "lucide-react";
+import { ArrowRight, Store, LayoutGrid, Gamepad2 } from "lucide-react";
+import ArcadeButton from "@/components/ui/arcade-button"; // Importamos nuestro botón nuevo
 
 export default function Home() {
   return (
@@ -44,31 +44,39 @@ export default function Home() {
           </div>
         </section>
 
-        {/* --- Bitcoin Agent / Aprende Section --- */}
-        <section id="aprende" className="py-24 bg-background relative overflow-hidden">
-          <div className="absolute left-0 top-1/2 -translate-y-1/2 h-96 w-96 bg-bitcoin/5 blur-[120px] rounded-full" />
+        {/* --- Bitcoin Agent / Aprende Section (ACTUALIZADO) --- */}
+        <section id="aprende" className="py-24 bg-background relative overflow-hidden border-y border-border/50">
+          {/* Fondo decorativo estilo Grid */}
+          <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:40px_40px] pointer-events-none"></div>
           
           <div className="container relative z-10 px-4">
-            <div className="text-center max-w-3xl mx-auto mb-16">
-              <h2 className="font-space text-4xl font-bold tracking-tight sm:text-6xl mb-6">
-                Aprende Bitcoin <span className="text-bitcoin">jugando.</span>
+            <div className="flex flex-col items-center text-center max-w-4xl mx-auto">
+              
+              <div className="mb-4 flex items-center gap-2 text-bitcoin animate-pulse">
+                <Gamepad2 className="h-6 w-6" />
+                <span className="text-sm font-bold tracking-widest uppercase">Nueva Experiencia</span>
+              </div>
+
+              <h2 className="font-space text-5xl md:text-7xl font-bold tracking-tight mb-6">
+                Aprende Bitcoin <br />
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-yellow-400">
+                  jugando.
+                </span>
               </h2>
-              <p className="text-lg text-muted-foreground">
-                Olvida la teoría aburrida. Nuestra plataforma interactiva con IA te guía a través de 
-                laboratorios reales: desde crear tu primera wallet hasta entender la criptografía.
+              
+              <p className="text-xl text-muted-foreground mb-12 max-w-2xl leading-relaxed">
+                Olvida la teoría aburrida. Entra a la plataforma de <strong>Visionary AI</strong>: 
+                laboratorios interactivos, simuladores de IA y retos de criptografía.
               </p>
-            </div>
-            
-            <div className="rounded-[2.5rem] overflow-hidden border border-border bg-card/50 backdrop-blur-sm shadow-2xl shadow-bitcoin/5">
-              <BitcoinAgentEmbed />
-            </div>
-            
-            <div className="mt-12 text-center">
-              <Button asChild size="lg" className="rounded-full bg-bitcoin hover:bg-bitcoin/90 font-bold px-8">
-                <a href="https://bitcoinbot-five.vercel.app/es" target="_blank" rel="noopener noreferrer">
-                  Entrar a la Academia Completa <ArrowRight className="ml-2 h-4 w-4" />
-                </a>
-              </Button>
+              
+              {/* AQUÍ ESTÁ EL CAMBIO: Usamos nuestro ArcadeButton en vez del Embed */}
+              <ArcadeButton href="https://bitcoin.visionaryai.lat">
+                INICIAR MISION
+              </ArcadeButton>
+
+              <p className="mt-6 text-sm text-gray-600 font-vt323">
+                // SE REQUIERE CONEXIÓN A LA RED //
+              </p>
             </div>
           </div>
         </section>
@@ -119,4 +127,4 @@ export default function Home() {
       <Footer />
     </>
   );
-}
+}
