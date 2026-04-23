@@ -1,20 +1,30 @@
 import type { Config } from "tailwindcss";
 
-const config: Config = {
+const config = {
   darkMode: ["class"],
   content: [
     "./app/**/*.{js,ts,jsx,tsx,mdx}",
     "./components/**/*.{js,ts,jsx,tsx,mdx}",
+    "./pages/**/*.{ts,tsx}",
+    "./src/**/*.{ts,tsx}",
   ],
+  prefix: "",
   theme: {
+    container: {
+      center: true,
+      padding: "2rem",
+      screens: {
+        "2xl": "1400px",
+      },
+    },
     extend: {
       colors: {
-        // Colores personalizados (los que usamos en el sitio)
+        // Colores personalizados (Preservados para no romper el diseño actual)
         bitcoin: "#F7931A",
         turquesa: "#00C4B4",
         dark: "#0F172A",
 
-        // Colores del sistema shadcn/ui (mantener para componentes)
+        // Colores del sistema shadcn/ui
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
@@ -55,17 +65,30 @@ const config: Config = {
         sm: "calc(var(--radius) - 4px)",
       },
       fontFamily: {
-        sans: ["var(--font-inter)", "sans-serif"],
-        space: ["var(--font-space)", "sans-serif"],
+        // FUENTE PRINCIPAL: Ubuntu (Estilo Tech/Bank)
+        sans: ["var(--font-ubuntu)", "sans-serif"],
+        
+        // FUENTE CÓDIGO: Fira Code (Estilo Cypherpunk)
+        mono: ["var(--font-fira-code)", "monospace"],
+        
+        // FUENTE ARCADE: VT323 (Para botones especiales)
         vt323: ["var(--font-vt323)", "monospace"],
       },
       keyframes: {
-        scanline: {
-          "0%": { top: "0%", opacity: "0" },
-          "5%": { opacity: "0.5" },
-          "95%": { opacity: "0.5" },
-          "100%": { top: "100%", opacity: "0" },
+        "accordion-down": {
+          from: { height: "0" },
+          to: { height: "var(--radix-accordion-content-height)" },
         },
+        "accordion-up": {
+          from: { height: "var(--radix-accordion-content-height)" },
+          to: { height: "0" },
+        },
+        // Animación para el efecto escaneo (scanline) optimizada
+        scanline: {
+          "0%": { transform: "translateY(-100%)" },
+          "100%": { transform: "translateY(200%)" },
+        },
+        // Efecto Tilt para el ArcadeButton
         tilt: {
           "0%, 50%, 100%": { transform: "rotate(0deg)" },
           "25%": { transform: "rotate(1deg)" },
@@ -73,12 +96,14 @@ const config: Config = {
         },
       },
       animation: {
-        tilt: "tilt 10s infinite linear",
+        "accordion-down": "accordion-down 0.2s ease-out",
+        "accordion-up": "accordion-up 0.2s ease-out",
+        "scanline": "scanline 2s linear infinite",
+        "tilt": "tilt 10s infinite linear",
       },
     },
   },
   plugins: [require("tailwindcss-animate")],
-};
-
+} satisfies Config;
 
 export default config;

@@ -1,4 +1,4 @@
-import Hero from "@/components/sections/Hero";
+import Hero from "@/components/layout/Hero";
 import PriceConverter from "@/components/sections/PriceConverter";
 import TipJarSection from "@/components/sections/TipJarSection";
 import BtcMapSection from "@/components/sections/BtcMapSection";
