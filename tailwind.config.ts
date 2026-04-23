@@ -3,9 +3,9 @@ import type { Config } from "tailwindcss";
 const config = {
   darkMode: ["class"],
   content: [
-    "./app/**/*.{js,ts,jsx,tsx,mdx}",
-    "./components/**/*.{js,ts,jsx,tsx,mdx}",
     "./pages/**/*.{ts,tsx}",
+    "./components/**/*.{ts,tsx}",
+    "./app/**/*.{ts,tsx}",
     "./src/**/*.{ts,tsx}",
   ],
   prefix: "",
@@ -24,7 +24,6 @@ const config = {
         turquesa: "#00C4B4",
         dark: "#0F172A",
 
-        // Colores del sistema shadcn/ui
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
@@ -65,13 +64,13 @@ const config = {
         sm: "calc(var(--radius) - 4px)",
       },
       fontFamily: {
-        // FUENTE PRINCIPAL: Ubuntu (Estilo Tech/Bank)
-        sans: ["var(--font-ubuntu)", "sans-serif"],
+        // Títulos con "patillas" (IBM Plex Serif)
+        serif: ["var(--font-ibm-plex)", "serif"],
         
-        // FUENTE CÓDIGO: Fira Code (Estilo Cypherpunk)
+        // Cuerpo y Código (Fira Code)
         mono: ["var(--font-fira-code)", "monospace"],
         
-        // FUENTE ARCADE: VT323 (Para botones especiales)
+        // Arcade / Retro (VT323)
         vt323: ["var(--font-vt323)", "monospace"],
       },
       keyframes: {
@@ -83,12 +82,11 @@ const config = {
           from: { height: "var(--radix-accordion-content-height)" },
           to: { height: "0" },
         },
-        // Animación para el efecto escaneo (scanline) optimizada
         scanline: {
           "0%": { transform: "translateY(-100%)" },
           "100%": { transform: "translateY(200%)" },
         },
-        // Efecto Tilt para el ArcadeButton
+        // Efecto Tilt para el ArcadeButton (Preservado)
         tilt: {
           "0%, 50%, 100%": { transform: "rotate(0deg)" },
           "25%": { transform: "rotate(1deg)" },

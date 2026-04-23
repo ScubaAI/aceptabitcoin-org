@@ -1,18 +1,18 @@
 import type { Metadata } from "next";
-import { Ubuntu, Fira_Code, VT323 } from "next/font/google";
+import { IBM_Plex_Serif, Fira_Code, VT323 } from "next/font/google";
 import "./globals.css";
 import { cn } from "@/lib/utils";
 import { Toaster } from "sonner";
 
-// 1. Tipografía Principal: Ubuntu (Estilo Bank/Tech/Futurista)
-const ubuntu = Ubuntu({
+// 1. Títulos: IBM Plex Serif (Con "patillas", Estilo Bank/Periódico Futurista)
+const ibmPlex = IBM_Plex_Serif({
   subsets: ["latin"],
-  variable: "--font-ubuntu",
+  variable: "--font-ibm-plex",
   display: "swap",
-  weight: ["300", "400", "500", "700"],
+  weight: ["300", "400", "500", "600", "700"],
 });
 
-// 2. Tipografía Secundaria/Código: Fira Code (Estilo Cypherpunk/Hacker)
+// 2. Cuerpo / Código: Fira Code (Monospace, Estilo Hacker/Terminal)
 const firaCode = Fira_Code({
   subsets: ["latin"],
   variable: "--font-fira-code",
@@ -20,7 +20,7 @@ const firaCode = Fira_Code({
   weight: ["300", "400", "500", "600", "700"],
 });
 
-// Mantenemos VT323 para el botón Arcade (Aprobado previamente)
+// 3. Arcade: VT323 (Para botones y detalles retro)
 const vt323 = VT323({
   subsets: ["latin"],
   variable: "--font-vt323",
@@ -43,11 +43,10 @@ export default function RootLayout({
     <html lang="es" className="dark">
       <body
         className={cn(
-          ubuntu.variable,
+          ibmPlex.variable,
           firaCode.variable,
           vt323.variable,
-          // Nota: Eliminamos 'font-sans' por defecto para forzar el uso de nuestras variables específicas
-          "bg-background text-foreground antialiased min-h-screen selection:bg-bitcoin selection:text-black"
+          "bg-black text-white antialiased min-h-screen selection:bg-bitcoin selection:text-black"
         )}
       >
         {children}
