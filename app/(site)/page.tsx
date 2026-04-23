@@ -1,14 +1,14 @@
 import Hero from "@/components/layout/Hero";
 import PriceConverter from "@/components/sections/PriceConverter";
 import TipJarSection from "@/components/sections/TipJarSection";
-import BtcMapSection from "@/components/sections/BtcMapSection";
+// BtcMapSection importado pero NO usado
 import { AgendaSection } from "@/components/sections/AgendaSection";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { ArrowRight, Store, LayoutGrid, Gamepad2 } from "lucide-react";
-import ArcadeButton from "@/components/ui/arcade-button"; // Importamos nuestro botón nuevo
+import ArcadeButton from "@/components/ui/arcade-button";
 
 export default function Home() {
   return (
@@ -26,18 +26,14 @@ export default function Home() {
                 <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-secondary/10 text-secondary text-xs font-bold uppercase tracking-wider border border-secondary/20">
                   Market Data
                 </div>
-                <h2 className="font-space text-4xl font-bold tracking-tight sm:text-5xl">
+                <h2 className="font-serif text-4xl font-bold tracking-tight sm:text-5xl">
                   Bitcoin es el dinero <br />
-                  <span className="text-secondary">de la libertad.</span>
+                  <span className="text-bitcoin">de la libertad.</span>
                 </h2>
                 <p className="text-lg text-muted-foreground">
                   No importa si el precio sube o baja, la red sigue confirmando bloques cada 10 minutos. 
                   Usa nuestra calculadora para ver el valor actual en pesos mexicanos.
                 </p>
-                <div className="flex items-center gap-4 pt-4">
-                  <div className="h-0.5 w-12 bg-secondary/50" />
-                  <span className="text-sm font-medium italic text-muted-foreground">Satoshi Nakamoto</span>
-                </div>
               </div>
               <PriceConverter />
             </div>
@@ -57,7 +53,7 @@ export default function Home() {
                 <span className="text-sm font-bold tracking-widest uppercase">Nueva Experiencia</span>
               </div>
 
-              <h2 className="font-space text-5xl md:text-7xl font-bold tracking-tight mb-6">
+              <h2 className="font-serif text-5xl md:text-7xl font-bold tracking-tight mb-6">
                 Aprende Bitcoin <br />
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-yellow-400">
                   jugando.
@@ -69,7 +65,6 @@ export default function Home() {
                 laboratorios interactivos, simuladores de IA y retos de criptografía.
               </p>
               
-              {/* AQUÍ ESTÁ EL CAMBIO: Usamos nuestro ArcadeButton en vez del Embed */}
               <ArcadeButton href="https://bitcoin.visionaryai.lat">
                 INICIAR MISION
               </ArcadeButton>
@@ -81,35 +76,54 @@ export default function Home() {
           </div>
         </section>
 
-        {/* --- Mercados e Impacto (Crea tu tienda + Tianguis) --- */}
-        <section className="py-24 bg-background">
-          <div className="container px-4">
+        {/* --- Mercados e Impacto (Estilo Cypherpunk Bank) --- */}
+        <section className="py-24 bg-black relative overflow-hidden">
+          {/* Fondo decorativo sutil */}
+          <div className="absolute inset-0 bg-[radial-gradient(rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:40px_40px] opacity-30 pointer-events-none" />
+          
+          <div className="container relative z-10 px-4">
             <div className="grid md:grid-cols-2 gap-8">
               
-              {/* Card 1: Crea tu Tienda */}
-              <div className="group relative rounded-[2rem] border border-border bg-card p-10 overflow-hidden transition-all hover:border-bitcoin/50">
+              {/* Card 1: Crea tu Tienda (Estilo Bitcoin) */}
+              <div className="group relative rounded-xl border border-bitcoin/20 bg-black/40 p-10 overflow-hidden transition-all duration-300 hover:border-bitcoin/50 hover:shadow-[0_0_30px_rgba(247,147,26,0.15)] hover:-translate-y-1">
+                {/* Glow decorativo */}
                 <div className="absolute -right-20 -top-20 h-64 w-64 rounded-full bg-bitcoin/5 blur-3xl transition-all group-hover:bg-bitcoin/10" />
-                <Store className="h-12 w-12 text-bitcoin mb-6" />
-                <h3 className="font-space text-3xl font-bold mb-4">Crea tu tienda en minutos</h3>
-                <p className="text-muted-foreground mb-8">
-                  Te proporcionamos infraestructura soberana: BTCPay Server + LNbits + Point of Sale listo para usar.
-                </p>
-                <Button asChild variant="secondary" className="rounded-full font-bold">
-                  <Link href="/crea-tu-tienda">Solicitar Alta de Negocio</Link>
-                </Button>
+                
+                <div className="relative z-10 flex flex-col h-full">
+                  <div className="h-12 w-12 mb-6 rounded-lg bg-bitcoin/10 border border-bitcoin/20 flex items-center justify-center text-bitcoin">
+                    <Store className="h-6 w-6" />
+                  </div>
+                  <h3 className="font-serif text-3xl font-bold mb-4 text-white">
+                    Crea tu tienda en minutos
+                  </h3>
+                  <p className="font-mono text-sm text-gray-400 mb-8 leading-relaxed flex-grow">
+                    Infraestructura soberana: BTCPay Server + LNbits + Point of Sale listo para usar.
+                  </p>
+                  <Button asChild variant="outline" className="w-full md:w-auto border-bitcoin/30 text-bitcoin font-bold hover:bg-bitcoin hover:text-black font-serif transition-all rounded">
+                    <Link href="/crea-tu-tienda">Solicitar Alta de Negocio</Link>
+                  </Button>
+                </div>
               </div>
 
-              {/* Card 2: Tianguis Bitcoin */}
-              <div className="group relative rounded-[2rem] border border-border bg-card p-10 overflow-hidden transition-all hover:border-secondary/50">
-                <div className="absolute -right-20 -top-20 h-64 w-64 rounded-full bg-secondary/5 blur-3xl transition-all group-hover:bg-secondary/10" />
-                <LayoutGrid className="h-12 w-12 text-secondary mb-6" />
-                <h3 className="font-space text-3xl font-bold mb-4">Tianguis Bitcoin Mérida</h3>
-                <p className="text-muted-foreground mb-8">
-                  El primer marketplace descentralizado impulsado por Nostr y Lightning. Compra y vende sin intermediarios.
-                </p>
-                <Button asChild variant="outline" className="rounded-full font-bold border-secondary/50 text-secondary hover:bg-secondary/10">
-                  <Link href="/tianguis">Explorar el Tianguis</Link>
-                </Button>
+              {/* Card 2: Tianguis Bitcoin (Estilo Cypherpunk/Cyan) */}
+              <div className="group relative rounded-xl border border-cyan-500/20 bg-black/40 p-10 overflow-hidden transition-all duration-300 hover:border-cyan-500/50 hover:shadow-[0_0_30px_rgba(6,182,212,0.15)] hover:-translate-y-1">
+                {/* Glow decorativo */}
+                <div className="absolute -right-20 -top-20 h-64 w-64 rounded-full bg-cyan-500/5 blur-3xl transition-all group-hover:bg-cyan-500/10" />
+                
+                <div className="relative z-10 flex flex-col h-full">
+                  <div className="h-12 w-12 mb-6 rounded-lg bg-cyan-950/30 border border-cyan-500/20 flex items-center justify-center text-cyan-400">
+                    <LayoutGrid className="h-6 w-6" />
+                  </div>
+                  <h3 className="font-serif text-3xl font-bold mb-4 text-white">
+                    Tianguis Bitcoin Mérida
+                  </h3>
+                  <p className="font-mono text-sm text-gray-400 mb-8 leading-relaxed flex-grow">
+                    El primer marketplace descentralizado impulsado por Nostr y Lightning. Compra y vende sin intermediarios.
+                  </p>
+                  <Button asChild variant="outline" className="w-full md:w-auto border-cyan-500/30 text-cyan-400 font-bold hover:bg-cyan-500 hover:text-black font-serif transition-all rounded">
+                    <Link href="/tianguis">Explorar el Tianguis</Link>
+                  </Button>
+                </div>
               </div>
 
             </div>
@@ -118,7 +132,7 @@ export default function Home() {
 
         <TipJarSection />
 
-        <BtcMapSection />
+        {/* MAPA ELIMINADO DE LA HOME PARA DAR PROTAGONISMO A LA AGENDA */}
 
         <AgendaSection />
 

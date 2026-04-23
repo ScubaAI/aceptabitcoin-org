@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Coins, DollarSign, Bitcoin } from "lucide-react";
+import { Coins, DollarSign, Bitcoin, Activity } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 export default function PriceConverter() {
@@ -15,7 +15,7 @@ export default function PriceConverter() {
   const [btcMxn, setBtcMxn] = useState<number>(1);
   const [mxn, setMxn] = useState<number>(0);
 
-  // Estados para SATS/MXN (Asumiremos MXN como la principal para Sats, pero podríamos agregar USD si es necesario)
+  // Estados para SATS/MXN
   const [sats, setSats] = useState<number>(1000);
   const [satsMxn, setSatsMxn] = useState<number>(0);
 
@@ -37,7 +37,7 @@ export default function PriceConverter() {
         // Calcular valores iniciales
         setUsd(btcUsd * data.bitcoin.usd);
         setMxn(btcMxn * data.bitcoin.mxn);
-        setSatsMxn((sats / 100000000) * data.bitcoin.mxn); // Sats a BTC * Precio MXN
+        setSatsMxn((sats / 100000000) * data.bitcoin.mxn);
         
         setLoading(false);
       } catch (error) {
@@ -50,9 +50,9 @@ export default function PriceConverter() {
     fetchPrices();
     const interval = setInterval(fetchPrices, 60000);
     return () => clearInterval(interval);
-  }, [btcUsd, btcMxn, sats]); // Dependencias para recalcular si cambia el precio base
+  }, [btcUsd, btcMxn, sats]);
 
-  // --- Handlers BTC/USD ---
+  // --- Handlers ---
   const handleBtcUsdChange = (value: number) => {
     setBtcUsd(value);
     if (prices.usd) setUsd(value * prices.usd);
@@ -61,8 +61,6 @@ export default function PriceConverter() {
     setUsd(value);
     if (prices.usd) setBtcUsd(value / prices.usd);
   };
-
-  // --- Handlers BTC/MXN ---
   const handleBtcMxnChange = (value: number) => {
     setBtcMxn(value);
     if (prices.mxn) setMxn(value * prices.mxn);
@@ -71,8 +69,6 @@ export default function PriceConverter() {
     setMxn(value);
     if (prices.mxn) setBtcMxn(value / prices.mxn);
   };
-
-  // --- Handlers SATS/MXN ---
   const handleSatsChange = (value: number) => {
     setSats(value);
     if (prices.mxn) setSatsMxn((value / 100000000) * prices.mxn);
@@ -83,113 +79,131 @@ export default function PriceConverter() {
   };
 
   return (
-    <Card className="relative overflow-hidden border-border bg-card/80 p-6 backdrop-blur-md shadow-2xl">
-      <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:20px_20px] opacity-30 pointer-events-none" />
+    <Card className="relative overflow-hidden border-cyan-500/20 bg-black/40 p-6 backdrop-blur-xl shadow-[0_0_50px_rgba(0,0,0,0.5)]">
+      {/* Fondo: Rejilla Cypherpunk */}
+      <div className="absolute inset-0 bg-[radial-gradient(rgba(6,182,212,0.1)_1px,transparent_1px)] bg-[size:20px_20px] opacity-30 pointer-events-none" />
       
       <div className="relative z-10">
         {/* Header */}
-        <div className="mb-8 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+        <div className="mb-8 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 border-b border-white/10 pb-6">
           <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-bitcoin/10 text-bitcoin">
-              <Coins className="h-5 w-5" />
+            <div className="flex h-10 w-10 items-center justify-center rounded border border-cyan-500/30 bg-cyan-950/20 text-cyan-400 shadow-[0_0_15px_rgba(34,211,238,0.2)]">
+              <Activity className="h-5 w-5" />
             </div>
             <div>
-              <h3 className="font-space text-xl font-bold tracking-tight text-foreground">
-                Conversor Multidivisa
+              <h3 className="font-serif text-xl font-bold tracking-tight text-white">
+                Mercado Global
               </h3>
-              <p className="text-xs text-muted-foreground">BTC • USD • MXN • SATS</p>
+              <p className="font-mono text-[10px] text-cyan-500/80 uppercase tracking-widest mt-1">
+                Oracle System // v2.0
+              </p>
             </div>
           </div>
           {!loading && (
-            <div className="text-right hidden md:block">
-              <div className="text-[10px] uppercase text-muted-foreground font-bold tracking-wider">BTC Global (USD)</div>
-              <div className="font-mono text-sm font-bold text-green-500">${prices.usd.toLocaleString("en-US", {minimumFractionDigits: 2})}</div>
+            <div className="hidden md:flex items-center gap-3 bg-white/5 px-4 py-2 rounded border border-white/5">
+              <div className="text-right">
+                <div className="text-[10px] text-gray-500 font-mono uppercase tracking-wider">Precio Referencia</div>
+                <div className="font-mono text-sm font-bold text-cyan-400 drop-shadow-[0_0_5px_rgba(34,211,238,0.8)]">
+                  ${prices.usd.toLocaleString("en-US")} <span className="text-gray-500 text-xs">USD</span>
+                </div>
+              </div>
             </div>
           )}
         </div>
 
-        <div className="space-y-6">
+        <div className="space-y-4">
           
-          {/* ROW 1: BTC / USD */}
-          <div className="grid grid-cols-[1fr,auto,1fr] gap-4 items-center p-4 rounded-xl bg-background/30 border border-border/50">
+          {/* ROW 1: BTC / USD (Estilo Tech) */}
+          <div className="grid grid-cols-[1fr,auto,1fr] gap-3 items-center p-4 rounded-lg bg-black/30 border border-white/5 hover:border-cyan-500/20 transition-colors">
             <div className="space-y-1">
-              <label className="text-[10px] uppercase font-bold text-bitcoin tracking-wider">Bitcoin</label>
+              <label className="font-mono text-[10px] uppercase text-gray-500 tracking-wider">Bitcoin (BTC)</label>
               <Input
                 type="number"
                 step="0.00000001"
                 value={btcUsd}
                 onChange={(e) => handleBtcUsdChange(parseFloat(e.target.value) || 0)}
-                className="h-12 border-border bg-transparent px-3 font-mono text-lg font-bold text-bitcoin focus-visible:ring-bitcoin/30"
+                className="h-12 border-white/10 bg-transparent text-cyan-400 font-mono text-lg font-bold focus-visible:ring-cyan-500/50 focus:border-cyan-500/50 px-3"
               />
             </div>
-            <div className="text-gray-500"><Bitcoin className="h-4 w-4" /></div>
+            <div className="text-gray-600"><Bitcoin className="h-4 w-4" /></div>
             <div className="space-y-1">
-              <label className="text-[10px] uppercase font-bold text-green-500 tracking-wider">Dólares</label>
+              <label className="font-mono text-[10px] uppercase text-gray-500 tracking-wider">Dólares (USD)</label>
               <Input
                 type="text"
                 inputMode="decimal"
                 value={usd === 0 ? "" : usd.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                 onChange={(e) => handleUsdChange(parseFloat(e.target.value.replace(/,/g, "")) || 0)}
-                className="h-12 border-border bg-transparent px-3 font-mono text-lg font-bold text-green-500 focus-visible:ring-green-500/30"
+                className="h-12 border-white/10 bg-transparent text-white font-mono text-lg font-bold focus-visible:ring-white/20 px-3"
               />
             </div>
           </div>
 
-          {/* ROW 2: BTC / MXN */}
-          <div className="grid grid-cols-[1fr,auto,1fr] gap-4 items-center p-4 rounded-xl bg-background/30 border border-border/50">
-            <div className="space-y-1">
-              <label className="text-[10px] uppercase font-bold text-bitcoin tracking-wider">Bitcoin</label>
+          {/* ROW 2: BTC / MXN (Estilo Bitcoin) */}
+          <div className="grid grid-cols-[1fr,auto,1fr] gap-3 items-center p-4 rounded-lg bg-black/30 border border-bitcoin/10 hover:border-bitcoin/40 transition-colors relative overflow-hidden">
+            {/* Glow decorativo */}
+            <div className="absolute inset-0 bg-bitcoin/5 blur-xl pointer-events-none" />
+            
+            <div className="space-y-1 relative z-10">
+              <label className="font-mono text-[10px] uppercase text-bitcoin tracking-wider">Bitcoin (BTC)</label>
               <Input
                 type="number"
                 step="0.00000001"
                 value={btcMxn}
                 onChange={(e) => handleBtcMxnChange(parseFloat(e.target.value) || 0)}
-                className="h-12 border-border bg-transparent px-3 font-mono text-lg font-bold text-bitcoin focus-visible:ring-bitcoin/30"
+                className="h-12 border-bitcoin/30 bg-transparent text-bitcoin font-mono text-lg font-bold focus-visible:ring-bitcoin/50 px-3"
               />
             </div>
-            <div className="text-gray-500"><Bitcoin className="h-4 w-4" /></div>
-            <div className="space-y-1">
-              <label className="text-[10px] uppercase font-bold text-orange-500 tracking-wider">Pesos MX</label>
+            <div className="text-gray-600 relative z-10"><Bitcoin className="h-4 w-4" /></div>
+            <div className="space-y-1 relative z-10">
+              <label className="font-mono text-[10px] uppercase text-orange-400 tracking-wider">Pesos (MXN)</label>
               <Input
                 type="text"
                 inputMode="decimal"
                 value={mxn === 0 ? "" : mxn.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                 onChange={(e) => handleMxnChange(parseFloat(e.target.value.replace(/,/g, "")) || 0)}
-                className="h-12 border-border bg-transparent px-3 font-mono text-lg font-bold text-orange-500 focus-visible:ring-orange-500/30"
+                className="h-12 border-bitcoin/30 bg-transparent text-white font-mono text-lg font-bold focus-visible:ring-bitcoin/50 px-3"
               />
             </div>
           </div>
 
-          {/* ROW 3: SATS / MXN */}
-          <div className="grid grid-cols-[1fr,auto,1fr] gap-4 items-center p-4 rounded-xl bg-bitcoin/5 border border-bitcoin/20 relative overflow-hidden group">
-            {/* Decoración de fondo para Sats */}
-            <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iMSIgY3k9IjEiIHI9IjEiIGZpbGw9InJnYmEoMjU1LCAxNjUsIDAsIDAuMSkiLz48L3N2Zz4=')] opacity-50" />
-            
-            <div className="space-y-1 relative z-10">
-              <label className="text-[10px] uppercase font-bold text-bitcoin tracking-wider flex items-center gap-1">
-                <Coins className="h-3 w-3" /> Satoshis
+          {/* ROW 3: SATS / MXN (Estilo Special) */}
+          <div className="grid grid-cols-[1fr,auto,1fr] gap-3 items-center p-4 rounded-lg bg-gradient-to-r from-cyan-950/10 to-bitcoin/5 border border-white/5 hover:border-white/20 transition-all group">
+            <div className="space-y-1">
+              <label className="font-mono text-[10px] uppercase text-cyan-400 tracking-wider flex items-center gap-1">
+                <Coins className="h-3 w-3" /> Satoshis (SATS)
               </label>
               <Input
                 type="number"
                 step="1"
                 value={sats}
                 onChange={(e) => handleSatsChange(parseFloat(e.target.value) || 0)}
-                className="h-12 border-bitcoin/30 bg-transparent px-3 font-mono text-lg font-bold text-bitcoin focus-visible:ring-bitcoin/30"
+                className="h-12 border-cyan-500/20 bg-transparent text-cyan-400 font-mono text-lg font-bold focus-visible:ring-cyan-500/50 px-3 group-hover:shadow-[0_0_15px_rgba(34,211,238,0.1)] transition-shadow"
               />
             </div>
-            <div className="text-gray-500 relative z-10"><Bitcoin className="h-4 w-4" /></div>
-            <div className="space-y-1 relative z-10">
-              <label className="text-[10px] uppercase font-bold text-orange-500 tracking-wider">Pesos MX</label>
+            <div className="text-gray-500"><Bitcoin className="h-4 w-4" /></div>
+            <div className="space-y-1">
+              <label className="font-mono text-[10px] uppercase text-orange-400 tracking-wider">Pesos (MXN)</label>
               <Input
                 type="text"
                 inputMode="decimal"
                 value={satsMxn === 0 ? "" : satsMxn.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                 onChange={(e) => handleSatsMxnChange(parseFloat(e.target.value.replace(/,/g, "")) || 0)}
-                className="h-12 border-bitcoin/30 bg-transparent px-3 font-mono text-lg font-bold text-orange-500 focus-visible:ring-orange-500/30"
+                className="h-12 border-orange-500/20 bg-transparent text-white font-mono text-lg font-bold focus-visible:ring-orange-500/50 px-3"
               />
             </div>
           </div>
 
+        </div>
+
+        {/* Footer de Estado */}
+        <div className="mt-6 flex items-center justify-between pt-4 border-t border-white/5">
+          <div className="flex items-center gap-2">
+            <div className="h-1.5 w-1.5 rounded-full bg-green-500 animate-pulse shadow-[0_0_8px_rgba(34,197,94,0.8)]"></div>
+            <span className="font-mono text-[10px] text-gray-400 uppercase tracking-widest">Live Feed // Coingecko API</span>
+          </div>
+          <span className="font-serif text-[10px] text-gray-600 italic">
+            System Operational
+          </span>
         </div>
       </div>
     </Card>

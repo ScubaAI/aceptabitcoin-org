@@ -1,56 +1,59 @@
-# Acepta Bitcoin México
+# ₿ Acepta Bitcoin México (Oracle System v2.0)
 
-Comunidad de educación y adopción de Bitcoin en Mérida, Yucatán. Educación práctica, Tiendas Bitcoin, Tianguis y herramientas reales.
+Plataforma de soberanía financiera, educación y adopción real de Bitcoin en Mérida, Yucatán. Construyendo la infraestructura para la economía del futuro.
 
-## Tech Stack
+## 🎨 Design System: Cypherpunk Bank
+La plataforma utiliza una estética técnica de alto contraste inspirada en las fronteras digitales y la infraestructura descentralizada:
+- **Typography**: IBM Plex Serif (Institucional), Fira Code (Technical), VT323 (Retro-System).
+- **Theme**: Pure Black (`#000000`), Bitcoin Orange, and Cypherpunk Cyan.
+- **Effects**: Scanlines, Blinking Cursors, Glassmorphism, and Glows.
 
-- Next.js 14 (App Router)
-- TypeScript
-- Tailwind CSS
-- shadcn/ui
-- Leaflet (mapas)
-- QRCode (generación de QR)
-- Sonner (toasts)
+## 🚀 Características Principales
 
-## Getting Started
+- **🤖 Oracle System (Aprende)**: Laboratorios interactivos y simuladores de IA para dominar Bitcoin mediante la práctica (Estilo Tron).
+- **💹 Price Oracle**: Conversor multi-divisa (BTC/USD/MXN/SATS) con datos en tiempo real de Coingecko API.
+- **⚡ Lightning Donations**: Tip Jar dinámico con generación de QR en vivo y soporte para la red Lightning (Powered by Blink.sv).
+- **📅 Booking Terminal**: Sistema de asesorías 1-a-1 integrado directamente con Cal.com.
+- **🏪 Digital Tianguis**: Marketplace descentralizado impulsado por Nostr y Lightning Network.
+- **🗺️ Sovereign Infrastructure**: Soporte para BTCPay Server, LNbits y visualización standalone de BTC Map.
 
+## 🛠️ Tech Stack
+
+- **Framework**: [Next.js 14](https://nextjs.org/) (App Router)
+- **Language**: [TypeScript](https://www.typescriptlang.org/)
+- **Styling**: [Tailwind CSS](https://tailwindcss.com/) with Custom Animations.
+- **UI Components**: [shadcn/ui](https://ui.shadcn.com/) + Custom Arcade Components.
+- **Integrations**: LNbits API, BTC Map API, Cal.com Embed.
+- **Utilities**: `qrcode.react`, `lucide-react`, `clsx`, `tailwind-merge`.
+
+## 🚦 Getting Started
+
+### 1. Clonar e Instalar
 ```bash
+git clone https://github.com/aceptabitcoin/aceptabitcoin-org.git
+cd aceptabitcoin-org
 npm install
+```
+
+### 2. Configuración
+Copia el archivo `.env.example` a `.env.local` y configura tus variables de entorno para LNbits y Cal.com.
+
+### 3. Desarrollo
+```bash
 npm run dev
 ```
+Abre [http://localhost:3000](http://localhost:3000) para ver el sistema en acción.
 
-Open [http://localhost:3000](http://localhost:3000)
+## 🗺️ Mapa de Rutas
 
-## Páginas
+| Ruta | Componente | Descripción |
+|------|------------|-------------|
+| `/` | `Home` | Panel central del Oracle System |
+| `/aprende` | `AprendePage` | Módulos de entrenamiento interactivo |
+| `/tianguis` | `TianguisPage` | Marketplace P2P (Nostr + LN) |
+| `/mapa` | `MapaPage` | Localizador de comercios Bitcoin |
+| `/crea-tu-tienda` | `MerchantPage` | Onboarding de nuevos comercios |
+| `/agenda` | `AgendaPage` | Terminal de reservas y asesorías |
 
-| Ruta | Descripción |
-|------|-------------|
-| `/` | Homepage principal |
-| `/aprende` | Bitcoin Agent (IA + Labs interactivos) |
-| `/tianguis` | Marketplace descentralizado Nostr + Lightning |
-| `/crea-tu-tienda` | Formulario para negocios Bitcoin |
-| `/mapa` | Mapa de comercios BTC Map |
-| `/proyectos` | Proyectos de la comunidad |
-
-## Componentes
-
-```
-components/
-├── layout/          # Navbar, Footer
-├── sections/        # Hero, TipJar, BtcMap, etc.
-└── embeds/         # BitcoinAgent, Cal.com
-```
-
-## Características
-
-- 🗺️ Mapa en vivo de BTC Map API
-- ⚡ Lightning Address para donations
-- 🤖 Bitcoin Agent con labs interactivos
-- 🏪 Registro de tiendas Bitcoin
-- 📍 Marketplace Tianguis (Nostr + LN)
-
-## Dependencies
-
-```bash
-npm install sonner leaflet react-leaflet qrcode.react
-```
+---
+**Status: OPERATIONAL** | **Protocol: LIGHTNING** | **Network: MAINNET**
