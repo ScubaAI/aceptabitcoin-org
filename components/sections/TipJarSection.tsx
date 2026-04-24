@@ -88,7 +88,7 @@ export default function TipJarSection() {
 
                 <div className="text-center">
                   <p className="font-mono text-xs text-gray-500 mb-2 uppercase">Infraestructura</p>
-                  <div className="flex items-center justify-center gap-2 text-cyan-400 font-bold font-mono text-sm border border-cyan-500/30 bg-cyan-950/20 px-3 py-1 rounded">
+                  <div className="flex items-center justify-center gap-2 text-matrix font-bold font-mono text-sm border border-matrix/30 bg-matrix/10 px-3 py-1 rounded">
                     <Zap className="h-3 w-3" /> Powered by Blink.sv
                   </div>
                 </div>

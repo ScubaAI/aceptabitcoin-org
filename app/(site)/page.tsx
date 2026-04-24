@@ -105,13 +105,13 @@ export default function Home() {
                 </div>
               </div>
 
-              {/* Card 2: Tianguis Bitcoin (Estilo Cypherpunk/Cyan) */}
-              <div className="group relative rounded-xl border border-cyan-500/20 bg-black/40 p-10 overflow-hidden transition-all duration-300 hover:border-cyan-500/50 hover:shadow-[0_0_30px_rgba(6,182,212,0.15)] hover:-translate-y-1">
+              {/* Card 2: Tianguis Bitcoin (Estilo Matrix Green) */}
+              <div className="group relative rounded-xl border border-matrix/20 bg-black/40 p-10 overflow-hidden transition-all duration-300 hover:border-matrix/50 hover:shadow-[0_0_30px_rgba(0,255,65,0.15)] hover:-translate-y-1">
                 {/* Glow decorativo */}
-                <div className="absolute -right-20 -top-20 h-64 w-64 rounded-full bg-cyan-500/5 blur-3xl transition-all group-hover:bg-cyan-500/10" />
+                <div className="absolute -right-20 -top-20 h-64 w-64 rounded-full bg-matrix/5 blur-3xl transition-all group-hover:bg-matrix/10" />
                 
                 <div className="relative z-10 flex flex-col h-full">
-                  <div className="h-12 w-12 mb-6 rounded-lg bg-cyan-950/30 border border-cyan-500/20 flex items-center justify-center text-cyan-400">
+                  <div className="h-12 w-12 mb-6 rounded-lg bg-matrix/10 border border-matrix/20 flex items-center justify-center text-matrix">
                     <LayoutGrid className="h-6 w-6" />
                   </div>
                   <h3 className="font-serif text-3xl font-bold mb-4 text-white">
@@ -120,7 +120,7 @@ export default function Home() {
                   <p className="font-mono text-sm text-gray-400 mb-8 leading-relaxed flex-grow">
                     El primer marketplace descentralizado impulsado por Nostr y Lightning. Compra y vende sin intermediarios.
                   </p>
-                  <Button asChild variant="outline" className="w-full md:w-auto border-cyan-500/30 text-cyan-400 font-bold hover:bg-cyan-500 hover:text-black font-serif transition-all rounded">
+                  <Button asChild variant="outline" className="w-full md:w-auto border-matrix/30 text-matrix font-bold hover:bg-matrix hover:text-black font-serif transition-all rounded">
                     <Link href="/tianguis">Explorar el Tianguis</Link>
                   </Button>
                 </div>

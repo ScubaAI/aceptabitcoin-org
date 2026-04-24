@@ -4,37 +4,42 @@
 
 @layer base {
   :root {
-    /* Fondo Azul Muy Oscuro (Deep Navy) */
-    --background: 222 47% 6%;
-    --foreground: 210 40% 98%;
+    /* FONDO: Negro Puro (Estilo Matrix Cinematográfico) */
+    --background: 0 0% 0%;       /* #000000 */
+    --foreground: 210 40% 98%;  /* Blanco Hueso para texto general */
 
-    /* Tarjetas y Popovers */
-    --card: 222 47% 11%;
+    /* Tarjetas y Popovers: Negro con un tinte verde imperceptible */
+    --card: 120 10% 5%;         /* #000d0a - Fondo tarjeta casi negro */
     --card-foreground: 210 40% 98%;
-    --popover: 222 47% 11%;
+    --popover: 120 10% 5%;
     --popover-foreground: 210 40% 98%;
 
     /* Bordes y estados */
-    --border: 217 33% 18%;
-    --input: 217 33% 18%;
-    --ring: 30 93% 53%;
+    --border: 120 30% 15%;       /* Bordes verde oscuro */
+    --input: 120 30% 15%;
+    --ring: 30 93% 53%;         /* El ring de foco sigue siendo Naranja (Bitcoin) */
     --radius: 0.75rem;
 
-    /* Colores de Marca (HSL) */
-    --bitcoin: 30 93% 53%;      /* #F7931A */
-    --turquesa: 174 100% 38%;   /* #00C4B4 */
+    /* COLORES DE MARCA (HSL) */
+    --bitcoin: 30 93% 53%;      /* #F7931A - Invariable */
+    
+    /* CAMBIO CLAVE: Cyan por Matrix Green */
+    --matrix: 120 100% 50%;     /* #00FF00 - Verde Matrix Puro */
+    /* Variante un poco más oscura para textos largos */
+    --matrix-dark: 120 100% 35%; /* #00B300 */
 
-    /* Mapeo de Componentes principales */
-    --primary: 30 93% 53%;
-    --primary-foreground: 222 47% 6%;
-    --secondary: 174 100% 38%;
-    --secondary-foreground: 222 47% 6%;
+    /* Mapeo de Componentes */
+    --primary: 30 93% 53%;      /* Bitcoin sigue siendo Primary */
+    --primary-foreground: 0 0% 0%;
+    
+    --secondary: 120 100% 50%;  /* El secundario ahora es Matrix Green */
+    --secondary-foreground: 0 0% 0%;
 
     /* Estados adicionales */
-    --muted: 217 33% 18%;
-    --muted-foreground: 215 20% 65%;
-    --accent: 217 33% 18%;
-    --accent-foreground: 210 40% 98%;
+    --muted: 120 10% 10%;       /* Gris verdoso muy oscuro */
+    --muted-foreground: 120 10% 60%; /* Gris verdoso apagado */
+    --accent: 120 30% 15%;
+    --accent-foreground: 120 100% 50%;
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 210 40% 98%;
   }
@@ -45,21 +50,39 @@ body {
   font-feature-settings: "rlig" 1, "calt" 1;
 }
 
-/* Clases personalizadas útiles */
+/* UTILIDADES PERSONALIZADAS */
 @layer utilities {
+  /* Bitcoin Colors */
   .text-bitcoin {
     color: hsl(var(--bitcoin));
   }
-
   .bg-bitcoin {
     background-color: hsl(var(--bitcoin));
   }
-
-  .text-turquesa {
-    color: hsl(var(--turquesa));
+  .border-bitcoin {
+    border-color: hsl(var(--bitcoin));
   }
 
+  /* Matrix Green Colors (Reemplazando a Turquesa) */
+  .text-matrix {
+    color: hsl(var(--matrix));
+    text-shadow: 0 0 5px rgba(0, 255, 0, 0.5); /* Efecto Glow sutil */
+  }
+  
+  .bg-matrix {
+    background-color: hsl(var(--matrix));
+    box-shadow: 0 0 15px rgba(0, 255, 0, 0.3); /* Glow fuerte para fondos */
+  }
+
+  .border-matrix {
+    border-color: hsl(var(--matrix));
+  }
+
+  /* Fallbacks de turquesa por si acaso (Opcional, eliminar si limpias todo) */
+  .text-turquesa {
+    color: hsl(var(--matrix)); /* Redirige turquesa a matrix */
+  }
   .bg-turquesa {
-    background-color: hsl(var(--turquesa));
+    background-color: hsl(var(--matrix));
   }
 }

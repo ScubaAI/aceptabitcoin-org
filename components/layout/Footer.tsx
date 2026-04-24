@@ -4,8 +4,8 @@ import { Terminal, MapPin, Mail, X, Cpu, Hash } from "lucide-react";
 export default function Footer() {
   return (
     <footer className="bg-black border-t border-white/5 pt-16 pb-8 relative overflow-hidden">
-      {/* Fondo decorativo sutil */}
-      <div className="absolute inset-0 bg-[radial-gradient(rgba(6,182,212,0.05)_1px,transparent_1px)] bg-[size:30px_30px] opacity-20 pointer-events-none" />
+      {/* Fondo decorativo sutil - Ahora con tinte verde Matrix */}
+      <div className="absolute inset-0 bg-[radial-gradient(rgba(0,255,65,0.05)_1px,transparent_1px)] bg-[size:30px_30px] opacity-20 pointer-events-none" />
       
       <div className="container mx-auto px-4 relative z-10">
         <div className="grid grid-cols-1 gap-12 md:grid-cols-4 border-b border-white/5 pb-12">
@@ -34,8 +34,8 @@ export default function Footer() {
             <div className="p-3 rounded bg-white/5 border border-white/5 space-y-2">
               <div className="flex justify-between items-center text-[10px] font-mono text-gray-500 uppercase">
                 <span>Node Status</span>
-                <span className="text-green-400 flex items-center gap-1">
-                  <span className="block w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></span> Online
+                <span className="text-matrix flex items-center gap-1">
+                  <span className="block w-1.5 h-1.5 rounded-full bg-matrix animate-pulse"></span> Online
                 </span>
               </div>
               <div className="font-mono text-[10px] text-gray-600 truncate">
@@ -47,26 +47,26 @@ export default function Footer() {
           {/* --- Columna 2: Explorar (Directorio) --- */}
           <div>
             <div className="flex items-center gap-2 mb-6">
-              <Terminal className="h-4 w-4 text-cyan-500" />
+              <Terminal className="h-4 w-4 text-matrix" />
               <h4 className="text-xs font-bold uppercase tracking-widest text-white font-mono">
                 /Directorio
               </h4>
             </div>
             <ul className="space-y-4 font-mono text-sm">
-              <li><Link href="/aprende" className="text-gray-400 hover:text-cyan-400 transition-colors flex items-center gap-2 group">
-                <span className="opacity-0 group-hover:opacity-100 text-cyan-600">➜</span> ./aprende
+              <li><Link href="/aprende" className="text-gray-400 hover:text-matrix transition-colors flex items-center gap-2 group">
+                <span className="opacity-0 group-hover:opacity-100 text-matrix/60">➜</span> ./aprende
               </Link></li>
-              <li><Link href="/tianguis" className="text-gray-400 hover:text-cyan-400 transition-colors flex items-center gap-2 group">
-                <span className="opacity-0 group-hover:opacity-100 text-cyan-600">➜</span> ./tianguis
+              <li><Link href="/tianguis" className="text-gray-400 hover:text-matrix transition-colors flex items-center gap-2 group">
+                <span className="opacity-0 group-hover:opacity-100 text-matrix/60">➜</span> ./tianguis
               </Link></li>
-              <li><Link href="/crea-tu-tienda" className="text-gray-400 hover:text-cyan-400 transition-colors flex items-center gap-2 group">
-                <span className="opacity-0 group-hover:opacity-100 text-cyan-600">➜</span> ./crear_tienda
+              <li><Link href="/crea-tu-tienda" className="text-gray-400 hover:text-matrix transition-colors flex items-center gap-2 group">
+                <span className="opacity-0 group-hover:opacity-100 text-matrix/60">➜</span> ./crear_tienda
               </Link></li>
-              <li><Link href="/proyectos" className="text-gray-400 hover:text-cyan-400 transition-colors flex items-center gap-2 group">
-                <span className="opacity-0 group-hover:opacity-100 text-cyan-600">➜</span> ./proyectos
+              <li><Link href="/proyectos" className="text-gray-400 hover:text-matrix transition-colors flex items-center gap-2 group">
+                <span className="opacity-0 group-hover:opacity-100 text-matrix/60">➜</span> ./proyectos
               </Link></li>
-              <li><Link href="/nuestra-historia" className="text-gray-400 hover:text-cyan-400 transition-colors flex items-center gap-2 group">
-                <span className="opacity-0 group-hover:opacity-100 text-cyan-600">➜</span> ./historia
+              <li><Link href="/nuestra-historia" className="text-gray-400 hover:text-matrix transition-colors flex items-center gap-2 group">
+                <span className="opacity-0 group-hover:opacity-100 text-matrix/60">➜</span> ./historia
               </Link></li>
             </ul>
           </div>
@@ -128,7 +128,7 @@ export default function Footer() {
                   href="https://x.com/AceptaBitcoin21"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center gap-2 text-gray-400 hover:text-cyan-400 transition-colors group"
+                  className="flex items-center gap-2 text-gray-400 hover:text-matrix transition-colors group"
                 >
                   <X className="h-4 w-4 group-hover:scale-110 transition-transform" />
                   <span>@AceptaBitcoin21</span>
@@ -147,12 +147,12 @@ export default function Footer() {
         {/* --- System Log (Copyright) --- */}
         <div className="mt-8 flex flex-col md:flex-row justify-between items-center gap-4">
           <div className="font-mono text-[10px] text-gray-600 uppercase tracking-widest">
-            <span className="text-green-500">root@system:~$</span> ./init_shutdown_sequence
+            <span className="text-matrix">root@system:~$</span> ./init_shutdown_sequence
           </div>
           <div className="flex items-center gap-4 font-mono text-[10px] text-gray-500">
             <span>© {new Date().getFullYear()} Acepta Bitcoin</span>
             <span className="text-gray-700">|</span>
-            <span className="text-cyan-600">Protocol: Lightning</span>
+            <span className="text-matrix/80">Protocol: Lightning</span>
             <span className="text-gray-700">|</span>
             <span className="text-bitcoin">Status: Operational</span>
           </div>

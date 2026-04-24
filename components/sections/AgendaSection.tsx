@@ -9,8 +9,8 @@ import dynamic from "next/dynamic";
 const CalComEmbed = dynamic(() => import("@/components/embeds/CalComEmbed"), {
   ssr: false,
   loading: () => (
-    <div className="w-full h-[600px] bg-black/40 border border-cyan-500/20 rounded-xl animate-pulse flex items-center justify-center">
-      <span className="font-mono text-cyan-400 text-sm">Loading Booking Terminal...</span>
+    <div className="w-full h-[600px] bg-black/40 border border-matrix/20 rounded-xl animate-pulse flex items-center justify-center">
+      <span className="font-mono text-matrix text-sm">Loading Booking Terminal...</span>
     </div>
   ),
 });
@@ -19,7 +19,7 @@ export function AgendaSection() {
   return (
     <section id="agenda" className="relative py-24 bg-black overflow-hidden border-t border-white/5">
       {/* Fondo: Grid Cypherpunk sutil */}
-      <div className="absolute inset-0 bg-[radial-gradient(rgba(6,182,212,0.1)_1px,transparent_1px)] bg-[size:40px_40px] opacity-20 pointer-events-none" />
+      <div className="absolute inset-0 bg-[radial-gradient(rgba(0,255,65,0.1)_1px,transparent_1px)] bg-[size:40px_40px] opacity-20 pointer-events-none" />
       
       <div className="container relative z-10 px-4">
         <div className="grid lg:grid-cols-12 gap-12 items-start">
@@ -28,7 +28,7 @@ export function AgendaSection() {
           <div className="lg:col-span-4 space-y-8 flex flex-col h-full">
             
             <div className="space-y-6">
-              <div className="inline-flex items-center gap-2 bg-cyan-950/30 border border-cyan-500/30 px-3 py-1 rounded-full text-cyan-400 text-xs font-bold uppercase tracking-widest font-mono">
+              <div className="inline-flex items-center gap-2 bg-matrix/10 border border-matrix/30 px-3 py-1 rounded-full text-matrix text-xs font-bold uppercase tracking-widest font-mono">
                 <Calendar className="h-3 w-3" />
                 Booking System
               </div>
@@ -58,7 +58,7 @@ export function AgendaSection() {
                 </div>
               </div>
               <div className="flex items-center gap-3">
-                <div className="h-8 w-8 rounded bg-cyan-950/30 flex items-center justify-center text-cyan-400">
+                <div className="h-8 w-8 rounded bg-matrix/10 flex items-center justify-center text-matrix">
                   <Terminal className="h-4 w-4" />
                 </div>
                 <div>
@@ -79,7 +79,7 @@ export function AgendaSection() {
 
           {/* COLUMNA DERECHA: Cal.com Embed (8 columnas) */}
           <div className="lg:col-span-8">
-            <Card className="border-cyan-500/20 bg-black/40 backdrop-blur-md shadow-2xl overflow-hidden relative group">
+            <Card className="border-matrix/20 bg-black/40 backdrop-blur-md shadow-2xl overflow-hidden relative group">
               
               {/* Cabecera de la Tarjeta (Estilo Ventana de Sistema) */}
               <div className="bg-black/80 border-b border-white/5 p-3 flex items-center gap-2">
@@ -89,7 +89,7 @@ export function AgendaSection() {
                   <div className="h-3 w-3 rounded-full bg-green-500/20 border border-green-500/50"></div>
                 </div>
                 <div className="flex-1 text-center">
-                  <span className="font-mono text-[10px] text-cyan-500/80 uppercase tracking-widest">
+                  <span className="font-mono text-[10px] text-matrix/80 uppercase tracking-widest">
                     root@aceptabitcoin:~# ./calendar_client
                   </span>
                 </div>
@@ -106,7 +106,7 @@ export function AgendaSection() {
               </div>
 
               {/* Efecto de brillo en el borde */}
-              <div className="absolute inset-0 border border-cyan-500/0 group-hover:border-cyan-500/20 transition-colors duration-500 pointer-events-none rounded-xl"></div>
+              <div className="absolute inset-0 border border-matrix/0 group-hover:border-matrix/20 transition-colors duration-500 pointer-events-none rounded-xl"></div>
             </Card>
           </div>
 

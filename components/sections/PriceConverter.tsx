@@ -79,22 +79,22 @@ export default function PriceConverter() {
   };
 
   return (
-    <Card className="relative overflow-hidden border-cyan-500/20 bg-black/40 p-6 backdrop-blur-xl shadow-[0_0_50px_rgba(0,0,0,0.5)]">
+    <Card className="relative overflow-hidden border-matrix/20 bg-black/40 p-6 backdrop-blur-xl shadow-[0_0_50px_rgba(0,0,0,0.5)]">
       {/* Fondo: Rejilla Cypherpunk */}
-      <div className="absolute inset-0 bg-[radial-gradient(rgba(6,182,212,0.1)_1px,transparent_1px)] bg-[size:20px_20px] opacity-30 pointer-events-none" />
+      <div className="absolute inset-0 bg-[radial-gradient(rgba(0,255,65,0.1)_1px,transparent_1px)] bg-[size:20px_20px] opacity-30 pointer-events-none" />
       
       <div className="relative z-10">
         {/* Header */}
         <div className="mb-8 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 border-b border-white/10 pb-6">
           <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded border border-cyan-500/30 bg-cyan-950/20 text-cyan-400 shadow-[0_0_15px_rgba(34,211,238,0.2)]">
+            <div className="flex h-10 w-10 items-center justify-center rounded border border-matrix/30 bg-matrix/10 text-matrix shadow-[0_0_15px_rgba(0,255,65,0.2)]">
               <Activity className="h-5 w-5" />
             </div>
             <div>
               <h3 className="font-serif text-xl font-bold tracking-tight text-white">
                 Mercado Global
               </h3>
-              <p className="font-mono text-[10px] text-cyan-500/80 uppercase tracking-widest mt-1">
+              <p className="font-mono text-[10px] text-matrix/80 uppercase tracking-widest mt-1">
                 Oracle System // v2.0
               </p>
             </div>
@@ -103,7 +103,7 @@ export default function PriceConverter() {
             <div className="hidden md:flex items-center gap-3 bg-white/5 px-4 py-2 rounded border border-white/5">
               <div className="text-right">
                 <div className="text-[10px] text-gray-500 font-mono uppercase tracking-wider">Precio Referencia</div>
-                <div className="font-mono text-sm font-bold text-cyan-400 drop-shadow-[0_0_5px_rgba(34,211,238,0.8)]">
+                <div className="font-mono text-sm font-bold text-matrix drop-shadow-[0_0_5px_rgba(0,255,65,0.8)]">
                   ${prices.usd.toLocaleString("en-US")} <span className="text-gray-500 text-xs">USD</span>
                 </div>
               </div>
@@ -114,7 +114,7 @@ export default function PriceConverter() {
         <div className="space-y-4">
           
           {/* ROW 1: BTC / USD (Estilo Tech) */}
-          <div className="grid grid-cols-[1fr,auto,1fr] gap-3 items-center p-4 rounded-lg bg-black/30 border border-white/5 hover:border-cyan-500/20 transition-colors">
+          <div className="grid grid-cols-[1fr,auto,1fr] gap-3 items-center p-4 rounded-lg bg-black/30 border border-white/5 hover:border-matrix/20 transition-colors">
             <div className="space-y-1">
               <label className="font-mono text-[10px] uppercase text-gray-500 tracking-wider">Bitcoin (BTC)</label>
               <Input
@@ -122,7 +122,7 @@ export default function PriceConverter() {
                 step="0.00000001"
                 value={btcUsd}
                 onChange={(e) => handleBtcUsdChange(parseFloat(e.target.value) || 0)}
-                className="h-12 border-white/10 bg-transparent text-cyan-400 font-mono text-lg font-bold focus-visible:ring-cyan-500/50 focus:border-cyan-500/50 px-3"
+                className="h-12 border-white/10 bg-transparent text-matrix font-mono text-lg font-bold focus-visible:ring-matrix/50 focus:border-matrix/50 px-3"
               />
             </div>
             <div className="text-gray-600"><Bitcoin className="h-4 w-4" /></div>
@@ -167,9 +167,9 @@ export default function PriceConverter() {
           </div>
 
           {/* ROW 3: SATS / MXN (Estilo Special) */}
-          <div className="grid grid-cols-[1fr,auto,1fr] gap-3 items-center p-4 rounded-lg bg-gradient-to-r from-cyan-950/10 to-bitcoin/5 border border-white/5 hover:border-white/20 transition-all group">
+          <div className="grid grid-cols-[1fr,auto,1fr] gap-3 items-center p-4 rounded-lg bg-gradient-to-r from-matrix/5 to-bitcoin/5 border border-white/5 hover:border-white/20 transition-all group">
             <div className="space-y-1">
-              <label className="font-mono text-[10px] uppercase text-cyan-400 tracking-wider flex items-center gap-1">
+              <label className="font-mono text-[10px] uppercase text-matrix tracking-wider flex items-center gap-1">
                 <Coins className="h-3 w-3" /> Satoshis (SATS)
               </label>
               <Input
@@ -177,7 +177,7 @@ export default function PriceConverter() {
                 step="1"
                 value={sats}
                 onChange={(e) => handleSatsChange(parseFloat(e.target.value) || 0)}
-                className="h-12 border-cyan-500/20 bg-transparent text-cyan-400 font-mono text-lg font-bold focus-visible:ring-cyan-500/50 px-3 group-hover:shadow-[0_0_15px_rgba(34,211,238,0.1)] transition-shadow"
+                className="h-12 border-matrix/20 bg-transparent text-matrix font-mono text-lg font-bold focus-visible:ring-matrix/50 px-3 group-hover:shadow-[0_0_15px_rgba(0,255,65,0.1)] transition-shadow"
               />
             </div>
             <div className="text-gray-500"><Bitcoin className="h-4 w-4" /></div>
@@ -198,7 +198,7 @@ export default function PriceConverter() {
         {/* Footer de Estado */}
         <div className="mt-6 flex items-center justify-between pt-4 border-t border-white/5">
           <div className="flex items-center gap-2">
-            <div className="h-1.5 w-1.5 rounded-full bg-green-500 animate-pulse shadow-[0_0_8px_rgba(34,197,94,0.8)]"></div>
+            <div className="h-1.5 w-1.5 rounded-full bg-matrix animate-pulse shadow-[0_0_8px_rgba(0,255,65,0.8)]"></div>
             <span className="font-mono text-[10px] text-gray-400 uppercase tracking-widest">Live Feed // Coingecko API</span>
           </div>
           <span className="font-serif text-[10px] text-gray-600 italic">

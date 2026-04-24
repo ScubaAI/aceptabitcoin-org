@@ -20,9 +20,11 @@ const config = {
     extend: {
       colors: {
         // Colores personalizados (Preservados para no romper el diseño actual)
-        bitcoin: "#F7931A",
-        turquesa: "#00C4B4",
-        dark: "#0F172A",
+        bitcoin: "hsl(var(--bitcoin))",
+        matrix: "hsl(var(--matrix))",
+        "matrix-dark": "hsl(var(--matrix-dark))",
+        turquesa: "hsl(var(--matrix))", // Fallback para compatibilidad
+        dark: "#000000",
 
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
@@ -93,7 +95,7 @@ const config = {
           "75%": { transform: "rotate(-1deg)" },
         },
         blink: {
-          "0%, 100%": { opacity: "1", backgroundColor: "rgb(6, 182, 212)" }, // Cyan encendido
+          "0%, 100%": { opacity: "1", backgroundColor: "hsl(var(--matrix))" }, // Matrix Green encendido
           "50%": { opacity: "0", backgroundColor: "transparent" }, // Apagado
         },
       },
