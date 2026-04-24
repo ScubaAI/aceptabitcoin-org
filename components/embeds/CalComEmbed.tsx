@@ -8,6 +8,12 @@ interface CalComEmbedProps {
   className?: string;
 }
 
+declare global {
+  interface Window {
+    Cal?: any;
+  }
+}
+
 export default function CalComEmbed({ 
   username = "aceptabitcoin", 
   eventSlug = "asesoria-30min", 
@@ -15,15 +21,43 @@ export default function CalComEmbed({
 }: CalComEmbedProps) {
   
   useEffect(() => {
-    // Cargar el script de Cal.com solo una vez
-    const script = document.createElement("script");
-    script.src = "https://cal.com/embed.js";
-    script.async = true;
-    document.body.appendChild(script);
+    (function (C, A, L) {
+      let p = function (a: any, ar: any) { a.q.push(ar); };
+      let d = C.document;
+      C.Cal = C.Cal || function () {
+        let cal = C.Cal;
+        let ar = arguments;
+        if (!cal.loaded) {
+          cal.ns = {};
+          cal.q = cal.q || [];
+          d.head.appendChild(d.createElement("script")).src = A;
+          cal.loaded = true;
+        }
+        if (ar[0] === L) {
+          const api: any = function () { p(api, arguments); };
+          const namespace = ar[1];
+          api.q = api.q || [];
+          if(typeof namespace === "string"){
+            cal.ns[namespace] = api;
+            p(api, ar);
+            return api;
+          }
+          p(cal, ar);
+          return cal;
+        }
+        p(cal, ar);
+      };
+    })(window as any, "https://cal.com/embed.js", "init");
 
-    return () => {
-      document.body.removeChild(script);
-    };
+    if (window.Cal) {
+      window.Cal("init", { origin: "https://cal.com" });
+      window.Cal("ui", {
+        theme: "dark",
+        styles: { branding: { brandColor: "#f7931a" } },
+        hideEventTypeDetails: false,
+        layout: "month_view"
+      });
+    }
   }, []);
 
   return (

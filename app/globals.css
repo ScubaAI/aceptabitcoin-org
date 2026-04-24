@@ -85,4 +85,9 @@ body {
   .bg-turquesa {
     background-color: hsl(var(--matrix));
   }
+
+  @keyframes matrix-fall {
+    0% { transform: translateY(-100%); }
+    100% { transform: translateY(100%); }
+  }
 }
