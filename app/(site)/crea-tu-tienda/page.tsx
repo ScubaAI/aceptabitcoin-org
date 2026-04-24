@@ -57,7 +57,7 @@ export default function CreaTuTiendaPage() {
             <div className="mb-10 border-b border-white/10 pb-6">
               <div className="flex items-center gap-2 mb-2">
                 <Terminal className="w-5 h-5 text-matrix" />
-                <span className="font-mono text-xs text-matrix tracking-widest">>> MERCHANT_ONBOARDING_PROTOCOL_v2.0</span>
+                <span className="font-mono text-xs text-matrix tracking-widest">&gt;&gt; MERCHANT_ONBOARDING_PROTOCOL_v2.0</span>
               </div>
               <h1 className="font-serif text-3xl md:text-4xl font-bold mb-2">Conecta tu Negocio</h1>
               <p className="font-mono text-sm text-gray-400">

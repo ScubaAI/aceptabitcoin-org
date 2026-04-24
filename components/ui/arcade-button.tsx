@@ -5,11 +5,12 @@ interface ArcadeButtonProps {
   href: string;
   children: React.ReactNode;
   target?: string;
+  className?: string;
 }
 
-export default function ArcadeButton({ href, children, target = "_blank" }: ArcadeButtonProps) {
+export default function ArcadeButton({ href, children, target = "_blank", className }: ArcadeButtonProps) {
   return (
-    <div className="relative group z-10">
+    <div className={`relative group z-10 ${className || ""}`}>
       {/* Efecto de resplandor (Glow) detrás del botón */}
       <div className="absolute -inset-1 bg-gradient-to-r from-orange-600 to-yellow-500 rounded-lg blur opacity-75 group-hover:opacity-100 transition duration-200 group-hover:duration-200 animate-tilt"></div>
       

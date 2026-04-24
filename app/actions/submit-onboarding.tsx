@@ -24,12 +24,12 @@ export async function submitOnboarding(formData: FormData) {
       from: 'Acepta Bitcoin <onboarding@tu-dominio.com>', // Tiene que ser un dominio verificado en Resend
       to: ['hola@aceptabitcoin.org'], // Tu correo real
       subject: `🚀 Nuevo Lead: ${businessName}`,
-      react: EmailTemplate({ 
-        firstName: name, 
-        businessName, 
-        techLevel,
-        email 
-      }), // Usamos React para hacer el email bonito
+      react: <EmailTemplate 
+        firstName={name} 
+        businessName={businessName} 
+        techLevel={techLevel}
+        email={email} 
+      />, // Usamos React para hacer el email bonito
     });
 
     if (error) {
