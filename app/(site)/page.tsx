@@ -2,7 +2,7 @@ import Hero from "@/components/layout/Hero";
 import PriceConverter from "@/components/sections/PriceConverter";
 import TipJarSection from "@/components/sections/TipJarSection";
 // BtcMapSection importado pero NO usado
-import { AgendaSection } from "@/components/sections/AgendaSection";
+
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import { Button } from "@/components/ui/button";
@@ -132,9 +132,7 @@ export default function Home() {
 
         <TipJarSection />
 
-        {/* MAPA ELIMINADO DE LA HOME PARA DAR PROTAGONISMO A LA AGENDA */}
 
-        <AgendaSection />
 
       </main>
 
