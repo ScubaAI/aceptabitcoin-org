@@ -90,6 +90,10 @@ const config = {
           "0%, 100%": { opacity: "1" },
           "50%": { opacity: "0" },
         },
+        loading: {
+          "0%, 100%": { opacity: "0.3" },
+          "50%": { opacity: "1" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
@@ -97,6 +101,7 @@ const config = {
         scanline: "scanline 3s linear infinite",
         tilt: "tilt 10s infinite linear",
         blink: "blink 1s step-end infinite",
+        loading: "loading 1.5s ease-in-out infinite",
       },
     },
   },
