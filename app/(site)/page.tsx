@@ -97,7 +97,7 @@ export default function Home() {
                     Crea tu tienda en minutos
                   </h3>
                   <p className="font-mono text-sm text-gray-400 mb-8 leading-relaxed flex-grow">
-                    Infraestructura soberana: BTCPay Server + LNbits + Point of Sale listo para usar.
+                    Infraestructura soberana: BTCPay Server + Point of Sale listo para usar.
                   </p>
                   <Button asChild variant="outline" className="w-full md:w-auto border-bitcoin/30 text-bitcoin font-bold hover:bg-bitcoin hover:text-black font-serif transition-all rounded">
                     <Link href="/crea-tu-tienda">Solicitar Alta de Negocio</Link>

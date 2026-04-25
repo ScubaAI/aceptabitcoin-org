@@ -19,11 +19,9 @@ const config = {
     },
     extend: {
       colors: {
-        // Colores personalizados (Preservados para no romper el diseño actual)
-        bitcoin: "hsl(var(--bitcoin))",
-        matrix: "hsl(var(--matrix))",
-        "matrix-dark": "hsl(var(--matrix-dark))",
-        turquesa: "hsl(var(--matrix))", // Fallback para compatibilidad
+        // Design System Matrix v2.0
+        matrix: "#00FF41",
+        bitcoin: "#F7931A",
         dark: "#000000",
 
         border: "hsl(var(--border))",
@@ -66,13 +64,8 @@ const config = {
         sm: "calc(var(--radius) - 4px)",
       },
       fontFamily: {
-        // Títulos con "patillas" (IBM Plex Serif)
         serif: ["var(--font-ibm-plex)", "serif"],
-        
-        // Cuerpo y Código (Fira Code)
         mono: ["var(--font-fira-code)", "monospace"],
-        
-        // Arcade / Retro (VT323)
         vt323: ["var(--font-vt323)", "monospace"],
       },
       keyframes: {
@@ -88,22 +81,21 @@ const config = {
           "0%": { transform: "translateY(-100%)" },
           "100%": { transform: "translateY(200%)" },
         },
-        // Efecto Tilt para el ArcadeButton (Preservado)
         tilt: {
           "0%, 50%, 100%": { transform: "rotate(0deg)" },
           "25%": { transform: "rotate(1deg)" },
           "75%": { transform: "rotate(-1deg)" },
         },
         blink: {
-          "0%, 100%": { opacity: "1", backgroundColor: "hsl(var(--matrix))" }, // Matrix Green encendido
-          "50%": { opacity: "0", backgroundColor: "transparent" }, // Apagado
+          "0%, 100%": { opacity: "1" },
+          "50%": { opacity: "0" },
         },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
-        "scanline": "scanline 2s linear infinite",
-        "tilt": "tilt 10s infinite linear",
+        scanline: "scanline 3s linear infinite",
+        tilt: "tilt 10s infinite linear",
         blink: "blink 1s step-end infinite",
       },
     },

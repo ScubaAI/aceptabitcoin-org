@@ -19,7 +19,8 @@ aceptabitcoin-org/
 │   │   ├── layout.tsx    # Main site layout (Fonts: IBM Plex Serif, Fira Code, VT323)
 │   │   └── page.tsx      # Homepage (Cypherpunk Bank Aesthetic)
 │   ├── api/              # Backend API routes
-│   │   └── webhook/      # LNbits or external webhooks
+│   │   ├── tipjar/       # Blink Proxy API
+│   │   └── webhook/      # External webhooks
 │   ├── globals.css       # Global styles & Tailwind directives
 │   └── layout.tsx        # Root layout (Metadata, Fonts)
 ├── components/           # React Components
@@ -27,10 +28,10 @@ aceptabitcoin-org/
 │   ├── embeds/           # Bitcoin Agent, Cal.com, etc.
 │   ├── layout/           # Global wrappers (Navbar, Footer with Node Status)
 │   ├── sections/         # Feature-specific page sections (PriceConverter, TipJar, Agenda)
-│   └── ui/               # Primary UI kit (shadcn/ui + ArcadeButton)
+│   └── ui/               # Primary UI kit (shadcn/ui + ArcadeButton + MatrixRain)
 ├── lib/                  # Core Utilities & API Clients
+│   ├── blink.ts          # Blink API Client (GraphQL)
 │   ├── btcmap.ts         # BTC Map API integration
-│   ├── lnbits.ts         # LNbits API client
 │   └── utils.ts          # Helper functions (cn, etc.)
 ├── public/               # Static assets (images, icons, etc.)
 ├── docs/                 # Project documentation
@@ -64,7 +65,7 @@ aceptabitcoin-org/
 - **Icons**: [Lucide React](https://lucide.dev/)
 - **QR Codes**: [qrcode.react](https://github.com/zpao/qrcode.react)
 - **Maps**: [Leaflet](https://leafletjs.com/)
-- **Bitcoin/Lightning**: LNbits API, BTC Map API, Blink.sv integration
+- **Bitcoin/Lightning**: BTC Map API, Blink.sv integration
 - **Booking**: Cal.com Embed
 
 ## 🎨 Design System: Cypherpunk Bank / Oracle System

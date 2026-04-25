@@ -15,7 +15,7 @@ La plataforma utiliza una estética técnica de alto contraste inspirada en las 
 - **⚡ Lightning Donations**: Tip Jar dinámico con generación de QR en vivo y soporte para la red Lightning (Powered by Blink.sv).
 - **📅 Booking Terminal**: Sistema de asesorías 1-a-1 integrado directamente con Cal.com.
 - **🏪 Digital Tianguis**: Marketplace descentralizado impulsado por Nostr y Lightning Network.
-- **🗺️ Sovereign Infrastructure**: Soporte para BTCPay Server, LNbits y visualización standalone de BTC Map.
+- **🗺️ Sovereign Infrastructure**: Soporte para BTCPay Server y visualización standalone de BTC Map.
 
 ## 🛠️ Tech Stack
 
@@ -23,7 +23,7 @@ La plataforma utiliza una estética técnica de alto contraste inspirada en las 
 - **Language**: [TypeScript](https://www.typescriptlang.org/)
 - **Styling**: [Tailwind CSS](https://tailwindcss.com/) with Custom Animations.
 - **UI Components**: [shadcn/ui](https://ui.shadcn.com/) + Custom Arcade Components.
-- **Integrations**: LNbits API, BTC Map API, Cal.com Embed.
+- **Integrations**: BTC Map API, Cal.com Embed.
 - **Utilities**: `qrcode.react`, `lucide-react`, `clsx`, `tailwind-merge`.
 
 ## 🚦 Getting Started
@@ -36,7 +36,7 @@ npm install
 ```
 
 ### 2. Configuración
-Copia el archivo `.env.example` a `.env.local` y configura tus variables de entorno para LNbits y Cal.com.
+Copia el archivo `.env.example` a `.env.local` y configura tus variables de entorno.
 
 ### 3. Desarrollo
 ```bash

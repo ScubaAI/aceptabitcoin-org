@@ -10,8 +10,6 @@
 Set the following environment variables in your deployment platform:
 
 ```
-LNBITS_API_URL=your-lnbits-instance.com
-LNBITS_API_KEY=your-api-key
 BTCMAP_API_KEY=your-btcmap-api-key
 NEXT_PUBLIC_TIP_JAR_LN_ADDRESS=tip@your-domain.com
 ```

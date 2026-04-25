@@ -181,7 +181,7 @@ export default function CreaTuTiendaPage() {
                     />
                     <div className="flex-1">
                       <span className="block text-white font-bold group-hover:text-matrix transition-colors">Intermedio / Tengo POS</span>
-                      <span className="block font-mono text-xs text-gray-500">Ya uso LNbits o BTCPay pero necesito integración web.</span>
+                      <span className="block font-mono text-xs text-gray-500">Ya uso BTCPay pero necesito integración web.</span>
                     </div>
                   </label>
 

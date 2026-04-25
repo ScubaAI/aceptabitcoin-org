@@ -96,7 +96,7 @@ export default function TianguisPage() {
               <h3 className="font-serif text-2xl text-white mb-3">Código Abierto & Comunidad</h3>
               <p className="font-mono text-sm text-gray-300 leading-relaxed mb-6">
                 Este esfuerzo es <span className="text-bitcoin font-bold">AGPL-3.0</span>. <br/>
-                Acepta Bitcoin proporciona la infraestructura base (Relay, LNbits), pero es la <span className="text-matrix">comunidad</span> quien construye esta economía circular.
+                Acepta Bitcoin proporciona la infraestructura base (Relay, BTCPay), pero es la <span className="text-matrix">comunidad</span> quien construye esta economía circular.
               </p>
               
               <div className="flex flex-wrap gap-2 justify-center md:justify-start font-mono text-[10px] text-gray-500">

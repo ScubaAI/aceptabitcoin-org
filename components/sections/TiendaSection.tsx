@@ -13,7 +13,7 @@ export function TiendaSection() {
             <h3 className="mb-4 text-xl font-semibold">Herramientas recomendadas</h3>
             <ul className="space-y-2 text-left">
               <li>• BTCPay Server</li>
-              <li>• LNbits</li>
+              <li>• Blink.sv</li>
               <li>• OpenNode</li>
               <li>• CoinPayments</li>
             </ul>
