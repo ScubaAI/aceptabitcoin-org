@@ -1,0 +1,100 @@
+[
+  {
+    "id": "aureo-bitcoin",
+    "nombre": "Aureo Bitcoin",
+    "categoria": "exchange",
+    "tier": "patrocinador",
+    "descripcion": "Exchange mexicano de Bitcoin con on/off ramp en pesos mexicanos. Compra, vende y ahorra en Bitcoin de forma sencilla y segura.",
+    "url": "https://www.aureobitcoin.com/es",
+    "urlReferido": "https://www.aureobitcoin.com/es?ref=aceptabitcoin",
+    "logo": "/proveedores/aureo-bitcoin.svg",
+    "ubicacion": "Ciudad de México",
+    "tags": ["exchange", "on-ramp", "off-ramp", "MXN"],
+    "destacado": true
+  },
+  {
+    "id": "bitso",
+    "nombre": "Bitso",
+    "categoria": "exchange",
+    "tier": "partner",
+    "descripcion": "La plataforma de criptomonedas líder en Latinoamérica. Compra, vende y usa Bitcoin y otras criptos desde México.",
+    "url": "https://bitso.com",
+    "logo": "/proveedores/bitso.svg",
+    "ubicacion": "Ciudad de México",
+    "tags": ["exchange", "multi-crypto", "Latam"],
+    "destacado": false
+  },
+  {
+    "id": "volantis-logistica",
+    "nombre": "Volantis",
+    "categoria": "logistica",
+    "tier": "patrocinador",
+    "descripcion": "Agregador de volumen logístico para empresas. Soluciones de envío tipo FedEx con descuentos por volumen y pagos en Bitcoin.",
+    "url": "https://volantis.mx",
+    "logo": "/proveedores/volantis.svg",
+    "ubicacion": "Guadalajara, Jalisco",
+    "tags": ["logistica", "envios", "B2B", "volumen"],
+    "destacado": true
+  },
+  {
+    "id": "blockchain-university",
+    "nombre": "Blockchain University",
+    "categoria": "educacion",
+    "tier": "partner",
+    "descripcion": "Universidad de software especializada en blockchain, Bitcoin y desarrollo Web3. Bootcamps y carreras técnicas.",
+    "url": "https://blockchainuniversity.edu.mx",
+    "logo": "/proveedores/blockchain-university.svg",
+    "ubicacion": "Monterrey, Nuevo León",
+    "tags": ["educacion", "bootcamp", "desarrollo", "Web3"],
+    "destacado": false
+  },
+  {
+    "id": "satoshis-coffee",
+    "nombre": "Satoshi's Coffee",
+    "categoria": "comercio",
+    "tier": "miembro",
+    "descripcion": "Cafetería especializada en café de especialidad con pagos Lightning Network. El primer café Bitcoin de México.",
+    "url": "https://satoshiscoffee.mx",
+    "logo": "/proveedores/satoshis-coffee.svg",
+    "ubicacion": "Ciudad de México",
+    "tags": ["cafe", "LN", "comercio", "fisico"],
+    "destacado": false
+  },
+  {
+    "id": "bitconsulting",
+    "nombre": "BitConsulting",
+    "categoria": "servicios",
+    "tier": "partner",
+    "descripcion": "Consultoría empresarial para adopción de Bitcoin. Implementación de treasury, pagos y estrategia.",
+    "url": "https://bitconsulting.mx",
+    "logo": "/proveedores/bitconsulting.svg",
+    "ubicacion": "Remoto / CDMX",
+    "tags": ["consultoria", "B2B", "treasury", "empresas"],
+    "destacado": false
+  },
+  {
+    "id": "lighning-hardware",
+    "nombre": "Lightning Hardware",
+    "categoria": "tecnologia",
+    "tier": "miembro",
+    "descripcion": "Venta de nodos Lightning pre-configurados, hardware wallets y equipamiento para mineros.",
+    "url": "https://lightninghardware.mx",
+    "logo": "/proveedores/lightning-hardware.svg",
+    "ubicacion": "Querétaro",
+    "tags": ["hardware", "nodo", "mineria", "wallet"],
+    "destacado": false
+  },
+  {
+    "id": "btc-pay-mexico",
+    "nombre": "BTC Pay México",
+    "categoria": "tecnologia",
+    "tier": "patrocinador",
+    "descripcion": "Procesador de pagos Bitcoin para comercios. Integración con WooCommerce, Shopify y POS físico.",
+    "url": "https://btcpaymexico.com",
+    "urlReferido": "https://btcpaymexico.com?ref=aceptabitcoin",
+    "logo": "/proveedores/btc-pay-mexico.svg",
+    "ubicacion": "Ciudad de México",
+    "tags": ["pagos", "POS", "e-commerce", "comercio"],
+    "destacado": true
+  }
+]
