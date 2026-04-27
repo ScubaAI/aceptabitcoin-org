@@ -1,6 +1,11 @@
+import Navbar from "@/components/layout/Navbar";
+import Footer from "@/components/layout/Footer";
+
 export default function AgendaPage() {
   return (
-    <main className="min-h-screen bg-black pt-24 pb-16">
+    <>
+      <Navbar />
+      <main className="min-h-screen bg-black pt-24 pb-16">
       <div className="container mx-auto px-4 max-w-5xl">
 
         {/* Header */}
@@ -63,7 +68,9 @@ export default function AgendaPage() {
             </a>
           </p>
         </div>
-      </div>
-    </main>
+        </div>
+      </main>
+      <Footer />
+    </>
   );
 }

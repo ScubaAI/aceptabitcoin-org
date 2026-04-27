@@ -1,0 +1,159 @@
+[
+  {
+    "id": "bob-hotel",
+    "nombre": "BOB Hotel",
+    "tipo": "interno",
+    "descripcion": "Sistema de gestión hotelera sovereign construido sobre Bitcoin. Integra Lightning Network para pagos instantáneos, multisig para treasury corporativa, RGB para tokens de fidelidad, CashU para privacidad, y WDK para wallets descentralizadas. Incluye 5 agentes de IA autónomos (concierge, housekeeping, maintenance, predictive, treasury) y gestión IoT para habitaciones inteligentes.",
+    "descripcionCorta": "Hotel management sovereign con Bitcoin, Lightning, AI agents e IoT.",
+    "url": null,
+    "repoUrl": "https://github.com/aceptabitcoin/bob-hotel",
+    "logo": "/proyectos/bob-hotel.svg",
+    "imagen": "/proyectos/bob-hotel-preview.jpg",
+    "stack": ["Next.js", "TypeScript", "Prisma", "Bitcoin", "Lightning", "RGB", "CashU", "WDK", "AI Agents", "IoT"],
+    "estado": "development",
+    "features": [
+      "Pagos Lightning instantáneos",
+      "Treasury multisig corporativa",
+      "Tokens de fidelidad RGB",
+      "5 agentes de IA autónomos",
+      "Gestión IoT de habitaciones",
+      "Docker + Turborepo monorepo"
+    ],
+    "metricas": [
+      { "label": "Apps", "valor": "3" },
+      { "label": "Agentes IA", "valor": "5" },
+      { "label": "Servicios", "valor": "4" },
+      { "label": "Paquetes", "valor": "6" }
+    ],
+    "review": {
+      "fortalezas": [
+        "Arquitectura monorepo con Turborepo y pnpm workspaces",
+        "Integración completa del stack Bitcoin: Lightning, Multisig, RGB, CashU, WDK",
+        "Sistema de agentes de IA autónomos con memoria y runtime propio",
+        "Infraestructura Dockerizada para dev y producción",
+        "Documentación multilingüe (EN, ES, PT)"
+      ],
+      "oportunidades": [
+        "Implementar tests E2E con Playwright",
+        "Agregar dashboard de analytics para hoteleros",
+        "Integrar con sistemas PMS existentes (Opera, Cloudbeds)"
+      ],
+      "impacto": "Redefine la gestión hotelera para la era Bitcoin. Sin intermediarios financieros, sin custodia de terceros, soberanía total sobre los fondos del hotel."
+    },
+    "fecha": "2026-04-01"
+  },
+  {
+    "id": "don-memo-sats",
+    "nombre": "Don Memo y los Sats",
+    "tipo": "comunidad",
+    "descripcion": "Curso interactivo gamificado de educación Bitcoin protagonizado por Don Memo, un abuelo oaxaqueño que trabajó 20 años en Chicago. A través de su historia personal, el usuario aprende sobre inflación, remesas, y soberanía financiera. Incluye trivia por módulo, examen final, logros desbloqueables, calculadora de precios históricos y conversor en vivo.",
+    "descripcionCorta": "Curso interactivo gamificado de Bitcoin con Don Memo, un abuelo oaxaqueño.",
+    "url": "https://zadqui.github.io/HackathonBitcoin/",
+    "repoUrl": "https://github.com/zadqui/HackathonBitcoin",
+    "logo": "/proyectos/don-memo.svg",
+    "imagen": "/proyectos/don-memo-preview.jpg",
+    "stack": ["React", "JavaScript", "Pixel Art", "Gamification", "Binance API"],
+    "estado": "active",
+    "hackathon": {
+      "evento": "Hackathon Bitcoin México 2026",
+      "lugar": "winner",
+      "año": 2026
+    },
+    "equipo": [
+      { "nombre": "Blood Angels", "rol": "Equipo", "ubicacion": "Mérida, Yucatán" }
+    ],
+    "review": {
+      "fortalezas": [
+        "Narrativa gamificada con personaje memorable (Don Memo)",
+        "Pixel art original y consistente",
+        "Calculadora de precios históricos con datos reales",
+        "Trivia interactiva por módulo con retroalimentación",
+        "Diseño mobile-first accesible",
+        "Enfoque en problemas reales de México: inflación y remesas"
+      ],
+      "oportunidades": [
+        "Migrar a TypeScript para mejor mantenibilidad",
+        "Agregar backend para persistencia de progreso",
+        "Integrar Lightning Network para micropagos por módulo"
+      ],
+      "impacto": "Democratiza la educación Bitcoin en México a través de una narrativa culturalmente relevante. Don Memo no es un personaje ficticio — es tu abuelo, tu vecino, tu papá."
+    },
+    "fecha": "2026-04-15"
+  },
+  {
+    "id": "pizza-sats",
+    "nombre": "Pizza Sats",
+    "tipo": "interno",
+    "descripcion": "Sistema de punto de venta (POS) para pizzerías con pagos Lightning Network. Incluye gestión de órdenes, inventario, reparto con tracking GPS, y dashboard de ventas en tiempo real. Diseñado para pizzerías familiares que quieren aceptar Bitcoin sin complicaciones.",
+    "descripcionCorta": "POS para pizzerías con Lightning Network, inventario y reparto.",
+    "url": null,
+    "repoUrl": "https://github.com/aceptabitcoin/pizza-sats",
+    "logo": "/proyectos/pizza-sats.svg",
+    "imagen": "/proyectos/pizza-sats-preview.jpg",
+    "stack": ["Next.js", "TypeScript", "Prisma", "Lightning", "Maps API"],
+    "estado": "development",
+    "features": [
+      "POS con QR Lightning",
+      "Gestión de órdenes en tiempo real",
+      "Tracking de repartidores GPS",
+      "Inventario automático",
+      "Dashboard de ventas"
+    ],
+    "metricas": [
+      { "label": "Módulos", "valor": "5" },
+      { "label": "Integraciones", "valor": "3" }
+    ],
+    "review": {
+      "fortalezas": [
+        "Interfaz simple para personal no técnico",
+        "Integración nativa con Lightning Network",
+        "Sistema de reparto con tracking GPS"
+      ],
+      "oportunidades": [
+        "Agregar soporte multi-sucursal",
+        "Integrar con impresoras térmicas",
+        "App nativa para repartidores"
+      ],
+      "impacto": "Cada pizzería que adopta Bitcoin es un nodo más en la red. Pizza Sats hace que sea tan fácil como pedir una pizza."
+    },
+    "fecha": "2026-03-20"
+  },
+  {
+    "id": "cosmetica-satoshi",
+    "nombre": "Cosmética Satoshi",
+    "tipo": "interno",
+    "descripcion": "E-commerce de productos de belleza y cuidado personal con pagos Bitcoin. Incluye catálogo dinámico, carrito, checkout con Lightning, y sistema de reseñas verificadas. Orientado a emprendedoras mexicanas del sector cosmético.",
+    "descripcionCorta": "E-commerce de cosméticos con checkout Lightning para emprendedoras.",
+    "url": null,
+    "repoUrl": "https://github.com/aceptabitcoin/cosmetica-satoshi",
+    "logo": "/proyectos/cosmetica-satoshi.svg",
+    "imagen": "/proyectos/cosmetica-satoshi-preview.jpg",
+    "stack": ["Next.js", "TypeScript", "Stripe", "Lightning", "Cloudinary"],
+    "estado": "development",
+    "features": [
+      "Catálogo dinámico con filtros",
+      "Checkout Lightning + Stripe",
+      "Reseñas verificadas",
+      "Panel de administración",
+      "Notificaciones WhatsApp"
+    ],
+    "metricas": [
+      { "label": "Productos", "valor": "50+" },
+      { "label": "Vendedoras", "valor": "12" }
+    ],
+    "review": {
+      "fortalezas": [
+        "Diseño enfocado en emprendedoras mexicanas",
+        "Checkout dual: Lightning + tarjeta",
+        "Sistema de reseñas verificadas"
+      ],
+      "oportunidades": [
+        "Agregar suscripciones mensuales",
+        "Programa de afiliados",
+        "Integración con redes sociales"
+      ],
+      "impacto": "Empodera a emprendedoras mexicanas con herramientas de e-commerce sovereign. Sin comisiones de marketplace, sin censura."
+    },
+    "fecha": "2026-02-10"
+  }
+]

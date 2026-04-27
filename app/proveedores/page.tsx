@@ -7,6 +7,8 @@ import ProviderCard from "@/components/cards/ProviderCard";
 import ProviderSkeleton from "@/components/cards/ProviderSkeleton";
 import CategoryFilter from "@/components/filters/CategoryFilter";
 import MatrixRain from "@/components/ui/MatrixRain";
+import Navbar from "@/components/layout/Navbar";
+import Footer from "@/components/layout/Footer";
 import { type Proveedor, type Categoria, filterByCategory, getStats } from "@/lib/proveedores";
 
 export default function ProveedoresPage() {
@@ -75,7 +77,9 @@ export default function ProveedoresPage() {
   }, [proveedores]);
 
   return (
-    <main className="min-h-screen bg-black relative overflow-hidden">
+    <>
+      <Navbar />
+      <main className="min-h-screen bg-black relative overflow-hidden">
       {/* Background Effects */}
       <MatrixRain className="opacity-20" speed={0.5} density={15} />
       <div 
@@ -245,7 +249,9 @@ export default function ProveedoresPage() {
             Registrar mi Negocio →
           </a>
         </div>
-      </div>
-    </main>
+        </div>
+      </main>
+      <Footer />
+    </>
   );
 }

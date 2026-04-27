@@ -9,6 +9,21 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { ArrowRight, Store, LayoutGrid, Gamepad2 } from "lucide-react";
 import ArcadeButton from "@/components/ui/arcade-button";
+import dynamic from "next/dynamic";
+
+const MarketMoodWidget = dynamic(
+  () => import("@/components/widgets/MarketMoodWidget"),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="bg-black/60 border border-white/10 rounded-xl p-6 animate-pulse">
+        <div className="h-4 bg-white/5 rounded w-24 mb-4" />
+        <div className="h-16 bg-white/5 rounded w-16 mx-auto mb-4" />
+        <div className="h-6 bg-white/5 rounded w-32 mx-auto" />
+      </div>
+    ),
+  }
+);
 
 export default function Home() {
   return (
@@ -17,6 +32,15 @@ export default function Home() {
       
       <main className="space-y-0">
         <Hero />
+
+        {/* --- Market Sentiment Section --- */}
+        <section className="py-12 bg-black border-y border-white/5">
+          <div className="container mx-auto px-4">
+            <div className="max-w-md mx-auto">
+              <MarketMoodWidget />
+            </div>
+          </div>
+        </section>
 
         {/* --- Calculadora Section --- */}
         <section className="relative py-24 bg-background">

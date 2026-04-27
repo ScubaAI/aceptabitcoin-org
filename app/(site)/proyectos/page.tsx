@@ -1,98 +1,252 @@
+"use client";
+
+import { useState, useEffect, useMemo } from "react";
+import { Card } from "@/components/ui/card";
+import { Code2, Zap, Users, Activity, GitBranch, Search, Sparkles } from "lucide-react";
+import ProjectCard from "@/components/cards/ProjectCard";
+import ProjectSkeleton from "@/components/cards/ProjectSkeleton";
+import TypeFilter from "@/components/filters/TypeFilter";
+import MatrixRain from "@/components/ui/MatrixRain";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
-import { ExternalLink, GitBranch as Github } from "lucide-react";
-
-const projects = [
-  {
-    title: "Bitcoin Yucatán",
-    status: "ACTIVE",
-    tech: ["Node.js", "Lightning"],
-    desc: "Nodo principal de liquidación para la península.",
-    color: "text-bitcoin",
-    glow: "bg-bitcoin/20",
-    border: "border-bitcoin/30"
-  },
-  {
-    title: "Maya DAO",
-    status: "BETA",
-    tech: ["Solidity", "Nostr"],
-    desc: "Gobernanza descentralizada para fondos comunitarios.",
-    color: "text-cyan-400",
-    glow: "bg-cyan-500/20",
-    border: "border-cyan-500/30"
-  },
-  {
-    title: "Dev Merida",
-    status: "RECRUITING",
-    tech: ["React", "Rust"],
-    desc: "Hub de desarrolladores cypherpunk en la región.",
-    color: "text-purple-400",
-    glow: "bg-purple-500/20",
-    border: "border-purple-500/30"
-  },
-];
+import { type Proyecto, type TipoProyecto, getStats } from "@/lib/proyectos";
 
 export default function ProyectosPage() {
+  const [proyectos, setProyectos] = useState<Proyecto[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [activeType, setActiveType] = useState<TipoProyecto | "todos">("todos");
+  const [searchQuery, setSearchQuery] = useState("");
+
+  // Load data
+  useEffect(() => {
+    async function load() {
+      try {
+        const response = await fetch("/data/proyectos.json");
+        const data: Proyecto[] = await response.json();
+        // Sort by date descending
+        const sorted = data.sort((a, b) => new Date(b.fecha).getTime() - new Date(a.fecha).getTime());
+        setProyectos(sorted);
+      } catch (error) {
+        console.error("Error loading proyectos:", error);
+      } finally {
+        setTimeout(() => setLoading(false), 600);
+      }
+    }
+    load();
+  }, []);
+
+  // Filtered results
+  const filtered = useMemo(() => {
+    let result = proyectos;
+    
+    if (activeType !== "todos") {
+      result = result.filter((p) => p.tipo === activeType);
+    }
+    
+    if (searchQuery.trim()) {
+      const q = searchQuery.toLowerCase();
+      result = result.filter(
+        (p) =>
+          p.nombre.toLowerCase().includes(q) ||
+          p.descripcion.toLowerCase().includes(q) ||
+          p.descripcionCorta.toLowerCase().includes(q) ||
+          p.stack.some((s) => s.toLowerCase().includes(q))
+      );
+    }
+    
+    return result;
+  }, [proyectos, activeType, searchQuery]);
+
+  // Stats
+  const stats = useMemo(() => getStats(proyectos), [proyectos]);
+
   return (
     <>
       <Navbar />
-      <div className="min-h-screen bg-black text-white py-20 relative">
-        
-        {/* Background Grid */}
-        <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px]" />
+      <main className="min-h-screen bg-black relative overflow-hidden">
+        {/* Background Effects */}
+        <MatrixRain className="opacity-15" speed={0.4} density={12} />
+        <div 
+          className="absolute inset-0 pointer-events-none"
+          style={{
+            backgroundImage: `radial-gradient(rgba(0, 255, 65, 0.05) 1px, transparent 1px)`,
+            backgroundSize: "50px 50px",
+          }}
+        />
+        <div className="absolute top-1/3 right-0 w-[500px] h-[500px] bg-bitcoin/5 blur-[150px] rounded-full pointer-events-none" />
+        <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-matrix/5 blur-[120px] rounded-full pointer-events-none" />
 
-        <div className="container mx-auto px-4 relative z-10">
+        <div className="relative z-10 container mx-auto px-4 pt-32 pb-20">
           
-          <div className="flex flex-col md:flex-row justify-between items-end border-b border-white/10 pb-6 mb-12">
-            <div>
-              <h1 className="font-serif text-4xl md:text-5xl font-bold mb-2">
-                Proyectos <span className="text-gray-500">.json</span>
-              </h1>
-              <p className="font-mono text-gray-400"> Repositorios activos en la red de Acepta Bitcoin.</p>
+          {/* ═══════════════════════════════════════════════════════
+              HEADER
+              ═══════════════════════════════════════════════════════ */}
+          <div className="text-center mb-16 space-y-6">
+            <div className="inline-flex items-center gap-2 bg-bitcoin/10 border border-bitcoin/30 px-4 py-1.5 rounded-full text-bitcoin text-xs font-bold uppercase tracking-[0.2em] font-mono">
+              <Code2 className="h-3 w-3" />
+              Ecosistema de Desarrollo
             </div>
-            <div className="font-mono text-xs text-bitcoin mt-4 md:mt-0">
-              // INDEX: 01-03
-            </div>
+
+            <h1 className="font-serif text-4xl md:text-6xl font-bold text-white leading-tight">
+              Proyectos{" "}
+              <span className="text-matrix drop-shadow-[0_0_25px_rgba(0,255,65,0.4)]">
+                Bitcoin
+              </span>
+            </h1>
+
+            <p className="font-mono text-sm text-gray-400 max-w-2xl mx-auto leading-relaxed">
+              Software sovereign construido por y para la comunidad Bitcoin de México.
+              <br />
+              <span className="text-bitcoin">Código abierto. Sin permiso. Sin límites.</span>
+            </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {projects.map((proj, idx) => (
-              <div key={idx} className={`group bg-black/50 border ${proj.border} backdrop-blur-sm p-6 hover:bg-white/5 transition-all duration-300 relative overflow-hidden`}>
-                
-                {/* Efecto Glow en hover */}
-                <div className={`absolute -top-10 -right-10 w-32 h-32 ${proj.glow} blur-[50px] group-hover:opacity-100 opacity-50 transition-all`} />
-
-                <div className="flex justify-between items-start mb-4 relative z-10">
-                  <span className={`font-mono text-xs border ${proj.border} px-2 py-0.5 rounded ${proj.color}`}>
-                    {proj.status}
-                  </span>
-                  <Github className="w-5 h-5 text-gray-500 hover:text-white transition-colors cursor-pointer" />
-                </div>
-
-                <h3 className="font-serif text-2xl font-bold mb-2 relative z-10 group-hover:translate-x-1 transition-transform">
-                  {proj.title}
-                </h3>
-
-                <p className="font-mono text-sm text-gray-400 mb-6 leading-relaxed relative z-10">
-                  {proj.desc}
-                </p>
-
-                <div className="flex gap-2 mb-6 relative z-10">
-                  {proj.tech.map((t, i) => (
-                    <span key={i} className="text-[10px] font-mono bg-white/10 px-2 py-1 rounded text-gray-300">
-                      #{t}
-                    </span>
-                  ))}
-                </div>
-
-                <a href="#" className="inline-flex items-center gap-2 font-mono text-xs font-bold tracking-widest hover:text-bitcoin transition-colors relative z-10">
-                  ACCESS_REPO <ExternalLink className="w-3 h-3" />
-                </a>
+          {/* ═══════════════════════════════════════════════════════
+              STATS BAR
+              ═══════════════════════════════════════════════════════ */}
+          <div className="grid grid-cols-2 md:grid-cols-5 gap-3 mb-12">
+            <Card className="bg-black/60 border border-white/10 p-4 text-center backdrop-blur-md">
+              <div className="flex items-center justify-center gap-2 mb-1">
+                <Code2 className="h-4 w-4 text-matrix" />
+                <span className="font-vt323 text-2xl text-white">{stats.total}</span>
               </div>
-            ))}
+              <p className="text-[10px] font-mono text-gray-500 uppercase tracking-wider">Proyectos</p>
+            </Card>
+            <Card className="bg-black/60 border border-bitcoin/20 p-4 text-center backdrop-blur-md">
+              <div className="flex items-center justify-center gap-2 mb-1">
+                <Zap className="h-4 w-4 text-bitcoin" />
+                <span className="font-vt323 text-2xl text-bitcoin">{stats.internos}</span>
+              </div>
+              <p className="text-[10px] font-mono text-gray-500 uppercase tracking-wider">Internos</p>
+            </Card>
+            <Card className="bg-black/60 border border-matrix/20 p-4 text-center backdrop-blur-md">
+              <div className="flex items-center justify-center gap-2 mb-1">
+                <Users className="h-4 w-4 text-matrix" />
+                <span className="font-vt323 text-2xl text-matrix">{stats.comunidad}</span>
+              </div>
+              <p className="text-[10px] font-mono text-gray-500 uppercase tracking-wider">Comunidad</p>
+            </Card>
+            <Card className="bg-black/60 border border-green-500/20 p-4 text-center backdrop-blur-md">
+              <div className="flex items-center justify-center gap-2 mb-1">
+                <Activity className="h-4 w-4 text-green-400" />
+                <span className="font-vt323 text-2xl text-green-400">{stats.activos}</span>
+              </div>
+              <p className="text-[10px] font-mono text-gray-500 uppercase tracking-wider">Activos</p>
+            </Card>
+            <Card className="bg-black/60 border border-white/10 p-4 text-center backdrop-blur-md">
+              <div className="flex items-center justify-center gap-2 mb-1">
+                <GitBranch className="h-4 w-4 text-bitcoin" />
+                <span className="font-vt323 text-2xl text-bitcoin">{stats.enDesarrollo}</span>
+              </div>
+              <p className="text-[10px] font-mono text-gray-500 uppercase tracking-wider">En Dev</p>
+            </Card>
+          </div>
+
+          {/* ═══════════════════════════════════════════════════════
+              FILTERS & SEARCH
+              ═══════════════════════════════════════════════════════ */}
+          <div className="space-y-6 mb-12">
+            {/* Search */}
+            <div className="relative max-w-md mx-auto">
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500" />
+              <input
+                type="text"
+                placeholder="Buscar proyectos..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full bg-white/5 border border-white/10 rounded-full pl-11 pr-4 py-3 text-sm font-mono text-white placeholder-gray-600 focus:border-bitcoin focus:ring-1 focus:ring-bitcoin/50 outline-none transition-all"
+              />
+            </div>
+
+            {/* Type Filter */}
+            <TypeFilter
+              active={activeType}
+              onChange={setActiveType}
+              counts={{
+                todos: stats.total,
+                interno: stats.internos,
+                comunidad: stats.comunidad,
+              }}
+            />
+          </div>
+
+          {/* ═══════════════════════════════════════════════════════
+              RESULTS COUNT
+              ═══════════════════════════════════════════════════════ */}
+          <div className="flex items-center justify-between mb-6">
+            <p className="font-mono text-xs text-gray-500">
+              <span className="text-bitcoin">❯</span> Mostrando{" "}
+              <span className="text-white font-bold">{filtered.length}</span> de{" "}
+              <span className="text-white">{proyectos.length}</span> proyectos
+              {searchQuery && (
+                <span className="text-matrix"> | Búsqueda: "{searchQuery}"</span>
+              )}
+            </p>
+            
+            {activeType !== "todos" && (
+              <button
+                onClick={() => setActiveType("todos")}
+                className="text-[10px] font-mono text-gray-500 hover:text-bitcoin transition-colors"
+              >
+                Limpiar filtro ✕
+              </button>
+            )}
+          </div>
+
+          {/* ═══════════════════════════════════════════════════════
+              GRID
+              ═══════════════════════════════════════════════════════ */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {loading ? (
+              <ProjectSkeleton count={4} />
+            ) : filtered.length > 0 ? (
+              filtered.map((proyecto, index) => (
+                <ProjectCard
+                  key={proyecto.id}
+                  proyecto={proyecto}
+                  index={index}
+                />
+              ))
+            ) : (
+              <div className="col-span-full text-center py-20">
+                <Sparkles className="h-12 w-12 text-gray-700 mx-auto mb-4" />
+                <p className="font-mono text-sm text-gray-500">
+                  No se encontraron proyectos
+                  {searchQuery && <span className="text-bitcoin"> para "{searchQuery}"</span>}
+                </p>
+                <button
+                  onClick={() => { setActiveType("todos"); setSearchQuery(""); }}
+                  className="mt-4 text-xs font-mono text-bitcoin hover:text-matrix transition-colors"
+                >
+                  Ver todos los proyectos →
+                </button>
+              </div>
+            )}
+          </div>
+
+          {/* ═══════════════════════════════════════════════════════
+              FOOTER CTA
+              ═══════════════════════════════════════════════════════ */}
+          <div className="mt-20 text-center space-y-4">
+            <div className="inline-flex items-center gap-2 bg-matrix/10 border border-matrix/30 px-4 py-2 rounded-full">
+              <Code2 className="h-4 w-4 text-matrix" />
+              <span className="font-mono text-xs text-matrix font-bold uppercase tracking-wider">
+                ¿Tienes un proyecto Bitcoin?
+              </span>
+            </div>
+            <p className="font-mono text-sm text-gray-400 max-w-lg mx-auto">
+              Si estás construyendo algo con Bitcoin en México, queremos destacarlo.
+              Proyectos de comunidad, open source, o iniciativas sovereign.
+            </p>
+            <a
+              href="mailto:proyectos@aceptabitcoin.org"
+              className="inline-flex items-center gap-2 px-6 py-3 bg-matrix text-black font-vt323 text-lg tracking-wide rounded-lg hover:bg-matrix/90 transition-all shadow-[0_0_20px_rgba(0,255,65,0.3)]"
+            >
+              Enviar Proyecto →
+            </a>
           </div>
         </div>
-      </div>
+      </main>
       <Footer />
     </>
   );
