@@ -1,0 +1,73 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630">
+  <defs>
+    <linearGradient id="ogProvGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#000000"/>
+      <stop offset="50%" style="stop-color:#0a0a0a"/>
+      <stop offset="100%" style="stop-color:#000000"/>
+    </linearGradient>
+    <filter id="glowText2">
+      <feGaussianBlur stdDeviation="4" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="630" fill="url(#ogProvGrad)"/>
+
+  <!-- Abstract network connections (lines) -->
+  <g stroke="#00FF41" stroke-width="1" opacity="0.15">
+    <line x1="200" y1="200" x2="400" y2="280"/>
+    <line x1="400" y1="280" x2="600" y2="200"/>
+    <line x1="600" y1="200" x2="800" y2="280"/>
+    <line x1="800" y1="280" x2="1000" y2="200"/>
+    <line x1="600" y1="315" x2="600" y2="100"/>
+    <line x1="200" y1="500" x2="400" y2="420"/>
+    <line x1="800" y1="420" x2="1000" y2="500"/>
+  </g>
+
+  <!-- Provider icons (simple shapes) -->
+  <g transform="translate(200, 280)">
+    <circle cx="0" cy="0" r="40" fill="none" stroke="#F7931A" stroke-width="3"/>
+    <text x="0" y="8" font-family="serif" font-size="36" fill="#F7931A" text-anchor="middle">₿</text>
+  </g>
+  <g transform="translate(600, 200)">
+    <rect x="-50" y="-50" width="100" height="100" fill="none" stroke="#00FF41" stroke-width="3"/>
+    <text x="0" y="8" font-family="monospace" font-size="24" fill="#00FF41" text-anchor="middle">BTC</text>
+  </g>
+  <g transform="translate(1000, 280)">
+    <polygon points="0,-40 35,20 -35,20" fill="none" stroke="#F7931A" stroke-width="3"/>
+  </g>
+
+  <!-- Main title -->
+  <text x="600" y="380" font-family="serif" font-size="68" font-weight="bold"
+        fill="#FFFFFF" text-anchor="middle" filter="url(#glowText2)">
+    DIRECTORIO PROVEEDORES
+  </text>
+  <text x="600" y="440" font-family="monospace" font-size="22" fill="#F7931A" text-anchor="middle" letter-spacing="4">
+    EXCHANGES • LOGÍSTICA • EDUCACIÓN • COMERCIO
+  </text>
+
+  <!-- Category badges -->
+  <g font-family="monospace" font-size="14" fill="#00FF41">
+    <rect x="100" y="500" width="120" height="30" rx="4" fill="none" stroke="#00FF41" stroke-width="2"/>
+    <text x="160" y="522" text-anchor="middle">EXCHANGE</text>
+
+    <rect x="250" y="550" width="120" height="30" rx="4" fill="none" stroke="#00FF41" stroke-width="2"/>
+    <text x="310" y="572" text-anchor="middle">LOGÍSTICA</text>
+
+    <rect x="600" y="500" width="120" height="30" rx="4" fill="none" stroke="#00FF41" stroke-width="2"/>
+    <text x="660" y="522" text-anchor="middle">EDUCACIÓN</text>
+
+    <rect x="830" y="550" width="120" height="30" rx="4" fill="none" stroke="#00FF41" stroke-width="2"/>
+    <text x="890" y="572" text-anchor="middle">TECNOLOGÍA</text>
+  </g>
+
+  <!-- Bottom bar -->
+  <rect x="0" y="595" width="1200" height="35" fill="#00FF41" opacity="0.1"/>
+  <text x="600" y="620" font-family="monospace" font-size="16" fill="#00FF41" text-anchor="middle" letter-spacing="2">
+    ACEPTA BITCOIN MÉXICO • SIN PERMISO • SIN INTERMEDIARIOS
+  </text>
+</svg>

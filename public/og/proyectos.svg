@@ -1,0 +1,71 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630">
+  <defs>
+    <linearGradient id="ogMatrixGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#000000"/>
+      <stop offset="50%" style="stop-color:#0a0a0a"/>
+      <stop offset="100%" style="stop-color:#000000"/>
+    </linearGradient>
+    <linearGradient id="textGlow" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#00FF41;stop-opacity:0.3"/>
+      <stop offset="100%" style="stop-color:#00FF41;stop-opacity:0"/>
+    </linearGradient>
+    <filter id="glowText">
+      <feGaussianBlur stdDeviation="4" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="630" fill="url(#ogMatrixGrad)"/>
+
+  <!-- Grid lines (subtle) -->
+  <g stroke="#00FF41" stroke-width="0.5" opacity="0.1">
+    <line x1="0" y1="157" x2="1200" y2="157"/>
+    <line x1="0" y1="315" x2="1200" y2="315"/>
+    <line x1="300" y1="0" x2="300" y2="630"/>
+    <line x1="600" y1="0" x2="600" y2="630"/>
+    <line x1="900" y1="0" x2="900" y2="630"/>
+  </g>
+
+  <!-- Matrix rain (vertical lines) -->
+  <g fill="#00FF41" font-family="monospace" font-size="12" opacity="0.06">
+    <text x="50" y="50">01000111 01101100</text>
+    <text x="50" y="80">01100101 01110100</text>
+    <text x="50" y="110">01100101 10000001</text>
+    <text x="150" y="200">01110010 01110101</text>
+    <text x="150" y="230">01100011 01110100</text>
+    <text x="1050" y="150">01100101 01110100</text>
+    <text x="1050" y="180">01110010 01110101</text>
+    <text x="1050" y="210">01100011 01110100</text>
+  </g>
+
+  <!-- BTC Logo (left) -->
+  <circle cx="120" cy="315" r="60" fill="none" stroke="#F7931A" stroke-width="5"/>
+  <text x="120" y="335" font-family="serif" font-size="72" fill="#F7931A" text-anchor="middle">₿</text>
+
+  <!-- Main title -->
+  <text x="600" y="280" font-family="serif" font-size="72" font-weight="bold"
+        fill="#FFFFFF" text-anchor="middle" filter="url(#glowText)">
+    PROYECTOS BITCOIN
+  </text>
+  <text x="600" y="350" font-family="monospace" font-size="24" fill="#00FF41" text-anchor="middle" letter-spacing="4">
+    Ecosistema de Desarrollo Sovereign
+  </text>
+
+  <!-- Project name tags -->
+  <g font-family="monospace" font-size="16" fill="#F7931A">
+    <text x="600" y="420" text-anchor="middle">BOB HOTEL</text>
+    <text x="450" y="460" text-anchor="middle">PIZZA SATS</text>
+    <text x="750" y="460" text-anchor="middle">DON MEMO</text>
+    <text x="600" y="500" text-anchor="middle">COSMÉTICA SATOSHI</text>
+  </g>
+
+  <!-- Bottom bar -->
+  <rect x="0" y="560" width="1200" height="70" fill="#00FF41" opacity="0.1"/>
+  <text x="600" y="600" font-family="monospace" font-size="18" fill="#00FF41" text-anchor="middle" letter-spacing="2">
+    ACEPTA BITCOIN MÉXICO • CODIGO ABIERTO
+  </text>
+</svg>

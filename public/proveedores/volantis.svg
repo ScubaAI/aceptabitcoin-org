@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+  <defs>
+    <linearGradient id="volantisGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#F7931A;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#00FF41;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  <rect width="200" height="200" fill="#000000"/>
+  <!-- Flying bird/paper plane shape -->
+  <polygon points="100,50 150,120 100,100 50,120" fill="url(#volantisGrad)" opacity="0.8"/>
+  <polygon points="100,100 130,150 100,130 70,150" fill="url(#volantisGrad)" opacity="0.6"/>
+  <!-- Text -->
+  <text x="100" y="190" font-family="monospace" font-size="14" fill="#FFFFFF" text-anchor="middle" letter-spacing="3">VOLANTIS</text>
+</svg>

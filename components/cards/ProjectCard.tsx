@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { ArrowUpRight, Github, ExternalLink, Zap, MapPin, Users, ChevronDown, ChevronUp, Check, Sparkles, Target, Rocket } from "lucide-react";
+import { ArrowUpRight, GitFork, ExternalLink, Zap, MapPin, Users, ChevronDown, ChevronUp, Check, Sparkles, Target, Rocket } from "lucide-react";
 import StatusBadge from "@/components/badges/StatusBadge";
 import { ESTADO_CONFIG, HACKATHON_CONFIG, TIPO_CONFIG, type Proyecto } from "@/lib/proyectos";
 
@@ -179,7 +179,7 @@ export default function ProjectCard({ proyecto, index }: ProjectCardProps) {
               className="h-9 px-3 font-mono text-xs border-white/10 text-gray-400 hover:border-matrix/30 hover:text-matrix rounded-lg"
             >
               <a href={proyecto.repoUrl} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5">
-                <Github className="h-3.5 w-3.5" />
+                <GitFork className="h-3.5 w-3.5" />
                 Repo
               </a>
             </Button>

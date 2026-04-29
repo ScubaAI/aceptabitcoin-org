@@ -28,6 +28,10 @@ const vt323 = VT323({
   weight: ["400"],
 });
 
+// ── Analytics Domain ──
+// Using NEXT_PUBLIC_APP_URL from environment or fallback
+const analyticsDomain = process.env.NEXT_PUBLIC_APP_URL?.replace(/^https?:\/\//, "") || "aceptabitcoin.org";
+
 export const metadata: Metadata = {
   title: "Acepta Bitcoin México",
   description: "Educación, tiendas y adopción real de Bitcoin desde Mérida, Yucatán",
@@ -39,8 +43,30 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+  // Only load analytics in production
+  const isProduction = process.env.NODE_ENV === "production";
+
   return (
     <html lang="es" className="dark">
+      <head>
+        {/* ── Plausible Analytics ──
+            Privacy-first analytics with no cookies, no fingerprinting.
+            Aligns with Bitcoin privacy philosophy:
+            - No personal data collection
+            - No cross-site tracking
+            - No cookies or localStorage
+            - Respects Do Not Track (DNT)
+            - Data is aggregated and anonymized
+            - Open source & EU GDPR compliant
+        */}
+        {isProduction && (
+          <script
+            defer
+            data-domain={analyticsDomain}
+            src="https://plausible.io/js/script.js"
+          />
+        )}
+      </head>
       <body
         className={cn(
           ibmPlex.variable,

@@ -9,6 +9,8 @@ import {
   type StochasticResult,
 } from "@/lib/market/binance";
 
+export type { Timeframe, StochasticResult };
+
 // ============================================================
 // USE MARKET MOOD — Custom Hook with localStorage persistence
 // Acepta Bitcoin México | Oracle System v2.0

@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 400" width="1200" height="400">
+  <defs>
+    <linearGradient id="memoGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#F7931A;stop-opacity:0.3" />
+      <stop offset="100%" style="stop-color:#00FF41;stop-opacity:0.2" />
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="400" fill="#000000"/>
+  <!-- Pixel art character (Don Memo) - simplified -->
+  <g transform="translate(500, 100)" stroke="#FFFFFF" fill="none" stroke-width="2">
+    <!-- Head -->
+    <circle cx="200" cy="150" r="60" stroke="#00FF41"/>
+    <!-- Hat (sombrero) -->
+    <ellipse cx="200" cy="90" rx="70" ry="20" stroke="#F7931A"/>
+    <rect x="160" y="70" width="80" height="20" fill="#F7931A"/>
+    <!-- Body -->
+    <line x1="200" y1="210" x2="200" y2="300" stroke="#FFFFFF"/>
+    <!-- Arms -->
+    <line x1="200" y1="230" x2="140" y2="270" stroke="#FFFFFF"/>
+    <line x1="200" y1="230" x2="260" y2="270" stroke="#FFFFFF"/>
+    <!-- Cane -->
+    <line x1="260" y1="270" x2="290" y2="330" stroke="#F7931A" stroke-width="3"/>
+  </g>
+  <!-- Title -->
+  <text x="600" y="360" font-family="serif" font-size="72" font-weight="bold"
+        fill="#FFFFFF" text-anchor="middle" filter="url(#memoGrad)">DON MEMO</text>
+  <text x="600" y="390" font-family="monospace" font-size="16" fill="#00FF41" text-anchor="middle" letter-spacing="3">
+    TU ABUELO • TU VECINO • TU PAPÁ
+  </text>
+</svg>

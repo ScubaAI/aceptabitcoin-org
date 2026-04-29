@@ -7,7 +7,30 @@
 
 export type TipoProyecto = "interno" | "comunidad";
 export type EstadoProyecto = "active" | "development" | "abandoned";
-export type HackathonLugar = "winner" | "second" | "third" | null;
+export type HackathonLugar = "winner" | "second" | "third";
+
+export interface TeamMember {
+  nombre: string;
+  rol: string;
+  ubicacion: string;
+}
+
+export interface HackathonInfo {
+  evento: string;
+  lugar: HackathonLugar;
+  año: number;
+}
+
+export interface ReviewInfo {
+  fortalezas: string[];
+  oportunidades: string[];
+  impacto: string;
+}
+
+export interface Metrica {
+  label: string;
+  valor: string;
+}
 
 export interface Proyecto {
   id: string;
@@ -16,31 +39,16 @@ export interface Proyecto {
   descripcion: string;
   descripcionCorta: string;
   url: string | null;
-  repoUrl?: string;
+  repoUrl: string;
   logo: string;
-  imagen?: string;
+  imagen: string;
   stack: string[];
   estado: EstadoProyecto;
-  hackathon?: {
-    evento: string;
-    lugar: HackathonLugar;
-    año: number;
-  };
-  equipo?: {
-    nombre: string;
-    rol: string;
-    ubicacion?: string;
-  }[];
+  hackathon?: HackathonInfo;
+  equipo?: TeamMember[];
   features?: string[];
-  metricas?: {
-    label: string;
-    valor: string;
-  }[];
-  review: {
-    fortalezas: string[];
-    oportunidades: string[];
-    impacto: string;
-  };
+  metricas?: Metrica[];
+  review: ReviewInfo;
   fecha: string;
 }
 
@@ -78,7 +86,7 @@ export const ESTADO_CONFIG: Record<EstadoProyecto, {
   },
 };
 
-export const HACKATHON_CONFIG: Record<NonNullable<HackathonLugar>, {
+export const HACKATHON_CONFIG: Record<HackathonLugar, {
   icon: string;
   color: string;
   label: string;
@@ -107,15 +115,6 @@ export const TIPO_CONFIG: Record<TipoProyecto, {
     borderColor: "border-matrix/30",
   },
 };
-
-// ── Load and sort projects by date (newest first) ──
-export async function loadProyectos(): Promise<Proyecto[]> {
-  const response = await fetch("/data/proyectos.json");
-  const data: Proyecto[] = await response.json();
-  
-  // Sort by date descending (newest first)
-  return data.sort((a, b) => new Date(b.fecha).getTime() - new Date(a.fecha).getTime());
-}
 
 // ── Filter by type ──
 export function filterByType(proyectos: Proyecto[], tipo: TipoProyecto | "todos"): Proyecto[] {

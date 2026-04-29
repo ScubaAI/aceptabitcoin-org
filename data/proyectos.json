@@ -8,7 +8,7 @@
     "url": null,
     "repoUrl": "https://github.com/aceptabitcoin/bob-hotel",
     "logo": "/proyectos/bob-hotel.svg",
-    "imagen": "/proyectos/bob-hotel-preview.jpg",
+    "imagen": "/proyectos/bob-hotel-preview.svg",
     "stack": ["Next.js", "TypeScript", "Prisma", "Bitcoin", "Lightning", "RGB", "CashU", "WDK", "AI Agents", "IoT"],
     "estado": "development",
     "features": [
@@ -51,7 +51,7 @@
     "url": "https://zadqui.github.io/HackathonBitcoin/",
     "repoUrl": "https://github.com/zadqui/HackathonBitcoin",
     "logo": "/proyectos/don-memo.svg",
-    "imagen": "/proyectos/don-memo-preview.jpg",
+    "imagen": "/proyectos/don-memo-preview.svg",
     "stack": ["React", "JavaScript", "Pixel Art", "Gamification", "Binance API"],
     "estado": "active",
     "hackathon": {
@@ -89,7 +89,7 @@
     "url": null,
     "repoUrl": "https://github.com/aceptabitcoin/pizza-sats",
     "logo": "/proyectos/pizza-sats.svg",
-    "imagen": "/proyectos/pizza-sats-preview.jpg",
+    "imagen": "/proyectos/pizza-sats-preview.svg",
     "stack": ["Next.js", "TypeScript", "Prisma", "Lightning", "Maps API"],
     "estado": "development",
     "features": [
@@ -127,7 +127,7 @@
     "url": null,
     "repoUrl": "https://github.com/aceptabitcoin/cosmetica-satoshi",
     "logo": "/proyectos/cosmetica-satoshi.svg",
-    "imagen": "/proyectos/cosmetica-satoshi-preview.jpg",
+    "imagen": "/proyectos/cosmetica-satoshi-preview.svg",
     "stack": ["Next.js", "TypeScript", "Stripe", "Lightning", "Cloudinary"],
     "estado": "development",
     "features": [

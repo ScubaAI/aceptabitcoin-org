@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+  <defs>
+    <linearGradient id="coffeeGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#F7931A;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#8B4513;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  <rect width="200" height="200" fill="#000000"/>
+  <!-- Coffee cup -->
+  <path d="M60 80 L60 140 Q60 160 80 160 L120 160 Q140 160 140 140 L140 80 Z"
+        fill="none" stroke="#00FF41" stroke-width="3"/>
+  <!-- Steam -->
+  <path d="M80 60 Q85 50 80 40" stroke="#00FF41" fill="none" stroke-width="2" opacity="0.6"/>
+  <path d="M100 60 Q105 45 100 30" stroke="#00FF41" fill="none" stroke-width="2" opacity="0.6"/>
+  <path d="M120 60 Q115 50 120 40" stroke="#00FF41" fill="none" stroke-width="2" opacity="0.6"/>
+  <!-- BTC symbol on cup -->
+  <text x="100" y="120" font-family="serif" font-size="32" fill="#F7931A" text-anchor="middle">₿</text>
+  <!-- Saucer -->
+  <ellipse cx="100" cy="165" rx="50" ry="8" fill="none" stroke="#00FF41" stroke-width="2"/>
+  <!-- Corner accents -->
+  <path d="M25 25 L25 40 L40 25" stroke="#F7931A" fill="none" stroke-width="2"/>
+  <path d="M175 25 L175 40 L160 25" stroke="#F7931A" fill="none" stroke-width="2"/>
+</svg>

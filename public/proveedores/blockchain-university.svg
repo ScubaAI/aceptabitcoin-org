@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+  <defs>
+    <linearGradient id="eduGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#00FF41;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#008F11;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  <rect width="200" height="200" fill="#000000"/>
+  <!-- Graduation cap (mortarboard) -->
+  <g transform="translate(100, 80)" fill="none" stroke="#F7931A" stroke-width="3">
+    <polygon points="0,0 60,30 0,60 -60,30" />
+    <line x1="0" y1="60" x2="0" y2="110"/>
+    <rect x="-40" y="60" width="80" height="8" fill="#F7931A"/>
+  </g>
+  <!-- Blockchain blocks (stack) -->
+  <g transform="translate(100, 130)" fill="none" stroke="#00FF41" stroke-width="2">
+    <rect x="-25" y="0" width="25" height="25" rx="2"/>
+    <rect x="0" y="0" width="25" height="25" rx="2"/>
+    <rect x="-25" y="-30" width="25" height="25" rx="2"/>
+    <rect x="0" y="-30" width="25" height="25" rx="2"/>
+    <rect x="-25" y="-60" width="25" height="25" rx="2"/>
+    <rect x="0" y="-60" width="25" height="25" rx="2"/>
+  </g>
+  <!-- Text -->
+  <text x="100" y="190" font-family="monospace" font-size="12" fill="#FFFFFF" text-anchor="middle" letter-spacing="1">BLOCKCHAIN UNIVERSITY</text>
+</svg>

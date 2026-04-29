@@ -72,19 +72,6 @@ export const TIER_CONFIG: Record<Tier, {
   },
 };
 
-// ── Load and sort providers ──
-export async function loadProveedores(): Promise<Proveedor[]> {
-  const response = await fetch("/data/proveedores.json");
-  const data: Proveedor[] = await response.json();
-  
-  // Sort: Patrocinadores first, then by name
-  return data.sort((a, b) => {
-    const priorityDiff = TIER_CONFIG[a.tier].priority - TIER_CONFIG[b.tier].priority;
-    if (priorityDiff !== 0) return priorityDiff;
-    return a.nombre.localeCompare(b.nombre);
-  });
-}
-
 // ── Filter by category ──
 export function filterByCategory(proveedores: Proveedor[], categoria: Categoria | "todos"): Proveedor[] {
   if (categoria === "todos") return proveedores;
