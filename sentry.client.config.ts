@@ -8,8 +8,7 @@ Sentry.init({
   // 1. Not attaching user PII (no IP, no personal data)
   // 2. Scrubbing sensitive data from error messages
   // 3. Using only error fingerprints, not user sessions
-  // 4. Respecting "Do Not Track" signals
-  // 5. No cookies or localStorage tracking
+  // 4. No cookies or localStorage tracking
 
   // ── Privacy-first configuration ──
   sendDefaultPii: false, // Never send IP, cookies, user data
@@ -25,6 +24,12 @@ Sentry.init({
       delete event.request.headers?.["authorization"];
       delete event.request.headers?.["cookie"];
     }
+    // Respect Do Not Track — if enabled, strip any identifying info
+    if (typeof window !== "undefined" && navigator.doNotTrack === "1") {
+      if (event.user) {
+        delete event.user.ip_address;
+      }
+    }
     return event;
   },
 
@@ -38,14 +43,6 @@ Sentry.init({
     // Browser extension errors
     "top.GLOBALS",
   ],
-
-  // Respect Do Not Track
-  shouldAttachStacktrace: (currentHub) => {
-    if (typeof window !== "undefined" && navigator.doNotTrack === "1") {
-      return false;
-    }
-    return true;
-  },
 });
 
 // Only log errors in production, not development
