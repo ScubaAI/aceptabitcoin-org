@@ -18,6 +18,32 @@ Estado actual del proyecto — última actualización: 2026-06-25
 
 ---
 
+## 🎨 Logo Original SVG — Integración (2026-07-10)
+
+### Cambios Implementados
+
+**Creación del Componente**
+- Archivo: `components/ui/OriginalLogo.tsx`
+- SVG inline fiel al logo original "AceptaBitcoin.org"
+- Colores exactos: `#E8772E` (naranja), `#7CB342` (verde), `#FFFFFF` (símbolo ₿)
+- ViewBox: `0 0 420 130` — proporción 3.2:1
+
+**Integración en Navbar**
+- Reemplazo de `MatrixLogo + texto` por `OriginalLogo` único
+- Tamaños responsivos: `w-40` (mobile) → `w-48/56` (desktop)
+- Efectos hover: `drop-shadow` verde Matrix + `scale-[1.02]`
+- Eliminación de texto duplicado (el logo ya incluye "AceptaBitcoin.org")
+
+**Decisiones Técnicas**
+- ✅ SVG inline (sin dependencias externas)
+- ✅ Accesibilidad: `aria-label="Acepta Bitcoin"`
+- ✅ Performance: Sin imágenes rasterizadas
+- ✅ Coherencia: Mantiene estética institucional original
+
+**Estado**: ✅ Componente creado y navbar actualizado
+
+---
+
 ## 🚀 Sprint Update: Design System v2.1 — GSAP Animations & Cypherpunk Terminal (June 25, 2026)
 
 ### 🆕 Clases de Utilidad Nuevas
