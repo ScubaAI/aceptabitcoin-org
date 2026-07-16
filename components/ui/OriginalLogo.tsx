@@ -67,50 +67,55 @@ export default function OriginalLogo({
           />
         )}
 
-        {/* Símbolo Bitcoin (₿) con inclinación corregida */}
-        <g 
-          transform="rotate(-9, 60, 60)" 
+        {/* Símbolo Bitcoin (₿) — rotación real del logo oficial: -12° */}
+        <g
+          transform="rotate(-12, 60, 60)"
           fill={isNeon ? "url(#neon-gradient)" : "#FFFFFF"}
           stroke={isNeon ? "url(#neon-gradient)" : "none"}
           strokeWidth={isNeon ? "2" : "0"}
           filter={isNeon ? "url(#neon-glow)" : "none"}
         >
-          {/* 
-            Bitcoin Symbol Geometry - Versión simplificada y precisa
-            Construida para verse bien con la rotación aplicada
-          */}
-          
-          {/* Líneas verticales superiores */}
-          <rect x="38" y="18" width="5" height="16" rx="2" />
-          <rect x="57" y="18" width="5" height="16" rx="2" />
-          
-          {/* Cuerpo de la B - simplificado */}
-          <path d="
-            M 35 34 
-            L 68 34 
-            C 76 34, 80 39, 80 46 
-            C 80 52, 77 56, 72 58 
-            C 78 60, 82 65, 82 73 
-            C 82 82, 76 87, 67 87 
-            L 35 87 
-            Z
-            M 43 42 
-            L 43 54 
-            L 64 54 
-            C 68 54, 71 51, 71 47 
-            C 71 44, 68 42, 64 42 
-            Z
-            M 43 61 
-            L 43 79 
-            L 64 79 
-            C 69 79, 72 76, 72 71 
-            C 72 66, 69 61, 64 61 
-            Z
-          " />
-          
-          {/* Líneas verticales inferiores */}
-          <rect x="38" y="87" width="5" height="16" rx="2" />
-          <rect x="57" y="87" width="5" height="16" rx="2" />
+          {/* Barras verticales superiores (serifs del ₿)
+              Barra izquierda alineada con el borde izq. del tronco (x=36)
+              Barra derecha alineada con la "cintura" entre los dos bumps (x=52) */}
+          <rect x="36" y="19" width="8" height="15" rx="2.5" />
+          <rect x="52" y="19" width="8" height="15" rx="2.5" />
+
+          {/* Cuerpo de la B con fillRule="evenodd":
+              CRÍTICO — sin esto los huecos internos se rellenan sólidos
+              y la B queda como un bloque macizo (el bug original).
+              Los sub-paths interiores "restan" área al exterior. */}
+          <path
+            fillRule="evenodd"
+            d="
+              M 36,34
+              L 64,34
+              C 76,34 81,39 81,47
+              C 81,54 77,58 71,60
+              C 78,62 83,68 83,76
+              C 83,85 77,90 65,90
+              L 36,90
+              Z
+
+              M 44,42
+              L 62,42
+              C 68,42 72,45 72,48
+              C 72,52 68,55 62,55
+              L 44,55
+              Z
+
+              M 44,63
+              L 63,63
+              C 70,63 74,67 74,73
+              C 74,79 70,83 63,83
+              L 44,83
+              Z
+            "
+          />
+
+          {/* Barras verticales inferiores (mismas x que las superiores) */}
+          <rect x="36" y="90" width="8" height="15" rx="2.5" />
+          <rect x="52" y="90" width="8" height="15" rx="2.5" />
         </g>
       </g>
 

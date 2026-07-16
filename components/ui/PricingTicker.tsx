@@ -13,44 +13,52 @@ export default function PricingTicker() {
 
     const fetchPrices = async () => {
       try {
-        // Fetch directo a Binance (sin necesidad de proxy para este endpoint público)
+        // Intentar primero con CoinGecko por ser más confiable para MXN
         const res = await fetch(
-          'https://api.binance.com/api/v3/ticker/price?symbols=["BTCUSDT","BTCMXNT"]'
+          "https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd,mxn"
         );
         const data = await res.json();
         
-        if (data && data[0] && data[1]) {
-          const usd = parseFloat(data[0].price).toLocaleString("en-US", {
+        if (data && data.bitcoin) {
+          setBtcUsd(data.bitcoin.usd.toLocaleString("en-US", {
             minimumFractionDigits: 2,
             maximumFractionDigits: 2,
-          });
-          const mxn = parseFloat(data[1].price).toLocaleString("es-MX", {
+          }));
+          setBtcMxn(data.bitcoin.mxn.toLocaleString("es-MX", {
             minimumFractionDigits: 2,
             maximumFractionDigits: 2,
-          });
-          setBtcUsd(usd);
-          setBtcMxn(mxn);
+          }));
+        } else {
+          throw new Error("Invalid CoinGecko response");
         }
       } catch (error) {
-        console.warn("Ticker: Error fetching Binance prices, using fallback");
+        console.warn("Ticker: CoinGecko failed, falling back to Binance");
+        try {
+          const res = await fetch('https://api.binance.com/api/v3/ticker/price?symbol=BTCUSDT');
+          const data = await res.json();
+          if (data && data.price) {
+            setBtcUsd(parseFloat(data.price).toLocaleString("en-US", {
+              minimumFractionDigits: 2,
+              maximumFractionDigits: 2,
+            }));
+          }
+        } catch (binanceError) {
+          console.error("Ticker: All price sources failed");
+        }
       }
     };
 
     fetchPrices();
-    // Actualizar cada 30 segundos para mantenerlo "vivo" sin saturar
     const interval = setInterval(fetchPrices, 30000);
 
     return () => clearInterval(interval);
   }, []);
 
-  // Mensajes intercalados (Wall Street style)
   const msg1 = "RECIBE PAGOS CON BITCOIN EN TU TIENDA EN 5 MINS!!";
   const msg2 = "CONOCE NUESTROS SERVICIOS Y PLANES DESDE $0 MXN ▸";
 
-  // Fragmento reutilizable para el loop infinito
   const TickerSegment = () => (
     <>
-      {/* BTC/USD */}
       <span className="flex items-center gap-2">
         <span className="w-2 h-2 rounded-full bg-matrix animate-pulse" />
         <span className="text-matrix">BTC/USD</span>
@@ -64,12 +72,10 @@ export default function PricingTicker() {
       
       <span className="text-matrix/50">///</span>
       
-      {/* Mensaje 1 */}
       <span className="text-matrix font-bold">{msg1}</span>
       
       <span className="text-bitcoin">///</span>
       
-      {/* BTC/MXN */}
       <span className="flex items-center gap-2">
         <span className="w-2 h-2 rounded-full bg-matrix animate-pulse" />
         <span className="text-matrix">BTC/MXN</span>
@@ -83,7 +89,6 @@ export default function PricingTicker() {
       
       <span className="text-matrix/50">///</span>
       
-      {/* Mensaje 2 */}
       <span className="text-matrix font-bold">{msg2}</span>
       
       <span className="text-bitcoin">///</span>
@@ -96,18 +101,10 @@ export default function PricingTicker() {
       className="block w-full overflow-hidden bg-black/80 border-b border-matrix/30 hover:bg-matrix/10 transition-colors duration-300 group backdrop-blur-sm"
     >
       <div className="relative flex whitespace-nowrap">
-        {/* Animación CSS pura para rendimiento óptimo */}
         <div className="animate-marquee flex items-center gap-6 py-2.5 font-vt323 text-sm md:text-base tracking-widest group-hover:[animation-play-state:paused]">
-          
-          {/* Segmento 1 */}
           <TickerSegment />
-          
-          {/* Segmento 2 (Duplicado exacto para efecto infinito seamless) */}
           <TickerSegment />
-          
-          {/* Segmento 3 (Refuerzo para pantallas ultra-anchas) */}
           <TickerSegment />
-          
         </div>
       </div>
     </Link>
