@@ -14,7 +14,7 @@ export default function Hero({ nextEdition }: { nextEdition: any }) {
   const hackathonSlug = nextEdition?.slug || "custody-ui-2026";
 
   return (
-    <section className="min-h-screen pt-20 flex items-center relative overflow-hidden bg-black">
+    <section className="min-h-screen pt-20 flex items-start md:items-center relative overflow-hidden bg-black">
       {/* FONDO MATRIX */}
       <div className="absolute inset-0 bg-[radial-gradient(rgba(0,255,65,0.15)_1px,transparent_1px)] bg-[size:50px_50px] opacity-20 pointer-events-none" />
       
@@ -23,7 +23,7 @@ export default function Hero({ nextEdition }: { nextEdition: any }) {
       
       <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-black pointer-events-none" />
 
-      <div className="max-w-7xl mx-auto px-6 py-20 text-center relative z-10">
+      <div className="max-w-7xl mx-auto px-6 pt-10 pb-12 md:py-20 text-center relative z-10">
         
         {/* Header Terminal estilo Matrix */}
         <div className="inline-flex items-center gap-2 border border-matrix/30 bg-matrix/10 px-4 py-2 rounded text-xs font-mono text-matrix mb-8 backdrop-blur-sm shadow-[0_0_15px_rgba(0,255,65,0.2)]">
@@ -32,7 +32,7 @@ export default function Hero({ nextEdition }: { nextEdition: any }) {
         </div>
 
         {/* Título Principal CON CURSOR VERDE PARPADEANTE */}
-        <h1 className="font-serif text-5xl md:text-8xl font-bold tracking-tight mb-6 text-white leading-[1.1]">
+        <h1 className="font-serif text-4xl sm:text-5xl md:text-8xl font-bold tracking-tight mb-6 text-white leading-[1.1]">
           Impulsando la Educación <br />
           <span className="text-bitcoin drop-shadow-[0_0_25px_rgba(247,147,26,0.6)]">
             de Bitcoin en México
@@ -85,7 +85,7 @@ export default function Hero({ nextEdition }: { nextEdition: any }) {
         </div>
 
         {/* Footer del Hero (Datos técnicos) */}
-        <div className="mt-16 pt-8 border-t border-white/10 grid grid-cols-2 md:grid-cols-4 gap-8 text-left max-w-4xl mx-auto">
+        <div className="mt-8 md:mt-16 pt-6 md:pt-8 border-t border-white/10 grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8 text-left max-w-4xl mx-auto">
           <div>
             <div className="text-[10px] text-gray-500 font-mono mb-1 uppercase tracking-widest">System Status</div>
             <div className="flex items-center gap-2">
