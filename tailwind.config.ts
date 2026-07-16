@@ -163,6 +163,10 @@ const config = {
             boxShadow: "0 0 60px rgba(0, 255, 65, 0.8)"
           },
         },
+        marquee: {
+          "0%": { transform: "translateX(0%)" },
+          "100%": { transform: "translateX(-50%)" },
+        },
       },
       
       animation: {
@@ -177,6 +181,7 @@ const config = {
         // 🆕 Nuevas animaciones
         scan: "scan 2s ease-in-out infinite",
         "mining-pulse": "mining-pulse 0.6s ease-in-out",
+        marquee: "marquee 25s linear infinite",
       },
       
       // 🎨 Background Utilities

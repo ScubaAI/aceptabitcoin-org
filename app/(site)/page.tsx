@@ -9,6 +9,7 @@ import Link from "next/link";
 // ============================================
 import Navbar from "@/components/layout/Navbar";
 import Hero from "@/components/layout/Hero";
+import PricingTicker from "@/components/ui/PricingTicker"; // 🆕 Ticker de Servicios/Precios
 
 // ============================================
 // 3. SECCIONES PRINCIPALES
@@ -32,7 +33,7 @@ import AceptaBitcoinSectionHeader from "@/components/widgets/AceptaBitcoinSectio
 // ============================================
 // 6. NUEVOS COMPONENTES (Educational & Partners)
 // ============================================
-import { PartnersCarousel } from "@/components/ui/PartnersCarousel"; // 🆕 Carrusel de Exchanges
+import { PartnersCarousel } from "@/components/ui/PartnersCarousel";
 
 // ============================================
 // 7. DYNAMIC IMPORTS (Client-only components)
@@ -96,9 +97,13 @@ export default async function Home() {
     <>
       <Navbar />
       
-      <main className="flex flex-col bg-black text-[#FAFAFA] scroll-smooth">
+      {/* ✅ pt-16 agrega 64px (4rem) de padding superior para evitar overlap con el ticker */}
+      <main className="flex flex-col bg-black text-[#FAFAFA] scroll-smooth pt-16">
         
-        {/* 1️ HERO — Primera impresión */}
+        {/* 🆕 PRICING TICKER — Barra de estado soberana (Above Hero) */}
+        <PricingTicker />
+
+        {/* 1️⃣ HERO — Primera impresión */}
         <Hero nextEdition={nextEdition} />
 
         {/* 2️⃣ "APRENDE" — Header introductorio para B.O.B. */}
@@ -153,7 +158,7 @@ export default async function Home() {
                   <MarketMoodWidget />
                 </div>
 
-                {/* 🆕 Carrusel de Partners (Aliados Soberanos) */}
+                {/* Carrusel de Partners (Aliados Soberanos) */}
                 <div className="pt-8 border-t border-white/10">
                   <PartnersCarousel />
                 </div>
@@ -163,7 +168,7 @@ export default async function Home() {
           </div>
         </section>
 
-        {/* 5️ "ACEPTA" — Header Calculadora */}
+        {/* 5️⃣ "ACEPTA" — Header Calculadora */}
         <section 
           id="calculadora" 
           className="relative z-10 py-20 sm:py-28 bg-black border-y border-white/5 scroll-mt-24"
@@ -224,26 +229,21 @@ export default async function Home() {
               
               {/* Card 1: Crea tu Tienda (Bitcoin Orange) */}
               <article className="group relative bg-black/60 border border-bitcoin/20 rounded-2xl p-8 sm:p-10 backdrop-blur-md hover:border-bitcoin/40 hover:shadow-[0_0_40px_rgba(247,147,26,0.15)] transition-all duration-500 hover:-translate-y-1">
-                {/* Glow effect */}
                 <div className="absolute -right-12 -top-12 w-64 h-64 bg-bitcoin/5 rounded-full blur-3xl group-hover:bg-bitcoin/10 transition-all duration-500" aria-hidden="true" />
                 
                 <div className="relative z-10 flex flex-col h-full">
-                  {/* Icono */}
                   <div className="h-14 w-14 rounded-xl bg-bitcoin/10 border border-bitcoin/30 flex items-center justify-center mb-6 text-bitcoin">
                     <Store className="h-7 w-7" aria-hidden="true" />
                   </div>
                   
-                  {/* Título */}
                   <h3 className="font-serif text-3xl sm:text-4xl font-bold mb-4 text-[#FAFAFA]">
                     Crea tu tienda en minutos
                   </h3>
                   
-                  {/* Descripción */}
                   <p className="font-mono text-gray-400 mb-8 flex-grow leading-relaxed">
                     Infraestructura soberana con BTCPay Server + Point of Sale listo para usar.
                   </p>
                   
-                  {/* CTA */}
                   <Button 
                     asChild 
                     size="lg" 
@@ -256,27 +256,22 @@ export default async function Home() {
 
               {/* Card 2: Tianguis Bitcoin (Matrix Green) */}
               <article className="group relative bg-black/60 border border-matrix/20 rounded-2xl p-8 sm:p-10 backdrop-blur-md hover:border-matrix/40 hover:shadow-[0_0_40px_rgba(0,255,65,0.15)] transition-all duration-500 hover:-translate-y-1">
-                {/* Glow effect */}
                 <div className="absolute -right-12 -top-12 w-64 h-64 bg-matrix/5 rounded-full blur-3xl group-hover:bg-matrix/10 transition-all duration-500" aria-hidden="true" />
                 
                 <div className="relative z-10 flex flex-col h-full">
-                  {/* Icono */}
                   <div className="h-14 w-14 rounded-xl bg-matrix/10 border border-matrix/30 flex items-center justify-center mb-6 text-matrix">
                     <LayoutGrid className="h-7 w-7" aria-hidden="true" />
                   </div>
                   
-                  {/* Título */}
                   <h3 className="font-serif text-3xl sm:text-4xl font-bold mb-4 text-[#FAFAFA]">
                     Tianguis Bitcoin Mérida
                   </h3>
                   
-                  {/* Descripción */}
                   <p className="font-mono text-gray-400 mb-8 flex-grow leading-relaxed">
                     El primer marketplace descentralizado impulsado por Nostr y Lightning. 
                     Compra y vende sin intermediarios.
                   </p>
                   
-                  {/* CTA */}
                   <Button 
                     asChild 
                     size="lg" 
@@ -294,7 +289,7 @@ export default async function Home() {
         {/* 8️ TipJar — Donaciones Lightning */}
         <TipJarSection />
 
-        {/*  Botón flotante de contacto (siempre accesible) */}
+        {/* Botón flotante de contacto (siempre accesible) */}
         <MatrixArcadeWhatsApp
           phoneNumber="+525586765117"
           message="Hola, quiero aprender sobre Bitcoin 🟢"
