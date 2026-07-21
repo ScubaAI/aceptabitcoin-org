@@ -1,47 +1,47 @@
-// data/partners.ts
-
 export interface Partner {
   id: string;
   name: string;
   url: string;
   tagline: string;
   description: string;
-  icon: string; // Nombre del icono de Lucide (ej: "Bitcoin", "Globe")
-  protocol?: string; // Protocolo técnico (ej: "Lightning Network", "P2P Escrow")
+  icon: string; // Nombre del icono de Lucide (ej: "Wallet", "ShieldCheck")
+  protocol?: string; // Protocolo técnico o marco regulatorio
+  requiresKYC: boolean; // Transparencia radical: ¿Requiere identificación?
   status?: 'online' | 'maintenance' | 'offline'; // Estado del nodo para UI técnica
 }
 
 export const PARTNERS: Partner[] = [
   {
     id: "aureo",
-    name: "AureoBitcoin",
-    // CAMBIO: Enlace de referido actualizado
+    name: "Aureo Bitcoin",
     url: "https://app.aureobitcoin.com/es/auth/signup?ref=abo",
-    tagline: "La plataforma mexicana confiable",
-    description: "Compra y vende Bitcoin fácilmente con SPEI. Soberanía financiera desde México.",
-    icon: "Bitcoin",
-    protocol: "SPEI / On-Chain",
+    tagline: "Adquisición premium, directo a tu wallet",
+    description: "Puente soberano en México. Compra Bitcoin con SPEI y recíbelo directamente en tu cartera de autocustodia. Sin altcoins, sin stablecoins, solo Bitcoin.",
+    icon: "Wallet",
+    protocol: "SPEI / Direct-to-Wallet",
+    requiresKYC: true,
     status: "online"
   },
   {
     id: "arcadia",
-    name: "Arcadia",
+    name: "Arcadia₿",
     url: "https://www.arcadiab.com/",
-    tagline: "Tu puerta a Lightning Network",
-    description: "Exchange enfocado en privacidad y velocidad. Conecta tu nodo y toma el control.",
-    icon: "Zap",
-    protocol: "Lightning Network",
+    tagline: "La empresa Bitcoin más antigua de México",
+    description: "Primera tesorería Bitcoin pública del país. Regulada como SOFOM, ofrece custodia multifirma, compras recurrentes sin comisión y soporte humano local.",
+    icon: "ShieldCheck",
+    protocol: "SOFOM / Custodia Multifirma",
+    requiresKYC: true,
     status: "online"
   },
   {
     id: "bullbitcoin",
     name: "Bull Bitcoin",
-    // CAMBIO: Enlace de referido actualizado
     url: "https://app.bullbitcoin.com/registration/trtxx1",
-    tagline: "Non-custodial & Privacy First",
-    description: "Intercambio P2P sin KYC. Diseñado para cypherpunks que valoran su privacidad.",
-    icon: "Shield",
-    protocol: "P2P Non-Custodial",
+    tagline: "Non-custodial & Privacy Focused",
+    description: "Exchange canadiense con enfoque en no-custodia y retiros Lightning. *Requiere KYC* para cumplir con regulaciones financieras, pero tú mantienes el control de tus fondos.",
+    icon: "Globe",
+    protocol: "Non-Custodial / KYC Regulado",
+    requiresKYC: true,
     status: "online"
   },
   {
@@ -49,9 +49,10 @@ export const PARTNERS: Partner[] = [
     name: "Hodl Hodl",
     url: "https://hodlhodl.com/",
     tagline: "Trade Bitcoin without giving up custody",
-    description: "Plataforma P2P global. Tú tienes las llaves, tú tienes el Bitcoin.",
-    icon: "Globe",
+    description: "Plataforma P2P global con contratos multisig. Tú mantienes el control de tus llaves en todo momento. Sin fondos retenidos por la plataforma.",
+    icon: "Lock",
     protocol: "Multisig Escrow",
+    requiresKYC: false,
     status: "online"
   },
 ];

@@ -1,8 +1,7 @@
-// components/ui/PartnerCard.tsx
 "use client";
 
 import { motion } from "framer-motion";
-import { ExternalLink, ShieldCheck, Zap, Globe, Server } from "lucide-react";
+import { ExternalLink, ShieldCheck, Zap, Globe, Server, Lock } from "lucide-react";
 import * as Icons from "lucide-react";
 import { LucideIcon } from "lucide-react";
 
@@ -15,6 +14,7 @@ interface PartnerCardProps {
     description: string;
     icon: string;
     protocol?: string;
+    requiresKYC: boolean; // Transparencia radical: ¿Requiere identificación?
     status?: 'online' | 'maintenance' | 'offline';
   };
 }
@@ -107,16 +107,38 @@ export function PartnerCard({ partner }: PartnerCardProps) {
         </div>
 
         {/* Footer Technical Data */}
-        <div className="bg-black/50 border-t border-white/5 px-6 py-2 flex justify-between items-center">
+        <div className="bg-black/50 border-t border-white/5 px-6 py-3 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 sm:gap-0">
           <span className="font-mono text-[10px] text-gray-600 uppercase tracking-widest">
             Protocol: {partner.protocol || "Bitcoin"}
           </span>
-          <span className={`font-mono text-[10px] uppercase tracking-widest ${
-            partner.status === 'online' ? 'text-matrix/80' : 
-            partner.status === 'maintenance' ? 'text-yellow-400/80' : 'text-red-500/80'
-          }`}>
-            Status: {(partner.status || "UNKNOWN").toUpperCase()}
-          </span>
+          
+          <div className="flex items-center gap-3">
+            {/* KYC Transparency Badge */}
+            <span className={`inline-flex items-center gap-1.5 px-2 py-0.5 rounded text-[10px] font-mono uppercase tracking-wider border ${
+              partner.requiresKYC 
+                ? "bg-orange-500/10 border-orange-500/40 text-orange-400" 
+                : "bg-matrix/10 border-matrix/40 text-matrix"
+            }`}>
+              {partner.requiresKYC ? (
+                <>
+                  <ShieldCheck className="w-3 h-3" />
+                  <span>KYC Req.</span>
+                </>
+              ) : (
+                <>
+                  <Lock className="w-3 h-3" />
+                  <span>No KYC</span>
+                </>
+              )}
+            </span>
+            
+            <span className={`font-mono text-[10px] uppercase tracking-widest ${
+              partner.status === 'online' ? 'text-matrix/80' : 
+              partner.status === 'maintenance' ? 'text-yellow-400/80' : 'text-red-500/80'
+            }`}>
+              Status: {(partner.status || "UNKNOWN").toUpperCase()}
+            </span>
+          </div>
         </div>
       </div>
     </motion.div>
