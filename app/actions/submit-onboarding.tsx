@@ -1,58 +1,112 @@
-"use server"; // Esta línea es MUY importante. Le dice a Next que esto corre en el servidor.
+"use server";
 
-import { Resend } from 'resend';
-import React from 'react'; // Para usar JSX en el email
+import { Resend } from "resend";
+import React from "react";
 
-// Inicializamos Resend con tu variable de entorno
+// 1. Inicialización segura (asegúrate de tener RESEND_API_KEY en tu .env)
 const resend = new Resend(process.env.RESEND_API_KEY);
 
-export async function submitOnboarding(formData: FormData) {
-  // 1. Extraer datos del formulario
-  const name = formData.get('name') as string;
-  const email = formData.get('email') as string;
-  const businessName = formData.get('businessName') as string;
-  const techLevel = formData.get('techLevel') as string;
+// 2. Interfaces estrictas (Adiós al 'any')
+export interface OnboardingFormData {
+  name: string;
+  email: string;
+  businessName: string;
+  techLevel: string;
+}
 
-  // 2. (Opcional) Validación simple
-  if (!email || !businessName) {
-    return { error: "Faltan datos críticos." };
+// 3. Validación robusta
+function validateOnboardingData(data: OnboardingFormData): string | null {
+  if (!data.name || data.name.trim().length < 2) {
+    return "El nombre es requerido (mínimo 2 caracteres).";
+  }
+  if (!data.businessName || data.businessName.trim().length < 2) {
+    return "El nombre del negocio es requerido.";
+  }
+  
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!data.email || !emailRegex.test(data.email)) {
+    return "Se requiere un formato de correo electrónico válido.";
+  }
+  
+  if (!data.techLevel) {
+    return "Se requiere seleccionar un nivel técnico.";
+  }
+  
+  return null; // null significa que es válido
+}
+
+// 4. Server Action principal
+export async function submitOnboarding(formData: FormData) {
+  // Extraer y tipar datos
+  const rawData: OnboardingFormData = {
+    name: (formData.get("name") as string)?.trim() || "",
+    email: (formData.get("email") as string)?.trim() || "",
+    businessName: (formData.get("businessName") as string)?.trim() || "",
+    techLevel: (formData.get("techLevel") as string)?.trim() || "",
+  };
+
+  // Validar
+  const validationError = validateOnboardingData(rawData);
+  if (validationError) {
+    return { error: validationError };
   }
 
   try {
-    // 3. Enviar correo a TI (Admin)
+    // Enviar correo
     const { data, error } = await resend.emails.send({
-      from: 'Acepta Bitcoin <onboarding@tu-dominio.com>', // Tiene que ser un dominio verificado en Resend
-      to: ['hola@aceptabitcoin.org'], // Tu correo real
-      subject: `🚀 Nuevo Lead: ${businessName}`,
-      react: <EmailTemplate 
-        firstName={name} 
-        businessName={businessName} 
-        techLevel={techLevel}
-        email={email} 
-      />, // Usamos React para hacer el email bonito
+      // ⚠️ CRÍTICO: 'tu-dominio.com' DEBE estar verificado en el dashboard de Resend
+      from: "Acepta Bitcoin Oracle <onboarding@tu-dominio.com>", 
+      to: ["hola@aceptabitcoin.org"], // Tu correo de administración
+      subject: `🟢 [ORACLE] Nuevo Merchant: ${rawData.businessName}`,
+      react: <OracleEmailTemplate data={rawData} />,
     });
 
     if (error) {
-      return { error: error.message };
+      console.error("[ORACLE ERROR] Resend API failed:", error);
+      return { error: "Error al procesar la solicitud. Inténtalo de nuevo." };
     }
 
-    // 4. Retornar éxito al frontend
+    console.log("[ORACLE SUCCESS] Onboarding email sent:", data?.id);
     return { success: true };
 
   } catch (error) {
-    return { error: "Error interno del servidor." };
+    console.error("[ORACLE CRITICAL] Server action exception:", error);
+    return { error: "Error interno del servidor. El equipo ha sido notificado." };
   }
 }
 
-// Componente visual para el correo (Opcional pero pro)
-const EmailTemplate = ({ firstName, businessName, techLevel, email }: any) => (
-  <div style={{ fontFamily: 'monospace', color: '#000' }}>
-    <h1>Nuevo Merchant Solicita Acceso</h1>
-    <p><strong>Nombre:</strong> {firstName}</p>
-    <p><strong>Negocio:</strong> {businessName}</p>
-    <p><strong>Nivel Técnico:</strong> {techLevel}</p>
-    <p><strong>Email:</strong> {email}</p>
-    <hr />
-    <p style={{ fontSize: '12px', color: '#666' }}>Enviado desde Acepta Bitcoin Oracle System</p>
+// 5. Componente de Email con estética "Terminal / Oracle System"
+// Nota: Los clientes de correo requieren estilos en línea (inline styles).
+const OracleEmailTemplate = ({ data }: { data: OnboardingFormData }) => (
+  <div style={{ 
+    fontFamily: "'Fira Code', 'Courier New', monospace", 
+    backgroundColor: "#000000", 
+    color: "#00FF41", 
+    padding: "24px", 
+    border: "1px solid #00FF41",
+    borderRadius: "8px",
+    maxWidth: "600px",
+    margin: "0 auto"
+  }}>
+    <div style={{ borderBottom: "1px solid #00FF41", paddingBottom: "16px", marginBottom: "16px" }}>
+      <h1 style={{ fontSize: "18px", fontWeight: "bold", margin: 0, letterSpacing: "1px" }}>
+        &gt; NUEVA SOLICITUD DE ONBOARDING DETECTADA
+      </h1>
+      <p style={{ fontSize: "12px", color: "#00CC33", margin: "8px 0 0 0" }}>
+        TIMESTAMP: {new Date().toISOString()}
+      </p>
+    </div>
+
+    <div style={{ lineHeight: "1.6", fontSize: "14px" }}>
+      <p style={{ margin: "8px 0" }}><strong style={{ color: "#FAFAFA" }}>OPERADOR:</strong> {data.name}</p>
+      <p style={{ margin: "8px 0" }}><strong style={{ color: "#FAFAFA" }}>NODO (NEGOCIO):</strong> {data.businessName}</p>
+      <p style={{ margin: "8px 0" }}><strong style={{ color: "#FAFAFA" }}>CANAL DE CONTACTO:</strong> <a href={`mailto:${data.email}`} style={{ color: "#F7931A", textDecoration: "none" }}>{data.email}</a></p>
+      <p style={{ margin: "8px 0" }}><strong style={{ color: "#FAFAFA" }}>NIVEL TÉCNICO:</strong> {data.techLevel}</p>
+    </div>
+
+    <div style={{ marginTop: "24px", paddingTop: "16px", borderTop: "1px dashed #00FF41", fontSize: "11px", color: "#666" }}>
+      <p style={{ margin: 0 }}>ENVIADO DESDE: ACEPTA BITCOIN ORACLE SYSTEM v3.0</p>
+      <p style={{ margin: "4px 0 0 0" }}>NO RESPONDER A ESTE CORREO AUTOMATIZADO.</p>
+    </div>
   </div>
 );

@@ -1,12 +1,11 @@
 /* ============================================
-   app/globals.css — Design System v2.1 (UPDATED)
+   app/globals.css — Design System v3.0 (Cypherpunk Bank / Oracle System)
    ============================================
-   ✅ Fuentes Importadas (VT323, IBM Plex, Fira Code)
-   ✅ Variables en :root directo
-   ✅ Keyframes globales fuera de layers
-   ✅ Utilidades organizadas por propósito
-   ✅ Fix: Regla button permite fuentes custom (Arcade)
-   ✅ NEW: Keyframe 'scan' para efecto holográfico QR
+   ✅ v3.0 Core Tokens: matrix, bitcoin, accent (Tron Cyan), orange palette
+   ✅ v3.0 Glow Calibrations: Default glows at 20% alpha, hovers at 40-60%
+   ✅ Terminal UI Base: body defaults to font-mono (Fira Code)
+   ✅ Glassmorphism Bunker: bg-black/80 minimum opacity
+   ✅ Accessibility & Reduced Motion preserved
    ============================================ */
 
 @tailwind base;
@@ -16,63 +15,76 @@
 /* ============================================
    0. FUENTES (FONTS)
    ============================================ */
-@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Serif:ital,wght@0,400;0,600;0,700;1,400&family=Fira+Code:wght@300;400;500;600&family=VT323&display=swap');
+/* 
+  NOTA v3.0: Si estás usando next/font en tu layout.tsx (recomendado para Next.js 14), 
+  las variables CSS (--font-ibm-plex-serif, etc.) se inyectan automáticamente y esta 
+  importación de Google Fonts es redundante. Si NO usas next/font, descomenta la línea.
+*/
+/* @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Serif:ital,wght@0,400;0,600;0,700;1,400&family=Fira+Code:wght@300;400;500;600&family=VT323&display=swap'); */
 
 /* ============================================
    1. VARIABLES GLOBALES (:root)
    ============================================ */
 :root {
   /* 🎨 Base Theme (HSL para shadcn/ui) */
-  --background: 0 0% 0%;
-  --foreground: 0 0% 98%;
-  --card: 132 10% 2%;
+  --background: 0 0% 0%;       /* Pure black OLED depth */
+  --foreground: 0 0% 98%;      /* #FAFAFA */
+  --card: 0 0% 2%;             /* Slightly lifted black */
   --card-foreground: 0 0% 98%;
-  --popover: 132 10% 2%;
+  --popover: 0 0% 2%;
   --popover-foreground: 0 0% 98%;
-  --border: 132 20% 10%;
-  --input: 132 20% 10%;
+  --border: 0 0% 15%;          /* Tinted border base */
+  --input: 0 0% 15%;
   --ring: 30 93% 53%;
   --radius: 0.75rem;
 
-  /* 🟢 Matrix Green — Brand Primary */
+  /* 🟢 Matrix Green — System, Data, BOB, Code */
   --matrix: #00FF41;
-  --matrix-dark: #00B300;
   --matrix-hsl: 132 100% 50%;
-  --matrix-dark-hsl: 132 100% 35%;
-  --matrix-glow: 0 0 15px rgba(0, 255, 65, 0.2), 0 0 30px rgba(0, 255, 65, 0.1);
-  --matrix-glow-hover: 0 0 25px rgba(0, 255, 65, 0.4), 0 0 50px rgba(0, 255, 65, 0.25);
-  --matrix-glow-strong: 0 0 40px rgba(0, 255, 65, 0.6);
+  --matrix-glow: 0 0 15px rgba(0, 255, 65, 0.2);         /* v3.0: 20% alpha default */
+  --matrix-glow-hover: 0 0 25px rgba(0, 255, 65, 0.4);   /* v3.0: 40% alpha hover */
+  --matrix-glow-strong: 0 0 40px rgba(0, 255, 65, 0.6);  /* v3.0: 60% alpha strong */
 
-  /* 🟠 Bitcoin Orange — Brand Secondary */
+  /* 🟠 Bitcoin Orange — CTAs, Money, Primary Actions */
   --bitcoin: #F7931A;
   --bitcoin-hsl: 30 93% 53%;
-  --bitcoin-glow: 0 0 20px rgba(247, 147, 26, 0.4);
-  --bitcoin-glow-hover: 0 0 35px rgba(247, 147, 26, 0.6);
+  --bitcoin-glow: 0 0 20px rgba(247, 147, 26, 0.2);      /* v3.0: 20% alpha default (was 40% in v2) */
+  --bitcoin-glow-hover: 0 0 35px rgba(247, 147, 26, 0.6);/* v3.0: 60% alpha hover */
 
-  /* 🟠 Orange Palette — For UI consistency */
-  --orange-500: #f97316;
-  --orange-400: #fb923c;
-  --orange-300: #fdba74;
-  --orange-600: #ea580c;
-  --orange-glow: 0 0 15px rgba(249, 115, 22, 0.3), 0 0 30px rgba(249, 115, 22, 0.15);
+  /* 🔵 Tron Cyan — Accent (Secondary highlight, use sparingly) */
+  --accent: #06B6D4;
+  --accent-hsl: 189 94% 43%;
+  --accent-foreground: 0 0% 0%;
+  --accent-glow: 0 0 15px rgba(6, 182, 212, 0.3);
+  --accent-glow-hover: 0 0 25px rgba(6, 182, 212, 0.5);
 
-  /* 🔴 Trend Colors — Market indicators */
+  /* 🟠 Orange Palette — Financial UI Theming */
+  --orange-500: #F97316;
+  --orange-400: #FB923C;
+  --orange-300: #FDBA74;
+  --orange-glow: 0 0 15px rgba(249, 115, 22, 0.3);
+  --orange-glow-hover: 0 0 25px rgba(249, 115, 22, 0.5);
+
+  /* 🟢 Terminal Glow */
+  --terminal-glow: 0 0 12px rgba(0, 255, 65, 0.15);
+
+  /* 🔴 Trend & Semantic Colors */
   --green-400: #4ade80;
   --green-500: #22c55e;
   --red-400: #f87171;
-  --red-500: #ef4444;
-  --gray-400: #9ca3af;
-  --gray-500: #6b7280;
+  --red-500: #ef4444;     /* Reserved for warnings / caution */
+  --gray-400: #9ca3af;    /* Neutral / Loading */
+  --gray-500: #6b7280;    /* Disabled / Inactive */
 
   /* 🧩 shadcn/ui Token Mapping */
   --primary: var(--bitcoin-hsl);
   --primary-foreground: 0 0% 0%;
   --secondary: var(--matrix-hsl);
   --secondary-foreground: 0 0% 0%;
-  --muted: 132 10% 8%;
-  --muted-foreground: 132 10% 60%;
-  --accent: 132 20% 10%;
-  --accent-foreground: var(--matrix-hsl);
+  --muted: 0 0% 8%;
+  --muted-foreground: 0 0% 60%;
+  --accent-shadcn: var(--accent-hsl); /* Mapped to Tron Cyan */
+  --accent-shadcn-foreground: 0 0% 0%;
   --destructive: 0 62.8% 30.6%;
   --destructive-foreground: 0 0% 98%;
 }
@@ -82,7 +94,7 @@
    ============================================ */
 @keyframes scanline {
   0% { transform: translateY(-100%); }
-  100% { transform: translateY(100vh); }
+  100% { transform: translateY(200%); } /* v3.0: aligned with tailwind.config.ts */
 }
 
 @keyframes blink {
@@ -106,22 +118,12 @@
   50% { transform: translateY(-8px); }
 }
 
-/* 🆕 Efecto holográfico para QR codes (TipJar) */
 @keyframes scan {
-  0% { 
-    transform: translateY(-100%);
-    opacity: 0;
-  }
-  50% {
-    opacity: 1;
-  }
-  100% { 
-    transform: translateY(100%);
-    opacity: 0;
-  }
+  0% { transform: translateY(-100%); opacity: 0; }
+  50% { opacity: 1; }
+  100% { transform: translateY(100%); opacity: 0; }
 }
 
-/* 🆕 Efecto de "mining" para bloques (Nuestra Historia) */
 @keyframes mining-pulse {
   0%, 100% {
     transform: scale(1);
@@ -144,38 +146,31 @@
 
   html {
     @apply scroll-smooth;
-    scroll-padding-top: 5rem; /* Compensa navbar fija (~80px) */
+    scroll-padding-top: 5rem; 
     -webkit-text-size-adjust: 100%;
   }
 
+  /* v3.0 Terminal UI: Base body uses Mono (Fira Code) for technical aesthetic */
   body {
-    @apply bg-background text-foreground antialiased;
+    @apply bg-background text-foreground antialiased font-mono;
     font-feature-settings: "rlig" 1, "calt" 1;
-    /* Prevenir layout shift por scrollbar */
     scrollbar-gutter: stable;
   }
 
-  /* Tipografía base */
+  /* Serif for institutional authority (Titles, H1-H6) */
   h1, h2, h3, h4, h5, h6 {
     @apply font-serif font-bold tracking-tight;
   }
 
-  /* Textos generales */
-  p, span, label, input, a {
-    @apply font-sans;
+  /* Inputs and textareas inherit mono, but can be overridden */
+  input, textarea, select {
+    @apply font-mono;
   }
 
-  /* 
-     ⚠️ FIX CRÍTICO PARA ARCADE BUTTON:
-     No forzar 'font-sans' en todos los botones.
-     Dejamos que el botón decida su fuente (ej. VT323).
-     Si usas componentes shadcn/ui estándar, ellos tienen su propia clase.
-  */
   button {
-    /* @apply font-sans;  <-- COMENTADO O ELIMINADO */
+    /* Allow buttons to dictate their own font (e.g., VT323 for Arcade, Mono for standard) */
   }
 
-  /* Imágenes responsivas por defecto */
   img {
     @apply max-w-full h-auto;
   }
@@ -187,30 +182,35 @@
 @layer utilities {
   
   /* ────────────────────────────────────────
-     🎨 COLORES DE MARCA
+     🎨 v3.0 CORE BRAND COLORS
      ──────────────────────────────────────── */
-  
-  /* Matrix Green */
   .text-matrix      { color: var(--matrix); }
   .bg-matrix        { background-color: var(--matrix); }
   .border-matrix    { border-color: var(--matrix); }
   .fill-matrix      { fill: var(--matrix); }
   .ring-matrix      { --tw-ring-color: var(--matrix); }
   
-  /* Bitcoin Orange */
   .text-bitcoin     { color: var(--bitcoin); }
   .bg-bitcoin       { background-color: var(--bitcoin); }
   .border-bitcoin   { border-color: var(--bitcoin); }
   .fill-bitcoin     { fill: var(--bitcoin); }
   .ring-bitcoin     { --tw-ring-color: var(--bitcoin); }
+
+  /* v3.0 Tron Cyan Accent */
+  .text-accent      { color: var(--accent); }
+  .bg-accent        { background-color: var(--accent); }
+  .border-accent    { border-color: var(--accent); }
+  .fill-accent      { fill: var(--accent); }
+  .ring-accent      { --tw-ring-color: var(--accent); }
   
-  /* Orange Palette (UI consistency) */
+  /* Orange Palette */
   .text-orange-500  { color: var(--orange-500); }
   .text-orange-400  { color: var(--orange-400); }
+  .text-orange-300  { color: var(--orange-300); }
   .bg-orange-500    { background-color: var(--orange-500); }
   .border-orange-500 { border-color: var(--orange-500); }
   
-  /* Trend Colors */
+  /* Semantic Trend Colors */
   .text-trend-up    { color: var(--green-400); }
   .text-trend-down  { color: var(--red-400); }
   .bg-trend-up      { background-color: var(--green-500); }
@@ -218,110 +218,88 @@
 
 
   /* ────────────────────────────────────────
-     ✨ GLOW & SHADOW EFFECTS
+     ✨ v3.0 GLOW & SHADOW TOKENS
      ──────────────────────────────────────── */
-  
-  /* Text Glow */
   .glow-matrix      { text-shadow: 0 0 8px rgba(0, 255, 65, 0.6); }
   .glow-bitcoin     { text-shadow: 0 0 8px rgba(247, 147, 26, 0.6); }
-  .glow-orange      { text-shadow: 0 0 8px rgba(249, 115, 22, 0.5); }
+  .glow-accent      { text-shadow: 0 0 8px rgba(6, 182, 212, 0.6); }
   
-  /* Box Shadow Glow */
   .shadow-matrix          { box-shadow: var(--matrix-glow); }
   .shadow-matrix-hover    { box-shadow: var(--matrix-glow-hover); }
   .shadow-matrix-strong   { box-shadow: var(--matrix-glow-strong); }
   .shadow-bitcoin         { box-shadow: var(--bitcoin-glow); }
   .shadow-bitcoin-hover   { box-shadow: var(--bitcoin-glow-hover); }
+  .shadow-accent          { box-shadow: var(--accent-glow); }
+  .shadow-accent-hover    { box-shadow: var(--accent-glow-hover); }
   .shadow-orange          { box-shadow: var(--orange-glow); }
-  
-  /* Hover transitions for glow */
-  .hover-glow-matrix:hover   { box-shadow: var(--matrix-glow-hover); }
-  .hover-glow-bitcoin:hover  { box-shadow: var(--bitcoin-glow-hover); }
+  .shadow-orange-hover    { box-shadow: var(--orange-glow-hover); }
+  .shadow-terminal        { box-shadow: var(--terminal-glow); }
 
 
   /* ────────────────────────────────────────
-     🪞 GLASSMORPHISM & BACKDROPS
+     🪞 GLASSMORPHISM "BUNKER" (v3.0 Strict)
+     bg-black/80 minimum — never lower
      ──────────────────────────────────────── */
-  
-  /* Glass card base (reutilizable) */
   .glass-card {
-    @apply bg-black/60 backdrop-blur-md border border-white/10 rounded-2xl;
+    @apply bg-black/80 backdrop-blur-md border border-white/10 rounded-xl;
   }
   
-  /* Variantes con bordes de marca */
   .glass-card-matrix {
-    @apply glass-card border-matrix/20;
+    @apply glass-card border-matrix/30;
   }
   
   .glass-card-bitcoin {
-    @apply glass-card border-bitcoin/20;
+    @apply glass-card border-bitcoin/30;
   }
   
-  .glass-card-orange {
-    @apply glass-card border-orange-500/20;
+  .glass-card-accent {
+    @apply glass-card border-accent/30;
   }
   
-  /* Bunker style (más oscuro) */
   .glass-bunker {
-    @apply bg-black/80 backdrop-blur-lg border border-white/10;
+    @apply bg-black/90 backdrop-blur-xl border border-white/10;
   }
   
-  /* Overlay para modals/overlays */
   .glass-overlay {
-    @apply bg-black/70 backdrop-blur-sm border border-white/5;
+    @apply bg-black/80 backdrop-blur-md border border-white/5;
   }
 
 
   /* ────────────────────────────────────────
      🚀 INTERACCIONES & ANIMACIONES
      ──────────────────────────────────────── */
-  
-  /* Hover lift effect (cards, buttons) */
   .hover-lift {
-    @apply transition-all duration-500 hover:-translate-y-1;
+    @apply transition-all duration-300 hover:-translate-y-1;
   }
   
-  .hover-lift-sm {
-    @apply transition-all duration-300 hover:-translate-y-0.5;
-  }
-  
-  /* Pulse animation for indicators */
   .animate-pulse-glow {
     animation: pulse-glow 2s ease-in-out infinite;
   }
   
-  /* Float animation for decorative elements */
   .animate-float {
     animation: float 3s ease-in-out infinite;
   }
   
-  /* 🆕 Scan animation for QR holographic effect */
   .animate-scan {
     animation: scan 2s ease-in-out infinite;
   }
   
-  /* 🆕 Mining pulse animation for blocks */
   .animate-mining-pulse {
     animation: mining-pulse 0.6s ease-in-out;
   }
   
-  /* Scanline effect (Matrix style) */
-  .scanline::after {
+  /* Scanline texture (subtle background) */
+  .scanline-texture::after {
     content: '';
     position: absolute;
     inset: 0;
-    background: linear-gradient(
-      to bottom,
-      transparent 0%,
-      rgba(0, 255, 65, 0.03) 50%,
-      transparent 100%
-    );
-    animation: scanline 8s linear infinite;
+    background: linear-gradient(transparent 50%, rgba(255, 255, 255, 0.03) 50%);
+    background-size: 100% 4px;
     pointer-events: none;
     z-index: 1;
   }
   
-  /* Blinking cursor (terminal style) */
+  /* Blinking cursor */
   .cursor-blink {
     border-right: 2px solid var(--matrix);
     animation: blink 1s step-end infinite;
@@ -329,66 +307,94 @@
 
 
   /* ────────────────────────────────────────
-     🌐 BACKGROUNDS & PATTERNS
+     🌐 v3.0 PATTERNS (Tron Corners, Wisdom Logs)
      ──────────────────────────────────────── */
   
-  /* Matrix grid background */
-  .bg-matrix-grid {
-    background-image: radial-gradient(rgba(0, 255, 65, 0.15) 1px, transparent 1px);
-    background-size: 50px 50px;
+  /* Tron Corner Brackets (Medium 6x6) */
+  .tron-corners {
+    @apply relative;
   }
-  
-  /* Subtle dot pattern */
-  .bg-dot-pattern {
-    background-image: radial-gradient(rgba(255, 255, 255, 0.1) 1px, transparent 1px);
-    background-size: 30px 30px;
+  .tron-corners::before,
+  .tron-corners::after {
+    content: '';
+    position: absolute;
+    width: 1.5rem; /* 24px */
+    height: 1.5rem;
+    border-color: currentColor;
+    opacity: 0.3;
+    pointer-events: none;
   }
-  
-  /* Gradient overlay utility */
-  .bg-gradient-fade {
-    background: linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.8) 100%);
+  .tron-corners::before {
+    top: 1rem; left: 1rem;
+    border-top-width: 2px; border-left-width: 2px;
+  }
+  .tron-corners::after {
+    bottom: 1rem; right: 1rem;
+    border-bottom-width: 2px; border-right-width: 2px;
+  }
+
+  /* Wisdom Log / Oracle Whisper Base */
+  .wisdom-log {
+    @apply flex items-start gap-3 p-3 rounded-lg bg-white/5 border border-white/10 hover:border-matrix/30 transition-colors;
   }
 
 
   /* ────────────────────────────────────────
-     📱 RESPONSIVE & LAYOUT UTILITIES
+     🌐 BACKGROUNDS & GRIDS
      ──────────────────────────────────────── */
-  
-  /* Safe area padding (iOS notch) */
-  .pb-safe {
-    padding-bottom: env(safe-area-inset-bottom, 1.5rem);
-  }
-  .pt-safe {
-    padding-top: env(safe-area-inset-top, 1rem);
-  }
-  .pl-safe {
-    padding-left: env(safe-area-inset-left, 1rem);
-  }
-  .pr-safe {
-    padding-right: env(safe-area-inset-right, 1rem);
+  .bg-matrix-grid {
+    background-image: radial-gradient(rgba(0, 255, 65, 0.03) 1px, transparent 1px);
+    background-size: 50px 50px;
   }
   
-  /* Container con padding lateral consistente */
+  .bg-bitcoin-grid {
+    background-image: radial-gradient(rgba(247, 147, 26, 0.03) 1px, transparent 1px);
+    background-size: 50px 50px;
+  }
+
+  .bg-dot-pattern {
+    background-image: radial-gradient(rgba(255, 255, 255, 0.1) 1px, transparent 1px);
+    background-size: 30px 30px;
+  }
+
+
+  /* ────────────────────────────────────────
+     📱 RESPONSIVE & LAYOUT
+     ──────────────────────────────────────── */
+  .pb-safe { padding-bottom: env(safe-area-inset-bottom, 1.5rem); }
+  .pt-safe { padding-top: env(safe-area-inset-top, 1rem); }
+  
   .container-safe {
     @apply container mx-auto px-4 sm:px-6 lg:px-8;
   }
   
-  /* Scroll margin para anclas con navbar fija */
   .scroll-mt-nav {
     scroll-margin-top: 5rem;
   }
   
-  /* Sticky utility con z-index seguro */
-  .sticky-safe {
-    @apply sticky z-30;
+  /* Custom Scrollbar */
+  .custom-scrollbar::-webkit-scrollbar {
+    @apply w-1.5 h-1.5;
+  }
+  .custom-scrollbar::-webkit-scrollbar-track {
+    @apply bg-transparent;
+  }
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    @apply bg-white/20 rounded-full hover:bg-white/30 transition-colors;
+  }
+  
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
   }
 
 
   /* ────────────────────────────────────────
      ♿ ACCESIBILIDAD
      ──────────────────────────────────────── */
-  
-  /* Focus visible mejorado para teclado */
   .focus-ring {
     @apply focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-black;
   }
@@ -399,71 +405,10 @@
     @apply focus-ring focus:ring-bitcoin;
   }
   
-  /* Skip link para accesibilidad */
   .skip-link {
     @apply sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 
            focus:z-50 focus:px-4 focus:py-2 focus:bg-black focus:text-matrix 
            focus:border focus:border-matrix focus:rounded-lg;
-  }
-  
-  /* Texto solo para screen readers */
-  .sr-only-focusable:focus {
-    @apply not-sr-only fixed inset-0 w-full bg-black/95 z-50 
-           flex items-center justify-center text-xl text-matrix;
-  }
-
-
-  /* ────────────────────────────────────────
-     🧩 UTILIDADES ESPECÍFICAS DEL PROYECTO
-     ──────────────────────────────────────── */
-  
-  /* Terminal text style */
-  .text-terminal {
-    @apply font-mono text-sm text-gray-400;
-  }
-  
-  /* Badge style para chips/tags */
-  .badge {
-    @apply inline-flex items-center gap-1.5 px-3 py-1 rounded-full 
-           text-xs font-mono uppercase tracking-wider;
-  }
-  .badge-matrix {
-    @apply badge bg-matrix/10 border border-matrix/30 text-matrix;
-  }
-  .badge-bitcoin {
-    @apply badge bg-bitcoin/10 border border-bitcoin/30 text-bitcoin;
-  }
-  .badge-orange {
-    @apply badge bg-orange-500/10 border border-orange-500/30 text-orange-400;
-  }
-  
-  /* Divider con gradiente */
-  .divider-gradient {
-    @apply w-full h-[1px] relative overflow-hidden;
-    background: linear-gradient(90deg, transparent, var(--matrix), transparent);
-  }
-  .divider-orange {
-    background: linear-gradient(90deg, transparent, var(--orange-500), transparent);
-  }
-  
-  /* Scrollbar personalizado (opcional) */
-  .scrollbar-thin::-webkit-scrollbar {
-    @apply w-1.5 h-1.5;
-  }
-  .scrollbar-thin::-webkit-scrollbar-track {
-    @apply bg-transparent;
-  }
-  .scrollbar-thin::-webkit-scrollbar-thumb {
-    @apply bg-white/20 rounded-full hover:bg-white/30 transition-colors;
-  }
-  
-  /* Ocultar scrollbar pero mantener scroll */
-  .no-scrollbar {
-    -ms-overflow-style: none;
-    scrollbar-width: none;
-  }
-  .no-scrollbar::-webkit-scrollbar {
-    display: none;
   }
 }
 
@@ -471,7 +416,6 @@
    5. MEDIA QUERIES GLOBALES
    ============================================ */
 
-/* Reduced motion preference */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
     animation-duration: 0.01ms !important;
@@ -480,21 +424,18 @@
     scroll-behavior: auto !important;
   }
   
-  /* Desactivar efectos visuales pesados */
-  .scanline::after,
+  .scanline-texture::after,
   .animate-pulse-glow,
   .animate-float,
   .animate-scan,
   .animate-mining-pulse,
-  .hover-lift,
-  .hover-lift-sm {
+  .hover-lift {
     animation: none !important;
     transition: none !important;
     transform: none !important;
   }
 }
 
-/* High contrast mode support */
 @media (prefers-contrast: high) {
   :root {
     --border: 0 0% 100%;
@@ -502,31 +443,16 @@
   }
   
   .glass-card, .glass-bunker {
-    @apply border-white/40 bg-black/90;
+    @apply border-white/40 bg-black/95;
   }
 }
 
-/* Dark mode es el único modo, pero por consistencia */
-@media (prefers-color-scheme: dark) {
-  /* Ya estamos en dark, pero útil para futuras expansiones */
-}
-
-/* Mobile-first adjustments */
 @media (max-width: 640px) {
-  /* Espacio para botón flotante de WhatsApp */
   main {
     padding-bottom: 5rem;
   }
   
-  /* Ajustar scroll-margin para navbar en móvil */
   html {
     scroll-padding-top: 4rem;
-  }
-}
-
-/* Large screens enhancements */
-@media (min-width: 1440px) {
-  .container {
-    max-width: 1280px;
   }
 }

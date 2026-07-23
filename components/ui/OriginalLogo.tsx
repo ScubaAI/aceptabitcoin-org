@@ -1,156 +1,107 @@
+'use client';
+
 import React from "react";
 
-interface OriginalLogoProps {
+interface AceptaBitcoinLogoProps {
   className?: string;
   variant?: "standard" | "neon";
 }
 
-export default function OriginalLogo({ 
-  className = "w-32 h-auto",
-  variant = "standard"
-}: OriginalLogoProps) {
-  
+/**
+ * Glifo oficial del símbolo Bitcoin (₿) — brand assets de bitcoin.org
+ * (viewBox 32×32). NO se hace a mano: el path oficial es el canon del
+ * ecosistema y cualquier versión casera queda peor.
+ */
+const BITCOIN_GLYPH =
+  "M23.189 14.02c.314-2.096-1.283-3.223-3.465-3.975l.708-2.84-1.728-.43-.69 2.765c-.454-.114-.92-.22-1.385-.326l.695-2.783L15.596 6l-.708 2.839c-.376-.086-.746-.17-1.104-.26l.002-.009-2.384-.595-.46 1.846s1.283.294 1.256.312c.7.175.826.638.805 1.006l-.806 3.235c.048.012.11.03.18.057l-.183-.045-1.13 4.532c-.086.212-.303.531-.793.41.018.025-1.256-.313-1.256-.313l-.858 1.978 2.25.561c.418.105.828.215 1.231.318l-.715 2.872 1.727.43.708-2.84c.472.127.93.245 1.378.357l-.706 2.828 1.728.43.715-2.866c2.948.558 5.164.333 6.097-2.333.752-2.146-.037-3.385-1.588-4.192 1.13-.26 1.98-1.003 2.207-2.538zm-3.95 5.538c-.533 2.147-4.148.986-5.32.695l.95-3.805c1.172.293 4.929.872 4.37 3.11zm.535-5.569c-.487 1.953-3.495.96-4.47.717l.86-3.45c.975.243 4.118.696 3.61 2.733z";
+
+export default function AceptaBitcoinLogo({
+  className = "w-64 h-auto",
+  variant = "standard",
+}: AceptaBitcoinLogoProps) {
   const isNeon = variant === "neon";
-  
+
   return (
-    <svg 
-      xmlns="http://www.w3.org/2000/svg" 
-      viewBox="0 0 420 130" 
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 420 130"
       className={className}
-      aria-label="Acepta Bitcoin"
+      role="img"
+      aria-label="Acepta Bitcoin México"
     >
-      {/* Definiciones de filtros y gradients */}
       <defs>
-        {/* Glow effect para versión neon */}
-        <filter id="neon-glow" x="-50%" y="-50%" width="200%" height="200%">
-          <feGaussianBlur stdDeviation="4" result="coloredBlur"/>
+        {/* Glow reutilizable para modo neon (texto y elementos) */}
+        <filter id="ab-glow" x="-50%" y="-50%" width="200%" height="200%">
+          <feGaussianBlur stdDeviation="3" result="blur" />
           <feMerge>
-            <feMergeNode in="coloredBlur"/>
-            <feMergeNode in="coloredBlur"/>
-            <feMergeNode in="SourceGraphic"/>
+            <feMergeNode in="blur" />
+            <feMergeNode in="blur" />
+            <feMergeNode in="SourceGraphic" />
           </feMerge>
         </filter>
-        
-        {/* Gradiente neon */}
-        <linearGradient id="neon-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stopColor="#F7931A" />
-          <stop offset="50%" stopColor="#FFB347" />
-          <stop offset="100%" stopColor="#F7931A" />
+
+        {/* Gradiente Bitcoin usando variables CSS (Cero hex hardcodeados) */}
+        <linearGradient id="ab-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stopColor="var(--bitcoin)" />
+          <stop offset="50%" stopColor="var(--bitcoin)" stopOpacity="0.8" />
+          <stop offset="100%" stopColor="var(--bitcoin)" />
         </linearGradient>
       </defs>
 
-      {/* Icono Bitcoin - Versión corregida con inclinación real */}
-      <g transform="translate(15, 12)">
-        {/* Círculo/Rectángulo de fondo */}
-        {isNeon ? (
-          // Versión Neon: Círculo con glow
-          <circle
-            cx="60"
-            cy="60"
-            r="52"
-            fill="none"
-            stroke="url(#neon-gradient)"
-            strokeWidth="3"
-            filter="url(#neon-glow)"
-            className="animate-pulse"
-          />
-        ) : (
-          // Versión Standard: Rectángulo redondeado
-          <rect 
-            x="8" 
-            y="8" 
-            width="104" 
-            height="104" 
-            rx="20" 
-            fill="#F7931A"
-            className="drop-shadow-[0_0_15px_rgba(247,147,26,0.4)]"
-          />
-        )}
+      {/* Moneda — círculo en ambas variantes (consistencia de marca) */}
+      <g transform="translate(10, 10)">
+        <circle
+          cx="55"
+          cy="55"
+          r="54"
+          fill={isNeon ? "none" : "var(--bitcoin)"}
+          stroke={isNeon ? "url(#ab-gradient)" : "none"}
+          strokeWidth={isNeon ? "3" : "0"}
+          filter={isNeon ? "url(#ab-glow)" : undefined}
+          className={isNeon ? "animate-pulse" : undefined}
+        />
 
-        {/* Símbolo Bitcoin (₿) — rotación real del logo oficial: -12° */}
-        <g
-          transform="rotate(-12, 60, 60)"
-          fill={isNeon ? "url(#neon-gradient)" : "#FFFFFF"}
-          stroke={isNeon ? "url(#neon-gradient)" : "none"}
-          strokeWidth={isNeon ? "2" : "0"}
-          filter={isNeon ? "url(#neon-glow)" : "none"}
+        {/* Glifo ₿ escalado a 76×76 y centrado dentro del círculo */}
+        <svg
+          x="17"
+          y="17"
+          width="76"
+          height="76"
+          viewBox="0 0 32 32"
+          fill={isNeon ? "url(#ab-gradient)" : "hsl(var(--foreground))"}
+          filter={isNeon ? "url(#ab-glow)" : undefined}
+          aria-hidden="true"
         >
-          {/* Barras verticales superiores (serifs del ₿)
-              Barra izquierda alineada con el borde izq. del tronco (x=36)
-              Barra derecha alineada con la "cintura" entre los dos bumps (x=52) */}
-          <rect x="36" y="19" width="8" height="15" rx="2.5" />
-          <rect x="52" y="19" width="8" height="15" rx="2.5" />
-
-          {/* Cuerpo de la B con fillRule="evenodd":
-              CRÍTICO — sin esto los huecos internos se rellenan sólidos
-              y la B queda como un bloque macizo (el bug original).
-              Los sub-paths interiores "restan" área al exterior. */}
-          <path
-            fillRule="evenodd"
-            d="
-              M 36,34
-              L 64,34
-              C 76,34 81,39 81,47
-              C 81,54 77,58 71,60
-              C 78,62 83,68 83,76
-              C 83,85 77,90 65,90
-              L 36,90
-              Z
-
-              M 44,42
-              L 62,42
-              C 68,42 72,45 72,48
-              C 72,52 68,55 62,55
-              L 44,55
-              Z
-
-              M 44,63
-              L 63,63
-              C 70,63 74,67 74,73
-              C 74,79 70,83 63,83
-              L 44,83
-              Z
-            "
-          />
-
-          {/* Barras verticales inferiores (mismas x que las superiores) */}
-          <rect x="36" y="90" width="8" height="15" rx="2.5" />
-          <rect x="52" y="90" width="8" height="15" rx="2.5" />
-        </g>
+          <path d={BITCOIN_GLYPH} />
+        </svg>
       </g>
 
-      {/* Texto "Acepta" */}
-      <text 
-        x="140" 
-        y={isNeon ? "68" : "65"} 
-        fontFamily="IBM Plex Serif, Georgia, serif" 
-        fontSize={isNeon ? "52" : "48"} 
-        fontWeight="700" 
-        fill={isNeon ? "url(#neon-gradient)" : "#FAFAFA"}
-        filter={isNeon ? "url(#neon-glow)" : "none"}
-        letterSpacing="0.5"
-        style={{
-          textShadow: isNeon ? "0 0 20px rgba(247,147,26,0.6)" : "0 0 10px rgba(255,255,255,0.1)"
-        }}
-      >
-        Acepta
-      </text>
-
-      {/* Texto "Bitcoin.org" */}
-      <text 
-        x="140" 
-        y={isNeon ? "113" : "110"} 
-        fontFamily="Fira Code, monospace" 
-        fontSize={isNeon ? "34" : "32"} 
-        fontWeight="600" 
-        fill={isNeon ? "#FFB347" : "#00FF41"}
-        letterSpacing="1"
-        style={{
-          textShadow: isNeon ? "0 0 15px rgba(255,179,71,0.5)" : "none"
-        }}
-      >
-        Bitcoin.org
-      </text>
+      {/* Wordmark */}
+      <g transform="translate(140, 0)">
+        <text
+          x="0"
+          y="68"
+          fontFamily="var(--font-ibm-plex-serif), Georgia, serif"
+          fontSize="52"
+          fontWeight="700"
+          fill={isNeon ? "url(#ab-gradient)" : "hsl(var(--foreground))"}
+          filter={isNeon ? "url(#ab-glow)" : undefined}
+          letterSpacing="0.5"
+        >
+          Acepta
+        </text>
+        <text
+          x="0"
+          y="108"
+          fontFamily="var(--font-fira-code), monospace"
+          fontSize="30"
+          fontWeight="600"
+          fill={isNeon ? "var(--bitcoin)" : "var(--matrix)"}
+          letterSpacing="2"
+        >
+          México
+        </text>
+      </g>
     </svg>
   );
 }
