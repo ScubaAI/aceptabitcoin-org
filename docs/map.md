@@ -176,7 +176,6 @@ aceptabitcoin-org/
 │   └── ui/                            # shadcn/ui + custom components
 │       ├── MatrixRain.tsx             # Animated <canvas> rain effect (client-only)
 │       ├── ArcadeButton.tsx           # Tron-style CTA button (custom)
-│       ├── arcade-button.tsx          # shadcn variant of ArcadeButton
 │       ├── Logo.tsx                   # Matrix-styled SVG logo
 │       ├── OriginalLogo.tsx           # Original branding logo
 │       ├── MatrixArcadeWhatsApp.tsx   # ✅ WhatsApp CTA with Matrix arcade style

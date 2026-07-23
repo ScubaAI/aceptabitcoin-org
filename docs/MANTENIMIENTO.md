@@ -1,6 +1,6 @@
 # Mantenimiento: Acepta Bitcoin México (Design System v2.1)
 
-Estado actual del proyecto — última actualización: 2026-06-25
+Estado actual del proyecto — última actualización: 2026-07-21
 
 ---
 
@@ -345,6 +345,69 @@ Todos los cambios respetan la estética cypherpunk, la narrativa Bitcoin, y la s
 #### 3. ArcadeButton v2.0 Redesign
 - **3D Mechanical Effect:** Borde inferior grueso, fondo sólido, animación de presión
 - **DS Compliance:** Paleta restringida a Matrix Green + Bitcoin Orange, tipografía VT323
+
+---
+
+## 🚀 Sprint Update: Refinamiento de Soberanía, Transparencia Radical y UX Terminal (21 de julio de 2026)
+
+Se completó la refactorización integral de componentes clave asegurando cumplimiento estricto del Design System v2.1 y cero errores de hidratación.
+
+### ✅ Cambios Implementados
+
+#### 1. Navbar — Responsive & Hydration Guard
+- **Breakpoint corregido:** Cambio de `xl` a `lg` para mobile/desktop, optimizando espaciado y visibilidad de navegación
+- **Hydration guard:** Añadido estado `isMounted` para renderizar skeleton inicial y evitar mismatches SSR/CSR
+- **Mobile menu mejorado:** Fondo Matrix Rain sutil, links con stagger animado, badge `SYSTEM ONLINE`, CTA más prominente
+- **Logo ajustado:** Tamaños responsivos refinados (`w-28` → `w-40`) con hover glow
+
+#### 2. Directorio Soberano — KYC Transparency
+- **`data/partners.ts`:** Actualizadas descripciones y protocolos de Aureo Bitcoin, Arcadia, Bull Bitcoin y Hodl Hodl
+- **`PartnerCard.tsx`:** Campo `requiresKYC` agregado a interfaz y datos
+  - Badge dinámico: Verde Matrix (`No KYC`) / Naranja Bitcoin (`KYC Req.`)
+  - Footer responsive: layout `flex-col` en mobile, `flex-row` en desktop
+- **Bull Bitcoin corregido:** Etiquetado correctamente como "KYC Regulado / Non-custodial"
+
+#### 3. Oracle DCA — Hydration & UX Fixes
+- **`MarketMoodWidget.tsx`:**
+  - Integración de `MarketMoodInfoPopover` en header con helper `getDcaStatusType()`
+  - Eliminado tooltip legacy `showDCAInfo` y su estado asociado
+  - Añadida propiedad `bgProgressClass` explícita en config DCA para evitar generación dinámica de clases Tailwind
+  - Botón refresh con `disabled:opacity-50` para feedback visual
+  - Limpieza de imports no usados (`Info`, `ExternalLink`, `TrendingUp`)
+- **`MarketMoodInfoPopover.tsx`:**
+  - Prop `currentStatus` para resaltar tarjeta activa en modal educativo
+  - Guard `isMounted` + migración de `localStorage` a `sessionStorage` (alineado a "esta sesión")
+  - Bloqueo de scroll del body mientras modal está abierto
+  - Layout mejorado: `max-h-[90vh]`, `flex flex-col`, scroll interno controlado
+
+#### 4. TipJar v3.0 — Native BTCPay POS
+- **Migración a formularios nativos:** Reemplazo de QR + input manual por `<form method="POST">` apuntando a BTCPay Server soberano (Elestio)
+- **Choice Keys implementados:**
+  - `tip-21k-sats` → Apoyo Básico
+  - `tip-210k-sats` → Apoyo Estratégico
+  - `tip-2m-sats` → Socio Soberano
+  - Monto libre vía enlace directo (`btcpayDirectLink`)
+- **Design System compliance:** Eliminado color Cyan de pestaña Fiat, reemplazado por Matrix Green respetando dualidad sagrada
+- **Simplificación:** Removida dependencia de QRCodeSVG para Lightning, eliminados estados de `amount` y `currency`, limpiado código muerto
+
+### 🐛 Bugs Corregidos
+
+| Issue | Fix |
+|-------|-----|
+| Mismatch hidratación Navbar | `isMounted` guard con skeleton estático |
+| Generación dinámica clases Tailwind en barra de progreso DCA | `bgProgressClass` explícito en config |
+| Parpadeo/mismatch en MarketMoodInfoPopover | `isMounted` + `sessionStorage` |
+| Scroll body sin bloquear con modal abierto | `document.body.style.overflow = "hidden"` |
+| Cyan color en pestaña Fiat TipJar | Reemplazado por Matrix Green |
+| QR code + input manual en Lightning | Formularios nativos con choiceKey |
+
+### 📊 Estado Final
+
+- ✅ Build pasando sin errores TypeScript
+- ✅ Tipado estricto sin errores
+- ✅ Hidratación limpia en todos los componentes dinámicos
+- ✅ Alineación total con filosofía: **Sovereign Infrastructure, Terminal UI, High Contrast**
+- ✅ Design System v2.1 compliance verificado
 
 ---
 
