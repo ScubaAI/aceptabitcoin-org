@@ -1,15 +1,12 @@
 import type { Metadata } from "next";
-import { type Proyecto } from "@/lib/proyectos";
+import { type Proyecto, getProyectos } from "@/lib/proyectos";
 import ProyectosClient from "../ProyectosClient";
-import { ArcadeButton } from "@/components/ui/ArcadeButton";
+import ArcadeButton from "@/components/ui/ArcadeButton";
 import Link from "next/link";
 
-import proyectosRaw from '@/data/proyectos.json';
-
 // Mismos filtros para mantener consistencia de datos
-const proyectosComunidad = (proyectosRaw as Proyecto[])
-  .filter(p => p.tipo !== 'interno')
-  .sort((a, b) => new Date(b.fecha).getTime() - new Date(a.fecha).getTime());
+const proyectosRaw = await getProyectos();
+const proyectosComunidad = [...proyectosRaw].sort((a, b) => new Date(b.fecha).getTime() - new Date(a.fecha).getTime());
 
 const historialProyectos = proyectosComunidad.slice(3);
 
@@ -61,7 +58,7 @@ export default function HistorialProyectosPage() {
         
         <div className="mt-16 flex justify-center">
           <Link href="/proyectos">
-            <ArcadeButton tier="low" variant="matrix">
+            <ArcadeButton size="md" variant="matrix">
               ← VOLVER A GANADORES
             </ArcadeButton>
           </Link>

@@ -6,6 +6,9 @@ import { OrbitControls, Float, Text } from '@react-three/drei';
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
 import * as THREE from 'three'; // Requerido para materiales y colores en WebGL
+
+// Workaround for drei v8 + fiber v8 type mismatch on Text component
+const AnyText = Text as any;
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 import { 
@@ -134,6 +137,7 @@ function HologramBlock({ block, index }: { block: TimechainBlock; index: number 
   });
 
   return (
+    // @ts-ignore - drei v8 type incompatibility with fiber v8: attachArray/attachObject are internal props
     <Float speed={2} rotationIntensity={0.3} floatIntensity={0.5}>
       <group ref={groupRef} position={[Math.cos(angle) * radius, yBase, Math.sin(angle) * radius]}>
         <mesh position={[0, -0.6, 0]} rotation={[-Math.PI / 2, 0, 0]}>
@@ -158,7 +162,7 @@ function HologramBlock({ block, index }: { block: TimechainBlock; index: number 
           <meshBasicMaterial color={color} transparent opacity={0.4} />
         </mesh>
 
-        <Text
+        <AnyText
           position={[0, 1.2, 0]}
           fontSize={0.18}
           color={COLORS.white}
@@ -167,7 +171,7 @@ function HologramBlock({ block, index }: { block: TimechainBlock; index: number 
           font="/fonts/VT323-Regular.ttf"
         >
           #{block.height.toString().padStart(3, '0')}
-        </Text>
+        </AnyText>
       </group>
     </Float>
   );

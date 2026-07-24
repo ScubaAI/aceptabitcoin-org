@@ -8,7 +8,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import dynamic from "next/dynamic";
 import { 
   Zap, Copy, Check, CreditCard, ExternalLink, Coins, 
-  ShieldCheck, Banknote, Heart, Users, Building, Sprout, Radio, Activity
+  ShieldCheck, Banknote, Heart, Users, Building, Sprout, Radio, Activity, Rocket
 } from "lucide-react";
 
 import MatrixRain from "@/components/ui/MatrixRain";
@@ -248,6 +248,7 @@ const TipBlockCard = memo(({
                 </span>
                 <Zap className={`h-4 w-4 ${style.text} group-hover:scale-110 transition-transform`} />
               </div>
+               </div>
             </div>
           </button>
         </div>

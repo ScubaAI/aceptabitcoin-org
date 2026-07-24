@@ -1,0 +1,18 @@
+// prisma/schema.prisma
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model LpSnapshot {
+  id        Int      @id @default(autoincrement())
+  timestamp DateTime @default(now()) // Cuándo se tomó el snapshot
+  totalUSD  Float    // Valor total en dólares en ese momento
+  feesUSD   Float    // Fees acumulados en ese momento
+  
+  @@map("lp_snapshots") // Nombre de la tabla en Postgres
+}

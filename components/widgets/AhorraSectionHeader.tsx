@@ -1,7 +1,9 @@
 'use client';
 
 import React, { useMemo } from 'react';
+import Link from 'next/link';
 import { motion } from 'framer-motion';
+import { ArrowRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 /**
@@ -48,26 +50,6 @@ const LIVE_CONFIG = {
   label: 'LIVE',
 } as const;
 
-/**
- * AhorraSectionHeader Props
- * 
- * @example
- * // Basic usage
- * <AhorraSectionHeader 
- *   title="Ahorra en Bitcoin" 
- *   subtitle="DCA semanal automatizado"
- *   marketTrend="bullish"
- *   isLive
- * />
- * 
- * @example
- * // With context chip
- * <AhorraSectionHeader
- *   title="Portfolio"
- *   contextValue="+12.4% este mes"
- *   marketTrend="bullish"
- * />
- */
 export interface AhorraSectionHeaderProps {
   /** Main heading text (e.g., "Ahorra") */
   title: string;
@@ -89,12 +71,11 @@ export interface AhorraSectionHeaderProps {
 
   /** HTML ID for anchor navigation */
   id?: string;
+  
+  /** URL to navigate to when clicked */
+  href?: string;
 }
 
-/**
- * LiveBadge - Memoized live status indicator
- * WCAG AA compliant with proper ARIA attributes
- */
 const LiveBadge = React.memo(() => (
   <motion.span
     className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[10px] font-mono font-bold uppercase tracking-wider"
@@ -130,9 +111,6 @@ const LiveBadge = React.memo(() => (
 
 LiveBadge.displayName = 'LiveBadge';
 
-/**
- * TrendChip - Memoized trend indicator with accessibility
- */
 interface TrendChipProps {
   trend: TrendDirection;
 }
@@ -168,9 +146,6 @@ const TrendChip = React.memo(({ trend }: TrendChipProps) => {
 
 TrendChip.displayName = 'TrendChip';
 
-/**
- * ContextChip - Optional context value display
- */
 interface ContextChipProps {
   value: string;
 }
@@ -193,9 +168,6 @@ const ContextChip = React.memo(({ value }: ContextChipProps) => (
 
 ContextChip.displayName = 'ContextChip';
 
-/**
- * DivisorLine - Optimized divider with mesh gradient effect
- */
 interface DivisorLineProps {
   color: string;
   glow: string;
@@ -218,19 +190,6 @@ const DivisorLine = React.memo(({ color, glow, delay = 0 }: DivisorLineProps) =>
 
 DivisorLine.displayName = 'DivisorLine';
 
-/**
- * AhorraSectionHeader - Premium fintech dashboard section header
- * 
- * A production-ready component following DS v2.1 standards with:
- * - Spring-based micro-interactions for tactile feel
- * - WCAG AA compliant color contrasts
- * - Memoized sub-components for performance
- * - Framer-motion whileInView for optimized scroll animations
- * 
- * @remarks
- * Uses CSS variables for theming: `--matrix`, `--orange-500`, `--orange-glow`
- * Pre-defined in `app/globals.css` for maintainability.
- */
 export default function AhorraSectionHeader({
   title,
   subtitle,
@@ -239,93 +198,87 @@ export default function AhorraSectionHeader({
   contextValue,
   className,
   id,
+  href = '/ahorro/access', // Por defecto va a la puerta de entrada
 }: AhorraSectionHeaderProps) {
-  // Memoize computed styles to prevent unnecessary recalculations
   const trendStyles = useMemo(() => TREND_STYLES[marketTrend], [marketTrend]);
-
-  // Fallback for missing title (should not happen in production)
   const safeTitle = title || 'Sección';
 
   return (
-    <section
-      id={id}
-      className={cn(
-        'relative w-full py-8 sm:py-10 border-y border-white/5',
-        className
-      )}
-      role="region"
-      aria-label={`Sección: ${safeTitle}`}
+    <motion.div
+      className={cn('w-full cursor-pointer', className)}
+      whileHover={{ scale: 1.02 }}
+      whileTap={{ scale: 0.99 }}
+      transition={{ type: 'spring', stiffness: 300, damping: 20 }}
     >
-      {/* Top divider with mesh gradient */}
-      <DivisorLine
-        color={trendStyles.color}
-        glow={trendStyles.glow}
-        delay={0}
-      />
-
-      {/* Main content container */}
-      <motion.div
-        className="relative flex flex-col items-center mt-6 px-4"
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: '-100px' }}
-        transition={{
-          type: 'spring',
-          stiffness: 100,
-          damping: 30,
-        }}
+      <Link 
+        href={href} 
+        id={id}
+        className="block group focus:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 focus-visible:ring-offset-4 focus-visible:ring-offset-black rounded-lg"
+        aria-label={`Acceder a la sección ${safeTitle}`}
       >
-        {/* Title with premium typography */}
-        <motion.h2
-          className="font-serif text-3xl sm:text-4xl font-bold tracking-tight leading-none"
-          style={{
-            color: trendStyles.color,
-            textShadow: `0 0 16px ${trendStyles.glow.includes('rgba') ? trendStyles.glow.split(')')[0] + ', 0.3)' : trendStyles.color + '60'}`,
-            lineHeight: 1.2,
-            letterSpacing: '-0.02em',
-          }}
-          initial={{ opacity: 0, y: 12 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ type: 'spring', stiffness: 120, damping: 25, delay: 0.05 }}
+        <section
+          className="relative w-full py-8 sm:py-10 border-y border-white/5 transition-colors duration-300 group-hover:border-white/20"
+          role="region"
+          aria-label={`Sección: ${safeTitle}`}
         >
-          {safeTitle}
-        </motion.h2>
+          {/* Glow overlay on hover */}
+          <div 
+            className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
+            style={{
+              background: `radial-gradient(circle at 50% 50%, ${trendStyles.color}10 0%, transparent 70%)`
+            }}
+          />
 
-        {/* Subtitle with refined typography */}
-        {subtitle && (
-          <motion.p
-            className="mt-3 text-sm sm:text-base font-mono tracking-wide text-gray-400 max-w-md text-center"
-            style={{ lineHeight: 1.6 }}
-            initial={{ opacity: 0, y: 8 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ type: 'spring', stiffness: 140, damping: 25, delay: 0.1 }}
+          <DivisorLine
+            color={trendStyles.color}
+            glow={trendStyles.glow}
+            delay={0}
+          />
+
+          <div
+            className="relative flex flex-col items-center mt-6 px-4"
           >
-            {subtitle}
-          </motion.p>
-        )}
+            <motion.h2
+              className="font-serif text-3xl sm:text-4xl font-bold tracking-tight leading-none flex items-center gap-3"
+              style={{
+                color: trendStyles.color,
+                textShadow: `0 0 16px ${trendStyles.glow.includes('rgba') ? trendStyles.glow.split(')')[0] + ', 0.3)' : trendStyles.color + '60'}`,
+                lineHeight: 1.2,
+                letterSpacing: '-0.02em',
+              }}
+            >
+              {safeTitle}
+              <ArrowRight 
+                className="w-6 h-6 opacity-50 group-hover:opacity-100 group-hover:translate-x-2 transition-all duration-300" 
+                style={{ color: trendStyles.color }}
+              />
+            </motion.h2>
 
-        {/* Badges row */}
-        <motion.div
-          className="mt-4 flex flex-wrap items-center justify-center gap-2"
-          initial={{ opacity: 0, y: 6 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ type: 'spring', stiffness: 160, damping: 25, delay: 0.15 }}
-        >
-          {isLive && <LiveBadge />}
-          <TrendChip trend={marketTrend} />
-          {contextValue && <ContextChip value={contextValue} />}
-        </motion.div>
-      </motion.div>
+            {subtitle && (
+              <motion.p
+                className="mt-3 text-sm sm:text-base font-mono tracking-wide text-gray-400 max-w-md text-center"
+                style={{ lineHeight: 1.6 }}
+              >
+                {subtitle}
+              </motion.p>
+            )}
 
-      {/* Bottom divider */}
-      <DivisorLine
-        color={trendStyles.color}
-        glow={trendStyles.glow}
-        delay={0.2}
-      />
-    </section>
+            <div
+              className="mt-4 flex flex-wrap items-center justify-center gap-2"
+            >
+              {isLive && <LiveBadge />}
+              <TrendChip trend={marketTrend} />
+              {contextValue && <ContextChip value={contextValue} />}
+            </div>
+          </div>
+
+          <DivisorLine
+            color={trendStyles.color}
+            glow={trendStyles.glow}
+            delay={0.2}
+          />
+        </section>
+      </Link>
+    </motion.div>
   );
 }

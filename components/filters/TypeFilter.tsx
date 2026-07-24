@@ -1,6 +1,6 @@
 "use client";
 
-import { Zap, Users, LayoutGrid } from "lucide-react";
+import { Users, LayoutGrid } from "lucide-react";
 import { type TipoProyecto } from "@/lib/proyectos";
 
 interface TypeFilterProps {
@@ -8,7 +8,6 @@ interface TypeFilterProps {
   onChange: (tipo: TipoProyecto | "todos") => void;
   counts: {
     todos: number;
-    interno: number;
     comunidad: number;
   };
 }
@@ -21,13 +20,6 @@ export default function TypeFilter({ active, onChange, counts }: TypeFilterProps
       icon: LayoutGrid,
       color: "bitcoin",
       count: counts.todos,
-    },
-    {
-      value: "interno" as const,
-      label: "Acepta Bitcoin",
-      icon: Zap,
-      color: "bitcoin",
-      count: counts.interno,
     },
     {
       value: "comunidad" as const,

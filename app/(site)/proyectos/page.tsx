@@ -1,16 +1,12 @@
 import type { Metadata } from "next";
-import { type Proyecto } from "@/lib/proyectos";
+import { type Proyecto, getProyectos } from "@/lib/proyectos";
 import ProyectosClient from "./ProyectosClient";
-import { ArcadeButton } from "@/components/ui/ArcadeButton";
+import ArcadeButton from "@/components/ui/ArcadeButton";
 import Link from "next/link";
 
-// Importación estática de datos (sin fetch en runtime)
-import proyectosRaw from '@/data/proyectos.json';
-
-// 1. Filtrar proyectos internos y ordenar por fecha (más reciente primero)
-const proyectosComunidad = (proyectosRaw as Proyecto[])
-  .filter(p => p.tipo !== 'interno')
-  .sort((a, b) => new Date(b.fecha).getTime() - new Date(a.fecha).getTime());
+// 1. Cargar proyectos ya sanitizados (sin "interno") y ordenar por fecha (más reciente primero)
+const proyectosRaw = await getProyectos();
+const proyectosComunidad = [...proyectosRaw].sort((a, b) => new Date(b.fecha).getTime() - new Date(a.fecha).getTime());
 
 // 2. Separar los 3 ganadores del resto del historial
 // NOTA: Si tu tipo `Proyecto` tiene un campo específico como `puesto: 1 | 2 | 3` o `ganador: true`, 
@@ -100,7 +96,7 @@ export default function ProyectosPage() {
         {/* CTA para ver el historial completo */}
         <div className="mt-16 flex justify-center">
           <Link href="/proyectos/historial">
-            <ArcadeButton tier="medium" variant="matrix">
+            <ArcadeButton size="lg" variant="matrix">
               VER HISTORIAL COMPLETO DE PROYECTOS
             </ArcadeButton>
           </Link>

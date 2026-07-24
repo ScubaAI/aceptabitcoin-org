@@ -62,3 +62,11 @@ Thumbs.db
 
 # Scratch directory
 scratch/
+
+/.kilo/node_modules
+/.claude
+/.windsurf
+/.agents
+skills-lock.json
+
+/lib/generated/prisma
