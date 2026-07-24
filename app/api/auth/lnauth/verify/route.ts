@@ -1,54 +1,91 @@
-// app/api/auth/lnauth/verify/route.ts
+/**
+ * @file app/api/auth/lnauth/verify/route.ts
+ * @description Verifica la firma LNURL-Auth y emite un JWT de sesión soberana.
+ * 
+ * @design-system v3.0
+ * - §7.4: Protocolo LNURL-Auth (LUD-04) para autenticación sin contraseñas
+ * - §10.1: Patrón Adapter/Service (lógica criptográfica aislada)
+ * - §14.5: Seguridad estricta (no fallbacks de secretos)
+ * 
+ * @see https://github.com/lnurl/luds/blob/luds/04.md
+ */
+
 import { NextRequest, NextResponse } from "next/server";
 import { verify } from "@noble/secp256k1";
 import { SignJWT } from "jose";
+import crypto from "node:crypto";
 
+// 1. Acceso al mismo Map global definido en challenge/route.ts
 (globalThis as any).lnAuthChallenges = (globalThis as any).lnAuthChallenges || new Map<string, { createdAt: number }>();
 const challenges = (globalThis as any).lnAuthChallenges as Map<string, { createdAt: number }>;
 
 export const dynamic = "force-dynamic";
-
-// Clave secreta para firmar el JWT (en producción pon esto en tu .env.local)
-const JWT_SECRET = process.env.JWT_SECRET || "super-secret-dev-key-change-in-production";
 
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
     const k1 = searchParams.get("k1");
     const sig = searchParams.get("sig");
-    const key = searchParams.get("key"); // Public key de la wallet
+    const key = searchParams.get("key"); // Public key comprimida (33 bytes) de la wallet
     const action = searchParams.get("action");
 
+    // Validación básica de parámetros
     if (!k1 || !sig || !key) {
-      return NextResponse.json({ status: "ERROR", reason: "Missing parameters" }, { status: 400 });
+      return NextResponse.json(
+        { status: "ERROR", reason: "Faltan parámetros requeridos (k1, sig, key)" },
+        { status: 400 }
+      );
     }
 
-    // 1. Verificar que el k1 exista y no haya expirado
+    // 2. Verificar que el k1 exista y no haya expirado
     const challengeData = challenges.get(k1);
     if (!challengeData) {
-      return NextResponse.json({ status: "ERROR", reason: "Challenge expired or not found" }, { status: 400 });
+      return NextResponse.json(
+        { status: "ERROR", reason: "Challenge expirado o no encontrado (posible replay attack)" },
+        { status: 400 }
+      );
     }
 
-    // 2. Verificar la firma criptográfica (secp256k1)
-    // LNURL-Auth usa DER signatures, hay que convertirlas o verificarlas correctamente
-    // @noble/secp256k1 maneja esto si le pasamos el mensaje (k1) y la firma en hex
-    const messageBytes = Buffer.from(k1, "hex");
-    const signatureBytes = Buffer.from(sig, "hex");
-    const publicKeyBytes = Buffer.from(key, "hex");
+    // Validar que la acción coincida con la solicitada
+    if (action !== "login") {
+      return NextResponse.json(
+        { status: "ERROR", reason: "Acción no permitida" },
+        { status: 400 }
+      );
+    }
 
-    // LNURL spec: La firma es una firma ECDSA sobre el k1 usando la clave de linking de la wallet
-    const isValid = verify(signatureBytes, messageBytes, publicKeyBytes);
+    // 3. ⚠️ CRÍTICO: LNURL-Auth requiere firmar el SHA-256 del string k1, no el k1 en sí.
+    const messageHash = crypto.createHash("sha256").update(k1).digest();
+    
+    // Convertir hex a Uint8Array (formato que espera @noble/secp256k1)
+    const signatureBytes = Uint8Array.from(Buffer.from(sig, "hex"));
+    const publicKeyBytes = Uint8Array.from(Buffer.from(key, "hex"));
+
+    // 4. Verificar la firma criptográfica (secp256k1)
+    const isValid = verify(signatureBytes, messageHash, publicKeyBytes);
 
     if (!isValid) {
-      return NextResponse.json({ status: "ERROR", reason: "Invalid signature" }, { status: 401 });
+      return NextResponse.json(
+        { status: "ERROR", reason: "Firma criptográfica inválida" },
+        { status: 401 }
+      );
     }
 
-    // 3. ¡Éxito! El usuario demostró soberanía.
-    // Eliminar el k1 usado para que no pueda hacer replay attack
+    // 5. ¡Éxito! El usuario demostró soberanía.
+    // Eliminar el k1 inmediatamente para prevenir Replay Attacks
     challenges.delete(k1);
 
-    // 4. Crear JWT (Session token)
-    const secret = new TextEncoder().encode(JWT_SECRET);
+    // 6. Crear JWT (Session token)
+    const jwtSecret = process.env.JWT_SECRET;
+    if (!jwtSecret) {
+      console.error("🔴 [LNAuth Verify] JWT_SECRET no está definido en las variables de entorno");
+      return NextResponse.json(
+        { status: "ERROR", reason: "Error de configuración del servidor" },
+        { status: 500 }
+      );
+    }
+
+    const secret = new TextEncoder().encode(jwtSecret);
     const token = await new SignJWT({ 
       pubkey: key, 
       role: "ahorro_user" 
@@ -58,22 +95,22 @@ export async function GET(request: NextRequest) {
       .setExpirationTime("7d") // Sesión válida por 7 días
       .sign(secret);
 
-    // 5. Establecer cookie y responder
+    // 7. Establecer cookie HttpOnly y responder
     const response = NextResponse.json({ status: "OK" });
     response.cookies.set("ahorro_session", token, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
+      secure: process.env.NODE_ENV === "production", // Requiere HTTPS en producción
       sameSite: "lax",
-      maxAge: 60 * 60 * 24 * 7, // 7 días
+      maxAge: 60 * 60 * 24 * 7, // 7 días en segundos
       path: "/",
     });
 
     return response;
 
   } catch (error) {
-    console.error("Error en verify LnAuth:", error);
+    console.error("🔴 [LNAuth Verify] Error crítico:", error);
     return NextResponse.json(
-      { status: "ERROR", reason: "Internal Server Error" },
+      { status: "ERROR", reason: "Fallo interno del nodo de verificación" },
       { status: 500 }
     );
   }
