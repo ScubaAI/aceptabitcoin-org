@@ -27,7 +27,7 @@ export default function AceptaBitcoinLogo({
       viewBox="0 0 420 130"
       className={className}
       role="img"
-      aria-label="Acepta Bitcoin México"
+      aria-label="Acepta Bitcoin"
     >
       <defs>
         {/* Glow reutilizable para modo neon (texto y elementos) */}
@@ -76,8 +76,9 @@ export default function AceptaBitcoinLogo({
         </svg>
       </g>
 
-      {/* Wordmark */}
+      {/* Wordmark: "Acepta Bitcoin" */}
       <g transform="translate(140, 0)">
+        {/* "Acepta" en Serif institucional (autoridad) */}
         <text
           x="0"
           y="68"
@@ -90,6 +91,8 @@ export default function AceptaBitcoinLogo({
         >
           Acepta
         </text>
+        
+        {/* "Bitcoin" en Mono técnica (infraestructura) */}
         <text
           x="0"
           y="108"
@@ -99,7 +102,7 @@ export default function AceptaBitcoinLogo({
           fill={isNeon ? "var(--bitcoin)" : "var(--matrix)"}
           letterSpacing="2"
         >
-          México
+          Bitcoin
         </text>
       </g>
     </svg>
