@@ -1,8 +1,8 @@
-# Project Map: Acepta Bitcoin México (Oracle System v2.0)
+# Project Map: Acepta Bitcoin México (Oracle System v3.0)
 
 A comprehensive overview of the `aceptabitcoin-org` project structure, architecture, and current status.
 
-Last updated: 2026-07-15
+Last updated: 2026-07-24
 
 ## 🏗️ Project Architecture
 
@@ -21,9 +21,11 @@ aceptabitcoin-org/
 │   │   │   └── page.tsx               # Nostr + Lightning Marketplace
 │   │   ├── planes/                    # ✅ Pricing / Plans page
 │   │   │   └── page.tsx
-│   │   └── proyectos/
-│   │       ├── page.tsx               # Community Projects — server shell
-│   │       └── ProyectosClient.tsx    # Client component — filterable project grid
+│   │   ├── proyectos/
+│   │   │   ├── page.tsx               # Community Projects — server shell
+│   │   │   └── historial/
+│   │   │       └── page.tsx           # ✅ Project history page
+│   │   └── ...
 │   ├── hackathon/                     # ✅ Hackathon module (flat route)
 │   │   ├── layout.tsx                 # Shared layout: HackathonNavbar + HackathonFooter
 │   │   ├── page.tsx                   # Hackathon index / hub page
@@ -44,14 +46,14 @@ aceptabitcoin-org/
 │   ├── proveedores/
 │   │   ├── page.tsx                   # Server data fetching
 │   │   └── ProveedoresClient.tsx      # Client component — MatrixRain bg, filter/search, ProviderCard grid
-│   ├── ahorro/                        # 🚧 Savings / DCA section (WIP)
+│   ├── ahorro/                        # ✅ Savings / DCA + Orca LP Terminal (Active)
 │   │   ├── layout.tsx                 # Ahorro root layout
-│   │   ├── page.tsx                   # Ahorro landing (redirects or renders landing section)
+│   │   ├── page.tsx                   # Ahorro landing
 │   │   ├── access/
 │   │   │   └── page.tsx               # Access gate for ahorro users
 │   │   └── dashboard/
 │   │       ├── layout.tsx             # Dashboard layout
-│   │       └── page.tsx               # User savings dashboard
+│   │       └── page.tsx               # ✅ LP Terminal dashboard — Orca positions, fees, PnL
 │   ├── api/
 │   │   ├── tipjar/
 │   │   │   ├── route.ts               # Blink.sv Lightning tip-jar proxy (GraphQL)
@@ -66,9 +68,17 @@ aceptabitcoin-org/
 │   │   ├── ahorro/
 │   │   │   ├── stats/
 │   │   │   │   └── route.ts           # Ahorro stats GET endpoint
+│   │   │   ├── snapshot/
+│   │   │   │   └── route.ts           # ✅ Daily LP snapshot cron (Prisma + Orca data)
 │   │   │   └── webhook/
 │   │   │       └── blink/
 │   │   │           └── route.ts       # Blink.sv webhook handler for ahorro deposits
+│   │   ├── auth/
+│   │   │   └── lnauth/
+│   │   │       ├── challenge/
+│   │   │       │   └── route.ts       # ✅ LNURL-Auth challenge generator
+│   │   │       └── verify/
+│   │   │           └── route.ts       # ✅ LNURL-Auth signature verifier + JWT issuer
 │   │   └── webhook/
 │   │       └── lnbits/
 │   │           └── route.ts           # LNbits webhook handler
@@ -137,15 +147,16 @@ aceptabitcoin-org/
 │   │       ├── CommandCheatSheet.tsx
 │   │       ├── RepoCloneCTA.tsx
 │   │       └── SupportChannels.tsx
-│   ├── ahorro/                        # 🚧 Ahorro feature components (WIP)
+│   ├── ahorro/                        # ✅ Ahorro feature components (Active)
 │   │   ├── access/
 │   │   │   ├── AccessGate.tsx         # Auth / access gate UI
 │   │   │   ├── InviteForm.tsx         # Invite code form
 │   │   │   ├── PaymentFlow.tsx        # Lightning payment flow
 │   │   │   └── StatusIndicator.tsx    # Payment / access status indicator
 │   │   ├── dashboard/
-│   │   │   ├── DashboardHeader.tsx    # Dashboard page header
+│   │   │   ├── DashboardHeader.tsx    # ✅ Dashboard page header w/ clock + LnAuth status
 │   │   │   ├── DepositWidget.tsx      # Lightning deposit widget
+│   │   │   ├── LPTerminal.tsx         # ✅ Orca LP positions, fees, price range visualization
 │   │   │   ├── StatsPanel.tsx         # Savings stats panel
 │   │   │   └── TransactionTable.tsx   # Transaction history table
 │   │   ├── landing/
@@ -206,6 +217,7 @@ aceptabitcoin-org/
 │   ├── proveedores.test.ts            # Proveedores unit tests
 │   ├── proyectos.ts                   # Community projects types and data
 │   ├── utils.ts                       # cn() (clsx+twMerge), formatSats, formatFiat
+│   ├── prisma.ts                      # ✅ Prisma 6 client instance (Postgres adapter)
 │   ├── hackathon/                     # ✅ Hackathon data & logic layer
 │   │   ├── index.ts                   # Re-exports: getEditionConfig, listActiveEditions, getNextEdition
 │   │   ├── config.ts                  # Shared hackathon config/constants
@@ -222,12 +234,14 @@ aceptabitcoin-org/
 │   │   ├── binance.ts                 # Binance BTC/USD price fetch
 │   │   ├── binance.test.ts            # Binance client unit tests
 │   │   └── service.ts                 # ✅ Market data service abstraction
-│   ├── ahorro/                        # 🚧 Ahorro business logic (WIP)
+│   ├── ahorro/                        # ✅ Ahorro business logic + Orca SDK
 │   │   ├── access.ts                  # Access control helpers
 │   │   ├── blink.ts                   # Blink.sv integration for ahorro deposits
 │   │   ├── constants.ts               # Ahorro constants (yield rates, tiers, etc.)
 │   │   ├── types.ts                   # Ahorro TypeScript types
-│   │   └── yield.ts                   # Yield calculation utilities
+│   │   ├── yield.ts                   # Yield calculation utilities
+│   │   ├── orca.ts                    # ✅ Orca positions fetcher + portfolio snapshot
+│   │   └── orca-decoder.ts            # ✅ Orca Whirlpools position decoder (SDK v0.21)
 │   ├── prompts/
 │   │   └── bob-agent.ts               # Bob's personality & system prompt
 │   └── vector/
@@ -247,10 +261,22 @@ aceptabitcoin-org/
 │   ├── check-assets.mjs               # Asset validation script
 │   └── generate-icons.mjs             # Icon generation script
 ├── docs/
-│   └── DEPLOYMENT.md                  # Deployment guide
+│   ├── map.md                         # This file
+│   ├── design-system.md               # Design system documentation
+│   ├── DEPLOYMENT.md                  # Deployment guide
+│   └── MANTENIMIENTO.md               # Maintenance log & dev notes
+├── prisma/                            # ✅ Prisma 6 ORM
+│   ├── schema.prisma                  # LpSnapshot model + Postgres datasource
+│   └── migrations/
+│       ├── migration_lock.toml
+│       └── 20260724051849_init_lp_snapshot/
+│           └── migration.sql          # lp_snapshots table creation
+├── types/                             # Global TypeScript declarations
+│   └── lnurl.d.ts                     # lnurl module type declaration
 ├── public/                            # Static assets (images, icons, favicons)
 ├── .env.local                         # Local env (never committed)
 ├── .env.example                       # Env var template
+├── .gitignore                         # Git ignore rules
 ├── components.json                    # shadcn/ui config
 ├── components.json.bak                # shadcn config backup
 ├── middleware.ts                      # Next.js middleware (auth / redirects)
@@ -262,10 +288,8 @@ aceptabitcoin-org/
 ├── sentry.client.config.ts            # Sentry client-side init
 ├── sentry.server.config.ts            # Sentry server-side init
 ├── turbo.json                         # Turborepo config (if used)
-├── design-system.md                   # Design system documentation
-├── MANTENIMIENTO.md                   # Maintenance log & dev notes
-├── README.md                          # Project README
-└── package.json                       # Next.js 14.2.3, Vitest, Sentry, Resend, Groq, Three.js
+├── package.json                       # Next.js 14.2.3, Vitest, Sentry, Resend, Groq, Three.js
+└── README.md                          # Project README
 ```
 
 ## 🗺️ Route Map
@@ -275,15 +299,16 @@ aceptabitcoin-org/
 | `/` | **Oracle Homepage** — Hero, MarketMood, PriceConverter, Aprende, Tianguis cards, TipJar, Bob AI | `app/(site)/page.tsx` | ✅ Live (v2.0) |
 | `/arcade` | **Bitcoin Arcade** — Tron/Cypherpunk styled learning hub, interactive hackathon projects | `app/(site)/arcade/page.tsx` | ✅ Live |
 | `/tianguis` | **Lightning Marketplace** — Nostr + Lightning commerce | `app/(site)/tianguis/page.tsx` | ✅ Functional |
-| `/proyectos` | **Community Showcase** — Client-rendered filterable project grid | `app/(site)/proyectos/page.tsx` + `ProyectosClient.tsx` | ✅ Functional |
+| `/proyectos` | **Community Showcase** — Client-rendered filterable project grid | `app/(site)/proyectos/page.tsx` | ✅ Functional |
+| `/proyectos/historial` | **Project History** — Historical projects archive | `app/(site)/proyectos/historial/page.tsx` | ✅ New |
 | `/crea-tu-tienda` | **Merchant Onboarding** — BTCPay registration form | `app/(site)/crea-tu-tienda/page.tsx` | ✅ Functional |
 | `/planes` | **Pricing / Plans** — Service tiers and pricing cards | `app/(site)/planes/page.tsx` | ✅ Live |
 | `/agenda` | **Consultas** — Cal.com booking iframe | `app/agenda/page.tsx` | ✅ Integrated |
 | `/nuestra-historia` | Project History & Mission | `app/nuestra-historia/page.tsx` | ✅ Functional |
 | `/proveedores` | **Sovereign Directory** — Filterable provider grid w/ MatrixRain | `app/proveedores/page.tsx` + `ProveedoresClient.tsx` | ✅ Functional |
-| `/ahorro` | **Ahorro Landing** — Savings and DCA onboarding | `app/ahorro/page.tsx` | 🚧 WIP |
-| `/ahorro/access` | **Access Gate** — Lightning payment-gated access | `app/ahorro/access/page.tsx` | 🚧 WIP |
-| `/ahorro/dashboard` | **User Dashboard** — Savings stats, deposits, transactions | `app/ahorro/dashboard/page.tsx` | 🚧 WIP |
+| `/ahorro` | **Ahorro Landing** — Savings and DCA onboarding | `app/ahorro/page.tsx` | ✅ Active |
+| `/ahorro/access` | **Access Gate** — Lightning payment-gated access | `app/ahorro/access/page.tsx` | ✅ Active |
+| `/ahorro/dashboard` | **LP Terminal Dashboard** — Orca positions, fees, PnL, daily snapshots | `app/ahorro/dashboard/page.tsx` | ✅ Live (v2.0) |
 | `/hackathon` | **Hackathon Hub** — Index / overview page | `app/hackathon/page.tsx` | ✅ Live |
 | `/hackathon/[edition]` | **Hackathon Landing** — Edition-specific page (Hero, Timeline, Prizes, FAQ) | `app/hackathon/[edition]/page.tsx` | ✅ Live — slugs: `custody-ui-2026`, `tianguis-2026`, `2026-1` |
 | `/hackathon/[edition]/register` | **External Registration** — Redirect to Google Forms | `app/hackathon/[edition]/register/page.tsx` | ✅ Redirect |
@@ -295,6 +320,9 @@ aceptabitcoin-org/
 | `/api/hackathon/leaderboard` | Hackathon leaderboard data | `app/api/hackathon/leaderboard/route.ts` | ✅ Functional |
 | `/api/hackathon/tips` | Hackathon Lightning tips | `app/api/hackathon/tips/route.ts` | ✅ Functional |
 | `/api/ahorro/stats` | Ahorro savings stats | `app/api/ahorro/stats/route.ts` | 🚧 WIP |
+| `/api/ahorro/snapshot` | **Daily LP Snapshot** — Cron endpoint for Orca position snapshots | `app/api/ahorro/snapshot/route.ts` | ✅ Active |
+| `/api/auth/lnauth/challenge` | **LNURL-Auth Challenge** — Generate k1 + LNURL login link | `app/api/auth/lnauth/challenge/route.ts` | ✅ Active |
+| `/api/auth/lnauth/verify` | **LNURL-Auth Verify** — Verify sig, issue JWT session cookie | `app/api/auth/lnauth/verify/route.ts` | ✅ Active |
 | `/api/ahorro/webhook/blink` | Blink.sv deposit webhook | `app/api/ahorro/webhook/blink/route.ts` | 🚧 WIP |
 | `/api/webhook/lnbits` | LNbits webhook handler | `app/api/webhook/lnbits/route.ts` | 🔧 Legacy |
 
@@ -311,7 +339,7 @@ aceptabitcoin-org/
 | Layer | Technology | Version/Notes |
 |-------|-----------|---------------|
 | **Framework** | [Next.js](https://nextjs.org/) | 14.2.3 — App Router |
-| **Language** | [TypeScript](https://www.typescriptlang.org/) | Strict mode |
+| **Language** | [TypeScript](https://www.typescriptlang.com/) | Strict mode |
 | **Styling** | [Tailwind CSS](https://tailwindcss.com/) | Custom animations: `scanline`, `blink`, `tilt` |
 | **UI Kit** | [shadcn/ui](https://ui.shadcn.com/) | + custom ArcadeButton, MatrixRain, Logo |
 | **Icons** | [Lucide React](https://lucide.dev/) | v1.8.0 |
@@ -331,6 +359,11 @@ aceptabitcoin-org/
 | **Monitoring** | [Sentry](https://sentry.io) | Error tracking (client + server config) |
 | **Email** | [Resend](https://resend.com) | Transactional email |
 | **PWA** | next-pwa | ^5.6.0 (disabled in dev) |
+| **ORM** | [Prisma](https://www.prisma.io/) | 6.19.3 — PostgreSQL via `@prisma/adapter-pg` |
+| **Solana** | [@solana/web3.js](https://solana.com/) + [@solana/spl-token](https://solana.com/) | ^1.98.4 / ^0.4.15 |
+| **DeFi** | [@orca-so/whirlpools-sdk](https://www.orca.so/) | ^0.21.0 — Orca Whirlpools LP positions |
+| **Crypto** | [@noble/secp256k1](https://github.com/paulmillr/noble-secp256k1) | ^3.1.0 — LNURL-Auth signature verification |
+| **LNURL** | [lnurl](https://github.com/fiatjaf/lnurl) | ^0.27.0 — LNURL-Auth challenge/verify |
 
 ## 🎨 Design System: Cypherpunk Bank / Oracle System
 
@@ -362,7 +395,7 @@ The project uses a high-contrast, technical aesthetic inspired by digital fronti
 - **Glows**: Neon `box-shadow` on hover (`shadow-[0_0_25px_rgba(...)]`)
 - **Matrix Rain**: Animated `<canvas>` background on select pages
 
-## 🚀 Updates Log (v2.0 — Ongoing)
+## 🚀 Updates Log (v2.0 → v3.0 — Ongoing)
 
 1. **Oracle Homepage** (🎉): Replaced old BTC Map with a focused "Oracle" experience — Hero, MarketMood DCA widget, PriceConverter, and dual CTA cards (Crea tu Tienda + Tianguis)
 2. **`/proveedores` Sovereign Directory** (🎉): Full directory page with MatrixRain background, stats bar, category filters, search, ProviderCard grid
@@ -382,10 +415,15 @@ The project uses a high-contrast, technical aesthetic inspired by digital fronti
 16. **Orange Palette** (🎨): Defined CSS variables `--orange-500`, `--orange-400`, `--orange-glow` in globals.css and tailwind config
 17. **MarketTicker** (✨): Added `MarketTicker` widget for live price display
 18. **Planes / Pricing** (💰): New `/planes` route with `PricingCard`, `PricingTicker`, and partner data (`data/pricing.ts`, `data/partners.ts`)
-19. **Ahorro Module** (🚧 WIP): Full savings/DCA feature — landing, access gate (Lightning-payment gated), user dashboard with stats/deposit/transactions. Components: `components/ahorro/**`, lib: `lib/ahorro/**`, APIs: `/api/ahorro/**`
-20. **Vector Search** (🔍): Added Upstash Vector integration (`lib/vector/search.ts`) for semantic search capabilities
-21. **Shared UI Components** (✅): New reusable `components/badges/`, `components/cards/`, `components/filters/`, `components/common/` directories with typed, composable primitives
-22. **Three.js / GSAP** (🎨): Added `@react-three/fiber`, `@react-three/drei`, and GSAP for advanced 3D and animation capabilities
-23. **Hackathon API Routes** (🏆): New `/api/hackathon/leaderboard` and `/api/hackathon/tips` endpoints for live hackathon features
-24. **Webhook Infrastructure** (🔗): Added `/api/ahorro/webhook/blink` and `/api/webhook/lnbits` for payment event handling
-25. **Bob Chat Refactor** (🤖): Extracted `ChatBubble.tsx` and `useBobChat.ts` into bob-chat widget directory; added `icons/MatrixPhoneIcon.tsx`
+19. **Ahorro Module** (✅ Active): Full savings/DCA feature — landing, access gate (Lightning-payment gated), user dashboard with stats/deposit/transactions, and **Orca LP Terminal** with live position tracking, fees, and daily snapshots. Components: `components/ahorro/**`, lib: `lib/ahorro/**`, APIs: `/api/ahorro/**`, `/api/auth/lnauth/**`
+20. **LNURL-Auth** (🔐): Implemented `/api/auth/lnauth/challenge` and `/api/auth/lnauth/verify` for sovereign wallet-based authentication with JWT sessions
+21. **Prisma + Postgres** (🗄️): Added `prisma/` schema, migrations, and `lib/prisma.ts` client for persistent LP snapshots (`lp_snapshots` table)
+22. **Solana / Orca Integration** (🌐): Added `lib/ahorro/orca.ts` and `lib/ahorro/orca-decoder.ts` for Orca Whirlpools SDK v0.21 integration. Reads on-chain positions via Helius RPC, decodes liquidity/fees, fetches prices via Birdeye
+23. **Vector Search** (🔍): Added Upstash Vector integration (`lib/vector/search.ts`) for semantic search capabilities
+24. **Shared UI Components** (✅): New reusable `components/badges/`, `components/cards/`, `components/filters/`, `components/common/` directories with typed, composable primitives
+25. **Three.js / GSAP** (🎨): Added `@react-three/fiber`, `@react-three/drei`, and GSAP for advanced 3D and animation capabilities
+26. **Hackathon API Routes** (🏆): New `/api/hackathon/leaderboard` and `/api/hackathon/tips` endpoints for live hackathon features
+27. **Webhook Infrastructure** (🔗): Added `/api/ahorro/webhook/blink` and `/api/webhook/lnbits` for payment event handling
+28. **Bob Chat Refactor** (🤖): Extracted `ChatBubble.tsx` and `useBobChat.ts` into bob-chat widget directory; added `icons/MatrixPhoneIcon.tsx`
+29. **Project History** (📜): Added `/proyectos/historial` page for historical project archive
+30. **Git Hygiene** (🧹): Updated `.gitignore` to exclude tool directories (`.kilo/`, `.claude/`, `.windsurf/`, `.agents/`) and lock files
