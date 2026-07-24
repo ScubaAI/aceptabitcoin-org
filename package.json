@@ -25,6 +25,7 @@
     "@solana/web3.js": "^1.98.4",
     "@types/three": "^0.184.1",
     "@upstash/vector": "^1.1.6",
+    "bech32": "^2.0.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "framer-motion": "^11.18.2",
