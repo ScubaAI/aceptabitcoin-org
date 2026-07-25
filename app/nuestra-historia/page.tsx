@@ -2,13 +2,12 @@
 
 import { useState, useEffect, useRef, useMemo, Suspense } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
-import { OrbitControls, Float, Text } from '@react-three/drei';
+import { OrbitControls } from '@react-three/drei/core/OrbitControls';
+import { Float } from '@react-three/drei/core/Float';
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
 import * as THREE from 'three';
 
-// Workaround for drei v8 + fiber v8 type mismatch on Text component
-const AnyText = Text as any;
 // Workaround for drei v8 + fiber v8 type mismatch on Float component
 const AnyFloat = Float as any;
 import Navbar from '@/components/layout/Navbar';
@@ -159,17 +158,6 @@ function HologramBlock({ block, index }: { block: TimechainBlock; index: number 
           <sphereGeometry args={[0.25, 16, 16]} />
           <meshBasicMaterial color={color} transparent opacity={0.4} />
         </mesh>
-
-        <AnyText
-          position={[0, 1.2, 0]}
-          fontSize={0.18}
-          color={COLORS.white}
-          anchorX="center"
-          anchorY="middle"
-          font="/fonts/VT323-Regular.ttf"
-        >
-          #{block.height.toString().padStart(3, '0')}
-        </AnyText>
       </group>
     </AnyFloat>
   );

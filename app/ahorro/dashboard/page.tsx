@@ -1,6 +1,7 @@
 ﻿// app/ahorro/dashboard/page.tsx
-import LPTerminal from "@/components/ahorro/dashboard/LPTerminal"
 import { DashboardHeader } from "@/components/ahorro/dashboard/DashboardHeader"
+import LPTerminal from "@/components/ahorro/dashboard/LPTerminal"
+import PerformancePanel from "@/components/ahorro/dashboard/PerformancePanel"
 
 export default function AhorroDashboardPage() {
   // En el futuro, esto vendrá de getPortfolioSnapshot()
@@ -33,6 +34,11 @@ export default function AhorroDashboardPage() {
     <div className="min-h-screen bg-black text-white p-8">
       <div className="max-w-5xl mx-auto">
         <DashboardHeader />
+        
+        {/* Nueva Sección: Curva de Rendimiento Histórico */}
+        <div className="mt-8">
+          <PerformancePanel />
+        </div>
         
         <div className="mt-8">
           <LPTerminal {...mockData} />
