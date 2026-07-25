@@ -9,6 +9,8 @@ import * as THREE from 'three';
 
 // Workaround for drei v8 + fiber v8 type mismatch on Text component
 const AnyText = Text as any;
+// Workaround for drei v8 + fiber v8 type mismatch on Float component
+const AnyFloat = Float as any;
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 import { 
@@ -134,7 +136,7 @@ function HologramBlock({ block, index }: { block: TimechainBlock; index: number 
   });
 
   return (
-    <Float speed={2} rotationIntensity={0.3} floatIntensity={0.5}>
+    <AnyFloat speed={2} rotationIntensity={0.3} floatIntensity={0.5}>
       <group ref={groupRef} position={[Math.cos(angle) * radius, yBase, Math.sin(angle) * radius]}>
         <mesh position={[0, -0.6, 0]} rotation={[-Math.PI / 2, 0, 0]}>
           <ringGeometry args={[0.5, 0.6, 6]} />
@@ -169,7 +171,7 @@ function HologramBlock({ block, index }: { block: TimechainBlock; index: number 
           #{block.height.toString().padStart(3, '0')}
         </AnyText>
       </group>
-    </Float>
+    </AnyFloat>
   );
 }
 
