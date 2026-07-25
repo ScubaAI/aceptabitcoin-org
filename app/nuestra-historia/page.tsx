@@ -1,24 +1,23 @@
 'use client';
 
 import { useState, useEffect, useRef, useMemo, Suspense } from 'react';
-import { Canvas, useFrame, useThree } from '@react-three/fiber';
+import { Canvas, useFrame } from '@react-three/fiber';
 import { OrbitControls, Float, Text } from '@react-three/drei';
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
-import * as THREE from 'three'; // Requerido para materiales y colores en WebGL
+import * as THREE from 'three';
 
 // Workaround for drei v8 + fiber v8 type mismatch on Text component
 const AnyText = Text as any;
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 import { 
-  Clock, Hash, Zap, Users, Sprout, Store, Trophy, Coins, ShieldCheck, Cpu, Map, Rocket,
+  Clock, Hash, Zap, Users, Sprout, Store, Trophy, Coins, ShieldCheck, Map, Rocket,
   type LucideIcon
 } from 'lucide-react';
 
 // ============================================================
 // BITCOIN TIMECHAIN — OBSERVATORY MODE (v3.0 NEXUS Fusion)
-// Infraestructura Soberana como Holograma 3D Orbitable
 // ============================================================
 
 interface TimechainBlock {
@@ -29,7 +28,7 @@ interface TimechainBlock {
   desc: string;
   hash: string;
   prevHash: string;
-  Icon: LucideIcon; // §12.3: Iconos semánticos Lucide en lugar de emojis decorativos
+  Icon: LucideIcon;
   category: "genesis" | "infrastructure" | "adoption" | "community";
 }
 
@@ -96,8 +95,6 @@ const timechainBlocks: TimechainBlock[] = [
   }
 ];
 
-// 🔹 Colores canónicos v3.0 para Three.js (Hex format for WebGL)
-// Nota: En WebGL es obligatorio usar hex, pero estos mapean 1:1 con las variables CSS del DS.
 const COLORS = {
   matrix: 0x00FF41,
   bitcoin: 0xF7931A,
@@ -137,7 +134,6 @@ function HologramBlock({ block, index }: { block: TimechainBlock; index: number 
   });
 
   return (
-    // @ts-ignore - drei v8 type incompatibility with fiber v8: attachArray/attachObject are internal props
     <Float speed={2} rotationIntensity={0.3} floatIntensity={0.5}>
       <group ref={groupRef} position={[Math.cos(angle) * radius, yBase, Math.sin(angle) * radius]}>
         <mesh position={[0, -0.6, 0]} rotation={[-Math.PI / 2, 0, 0]}>
@@ -174,37 +170,6 @@ function HologramBlock({ block, index }: { block: TimechainBlock; index: number 
         </AnyText>
       </group>
     </Float>
-  );
-}
-
-function ConnectorBeam({ startIdx, endIdx }: { startIdx: number; endIdx: number }) {
-  const ref = useRef<THREE.Mesh>(null);
-  const startBlock = timechainBlocks[startIdx];
-  const endBlock = timechainBlocks[endIdx];
-  
-  const angleStart = (startIdx / timechainBlocks.length) * Math.PI * 2;
-  const angleEnd = (endIdx / timechainBlocks.length) * Math.PI * 2;
-  const radius = 3.5;
-  const yStart = (startIdx - timechainBlocks.length / 2) * 1.2;
-  const yEnd = (endIdx - timechainBlocks.length / 2) * 1.2;
-
-  useFrame(({ clock }) => {
-    if (!ref.current) return;
-    const t = clock.getElapsedTime();
-    const material = ref.current.material as THREE.MeshBasicMaterial;
-    material.opacity = 0.15 + Math.sin(t * 3 + startIdx) * 0.1;
-  });
-
-  const startX = Math.cos(angleStart) * radius;
-  const startZ = Math.sin(angleStart) * radius;
-  const endX = Math.cos(angleEnd) * radius;
-  const endZ = Math.sin(angleEnd) * radius;
-
-  return (
-    <mesh ref={ref}>
-      <cylinderGeometry args={[0.02, 0.02, Math.abs(yEnd - yStart), 8, 1]} />
-      <meshBasicMaterial color={COLORS.matrix} transparent opacity={0.2} />
-    </mesh>
   );
 }
 
@@ -253,6 +218,7 @@ export default function NuestraHistoriaPage() {
   const headerRef = useRef<HTMLDivElement>(null);
   const miningRef = useRef<HTMLDivElement>(null);
 
+  // 1. Patrón anti-hidratación: Solo se activa en el cliente
   useEffect(() => {
     setIsMounted(true);
   }, []);
@@ -277,15 +243,14 @@ export default function NuestraHistoriaPage() {
     return () => clearInterval(interval);
   }, [isMounted]);
 
-  // §5.2.4: gsap.context garantiza la limpieza no negociable de instancias
+  // 2. useGSAP con array vacío: se ejecuta una sola vez al montar en el cliente
   useGSAP(() => {
-    if (!isMounted) return;
     const ctx = gsap.context(() => {
       gsap.from(headerRef.current, { opacity: 0, y: -50, duration: 1.2, ease: "power3.out" });
       gsap.from(miningRef.current, { opacity: 0, scale: 0.8, rotationX: 15, duration: 1, delay: 0.3, ease: "back.out(1.7)", transformPerspective: 600 });
     });
     return () => ctx.revert();
-  }, [isMounted]);
+  }, []);
 
   const handleSpecSelect = (block: TimechainBlock) => {
     setActiveSpec(block);
@@ -293,7 +258,7 @@ export default function NuestraHistoriaPage() {
     setTimeout(() => setIsHovering(false), 2000);
   };
 
-  // §8.10: Hydration-Friendly Skeleton
+  // 3. Skeleton de hidratación: Debe ser idéntico en servidor y primer render del cliente
   if (!isMounted) {
     return (
       <div className="min-h-screen bg-black flex items-center justify-center">
@@ -305,7 +270,8 @@ export default function NuestraHistoriaPage() {
   return (
     <>
       <Navbar />
-      <div className="min-h-screen bg-black text-[hsl(var(--foreground))] relative overflow-hidden">
+      {/* 4. suppressHydrationWarning previene fallos por micro-discrepancias de terceros */}
+      <div className="min-h-screen bg-black text-[hsl(var(--foreground))] relative overflow-hidden" suppressHydrationWarning>
         
         {/* LAYER 1: THREE.JS CANVAS */}
         <div className="fixed inset-0 z-0">
@@ -313,7 +279,8 @@ export default function NuestraHistoriaPage() {
             <Canvas
               camera={{ position: [0, 2, 12], fov: 50 }}
               dpr={[1, 2]}
-              gl={{ antialias: true, toneMapping: THREE.ACESFilmicToneMapping }}
+              // 5. Usar el valor numérico 3 evita evaluaciones raras de THREE en SSR
+              gl={{ antialias: true, toneMapping: 3 }} 
             >
               <fog attach="fog" args={[COLORS.black, 8, 25]} />
               <ambientLight intensity={0.2} />
@@ -344,7 +311,6 @@ export default function NuestraHistoriaPage() {
         <div className="fixed inset-0 pointer-events-none z-10">
           <div className="pointer-events-auto">
             
-            {/* §4.5: Tron Corner Brackets - DIAGONAL PAIR ONLY (Canonical Oracle Signature) */}
             <div className="absolute top-[22px] right-[22px] w-8 h-8 border-t-2 border-r-2 border-matrix/30 pointer-events-none" />
             <div className="absolute bottom-[22px] left-[22px] w-8 h-8 border-b-2 border-l-2 border-matrix/30 pointer-events-none" />
 
@@ -361,7 +327,6 @@ export default function NuestraHistoriaPage() {
                   </div>
                 </div>
 
-                {/* §8.6: Live Status Pill */}
                 <div ref={miningRef} className="bg-black/80 border border-matrix/30 backdrop-blur-md rounded-3xl p-6 max-w-xs">
                   <div className="flex items-center gap-2 mb-3 text-[10px] font-mono text-matrix uppercase tracking-[0.2em]">
                     <Clock className="h-4 w-4 animate-pulse" /> Próximo Bloque
@@ -396,7 +361,6 @@ export default function NuestraHistoriaPage() {
               </div>
             </header>
 
-            {/* §4.1: Glassmorphism Bunker + §8.2: Oracle System Modal Header Pattern */}
             <aside className="absolute right-[56px] top-1/2 -translate-y-1/2 w-[248px] bg-black/80 backdrop-blur-xl border border-white/10 shadow-2xl">
               <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-matrix/60 to-transparent animate-scanline" />
               
@@ -414,7 +378,7 @@ export default function NuestraHistoriaPage() {
                     onClick={() => handleSpecSelect(block)}
                     className={`group flex items-center gap-3 p-3 border text-left transition-all duration-300
                       ${activeSpec.height === block.height 
-                        ? 'bg-matrix/10 border-matrix shadow-matrix' // §2.4: Token de sombra, no inline
+                        ? 'bg-matrix/10 border-matrix shadow-matrix' 
                         : 'border-white/10 hover:border-matrix/30 hover:bg-matrix/5'}
                     `}
                   >
