@@ -1,12 +1,13 @@
 'use client';
 
 import { useState, useEffect, useRef, useMemo, Suspense } from 'react';
-import { Canvas, useFrame } from '@react-three/fiber';
+import { Canvas } from '@react-three/fiber';
 import { OrbitControls } from '@react-three/drei/core/OrbitControls';
 import { Float } from '@react-three/drei/core/Float';
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
 import * as THREE from 'three';
+import dynamic from 'next/dynamic';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 import {
@@ -14,6 +15,13 @@ import {
   Menu, X, Volume2, VolumeX,
   type LucideIcon
 } from 'lucide-react';
+
+// 🌟 INTEGRACIÓN THE GRIDCN:
+// Asegúrate de ejecutar: npx shadcn@latest add @thegridcn/grid
+const Grid3D = dynamic(
+  () => import('@/components/grid').then((m) => m.Grid3D),
+  { ssr: false }
+);
 
 // Workaround for drei v8 + fiber v8
 const AnyFloat = Float as any;
@@ -138,24 +146,32 @@ function HologramBlock({
   const radius = 3.5;
   const yBase = (index - timechainBlocks.length / 2) * 1.2;
 
-  useFrame(({ clock }) => {
+  // 🌟 GSAP Animation for R3F Object (Corrige el bug de selectores DOM en R3F)
+  useGSAP(() => {
     if (!groupRef.current || !genesisComplete) return;
-    const t = clock.getElapsedTime();
-    groupRef.current.position.y = yBase + Math.sin(t * 0.55 + index) * 0.13;
-    groupRef.current.rotation.y = t * 0.07 + angle;
-  });
+    gsap.fromTo(groupRef.current, 
+      { x: 0, y: yBase, z: 0, scale: 0.05 },
+      { 
+        x: Math.cos(angle) * radius,
+        z: Math.sin(angle) * radius,
+        scale: 1,
+        duration: 1.5,
+        delay: 1.1 + index * 0.09,
+        ease: 'power3.out'
+      }
+    );
+  }, [genesisComplete, index, angle, radius, yBase]);
 
   return (
     <AnyFloat speed={1.4} rotationIntensity={0.18} floatIntensity={0.35}>
       <group
         ref={groupRef}
-        position={[0, 0, 0]} // GSAP will move this during Genesis
         onClick={(e) => {
           e.stopPropagation();
           onSelect(block);
         }}
-        // R3F maneja el cursor automáticamente si el mesh es interactivo, 
-        // evitando mutaciones manuales de document.body que causan bugs.
+        onPointerOver={() => { if (typeof document !== 'undefined') document.body.style.cursor = 'pointer'; }}
+        onPointerOut={() => { if (typeof document !== 'undefined') document.body.style.cursor = 'auto'; }}
       >
         <mesh position={[0, -0.55, 0]} rotation={[-Math.PI / 2, 0, 0]}>
           <ringGeometry args={[0.48, 0.58, 6]} />
@@ -241,11 +257,9 @@ export default function NuestraHistoriaPage() {
   const [audioReady, setAudioReady] = useState(false);
 
   const headerRef = useRef<HTMLDivElement>(null);
-  const miningRef = useRef<HTMLDivElement>(null);
   const ambientRef = useRef<HTMLAudioElement | null>(null);
   const genesisSoundRef = useRef<HTMLAudioElement | null>(null);
 
-  // Mobile detection
   useEffect(() => {
     const checkMobile = () => setIsMobile(window.innerWidth < 768);
     checkMobile();
@@ -253,12 +267,10 @@ export default function NuestraHistoriaPage() {
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
-  // Anti-hydration guard
   useEffect(() => {
     setIsMounted(true);
   }, []);
 
-  // Timer
   useEffect(() => {
     if (!isMounted) return;
     const updateTimer = () => {
@@ -283,11 +295,8 @@ export default function NuestraHistoriaPage() {
     return () => clearInterval(interval);
   }, [isMounted]);
 
-  // Audio setup
   useEffect(() => {
     if (!isMounted) return;
-
-    // Nota: Asegúrate de que estos archivos existan en la carpeta `public/audio/`
     ambientRef.current = new Audio('/audio/timechain-ambient.mp3');
     genesisSoundRef.current = new Audio('/audio/genesis-chime.mp3');
 
@@ -298,7 +307,6 @@ export default function NuestraHistoriaPage() {
     if (genesisSoundRef.current) {
       genesisSoundRef.current.volume = 0.45;
     }
-
     setAudioReady(true);
 
     return () => {
@@ -307,18 +315,14 @@ export default function NuestraHistoriaPage() {
     };
   }, [isMounted]);
 
-  // Genesis sequence (GSAP)
   useGSAP(() => {
     if (!isMounted) return;
-
-    // gsap.context asegura la limpieza correcta en React 18 Strict Mode
     const ctx = gsap.context(() => {
       const tl = gsap.timeline({
         delay: 0.8,
         onComplete: () => setGenesisComplete(true)
       });
 
-      // Central singularity flash
       tl.fromTo('.genesis-core',
         { scale: 0, opacity: 0 },
         { scale: 2.2, opacity: 0.85, duration: 0.7, ease: 'power2.out' }
@@ -330,30 +334,6 @@ export default function NuestraHistoriaPage() {
         ease: 'power2.in'
       });
 
-      // Blocks assemble from center
-      timechainBlocks.forEach((_, index) => {
-        const angle = (index / timechainBlocks.length) * Math.PI * 2;
-        const radius = 3.5;
-        const yBase = (index - timechainBlocks.length / 2) * 1.2;
-
-        tl.fromTo(`.block-group-${index}`,
-          {
-            x: 0, y: 0, z: 0, scale: 0.05, opacity: 0
-          },
-          {
-            x: Math.cos(angle) * radius,
-            y: yBase,
-            z: Math.sin(angle) * radius,
-            scale: 1,
-            opacity: 1,
-            duration: 1.5,
-            ease: 'power3.out'
-          },
-          1.1 + index * 0.09
-        );
-      });
-
-      // Header entrance
       gsap.from(headerRef.current, {
         opacity: 0,
         y: -40,
@@ -368,7 +348,6 @@ export default function NuestraHistoriaPage() {
 
   const toggleAudio = () => {
     if (!audioReady) return;
-
     if (audioEnabled) {
       ambientRef.current?.pause();
       setAudioEnabled(false);
@@ -401,8 +380,10 @@ export default function NuestraHistoriaPage() {
     <>
       <Navbar />
 
-      <div className="relative min-h-screen bg-black text-[hsl(var(--foreground))]">
-        {/* 3D Canvas */}
+      {/* 🌟 CONTENEDOR PRINCIPAL: flex-col permite que el Footer se empuje al fondo correctamente */}
+      <main className="relative min-h-screen bg-black text-[hsl(var(--foreground))] flex flex-col">
+        
+        {/* 1. 3D Canvas (Fondo, Interactivo) */}
         <div className="fixed inset-0 z-0">
           <Suspense fallback={null}>
             <Canvas
@@ -417,6 +398,18 @@ export default function NuestraHistoriaPage() {
                 intensity={2.2}
                 color={isHovering ? COLORS.accent : COLORS.matrix}
               />
+              
+              {/* 🌟 NUEVO: Suelo interactivo estilo Tron (The GridCN) */}
+              <Grid3D 
+                cellSize={1.5} 
+                cellColor="#00FF41" 
+                cellThickness={1} 
+                rotateX={80} 
+                followMouse={true} 
+                interactive={true} 
+                position={[0, -4, 0]} 
+                scale={[10, 10, 1]}
+              />
 
               <OrbitControls
                 autoRotate
@@ -429,7 +422,7 @@ export default function NuestraHistoriaPage() {
               />
 
               {timechainBlocks.map((block, idx) => (
-                <group key={block.height} name={`block-group-${idx}`}>
+                <group key={block.height}>
                   <HologramBlock
                     block={block}
                     index={idx}
@@ -445,199 +438,200 @@ export default function NuestraHistoriaPage() {
           </Suspense>
         </div>
 
-        {/* Genesis core flash (CSS) */}
+        {/* 2. Overlays (No interactivos, decorativos) */}
         <div className="genesis-core fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-32 h-32 rounded-full bg-matrix blur-3xl opacity-0 pointer-events-none z-[1]" />
-
-        {/* Vignette + grain */}
         <div className="fixed inset-0 pointer-events-none z-[5] bg-[radial-gradient(ellipse_75%_65%_at_center,transparent_30%,rgba(0,0,0,0.75)_100%)]" />
         <div className="fixed inset-0 pointer-events-none z-[6] opacity-[0.04] mix-blend-overlay bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0IiBoZWlnaHQ9IjQiPgo8cmVjdCB3aWR0aD0iNCIgaGVpZ2h0PSI0IiBmaWxsPSIjZmZmIiBmaWxsLW9wYWNpdHk9IjAuMDUiLz4KPC9zdmc+')]"/>
 
-        {/* HUD */}
-        <div className="relative z-10 min-h-screen flex flex-col">
-          <div className="flex-1 relative">
-            {/* Header */}
-            <header
-              ref={headerRef}
-              className="absolute top-4 left-4 right-4 md:top-[44px] md:left-[56px] md:right-[56px] flex flex-col md:flex-row justify-between items-start gap-4"
-            >
-              <div className="flex flex-col gap-4 md:gap-6">
-                <div className="flex items-center gap-4">
-                  <div className="relative w-8 h-8">
-                    <div className="absolute inset-0 border-[1.5px] border-matrix rotate-45" />
-                    <div className="absolute inset-[9px] bg-matrix rotate-45 shadow-matrix-strong" />
+        {/* 3. HUD Layer: pointer-events-none permite que los clics pasen al Canvas 3D */}
+        <div className="fixed inset-0 z-10 pointer-events-none flex flex-col">
+          
+          {/* Header: pointer-events-auto restaura la interactividad solo para este elemento */}
+          <header
+            ref={headerRef}
+            className="pointer-events-auto absolute top-4 left-4 right-4 md:top-[44px] md:left-[56px] md:right-[56px] flex flex-col md:flex-row justify-between items-start gap-4"
+          >
+            <div className="flex flex-col gap-4 md:gap-6">
+              <div className="flex items-center gap-4">
+                <div className="relative w-8 h-8">
+                  <div className="absolute inset-0 border-[1.5px] border-matrix rotate-45" />
+                  <div className="absolute inset-[9px] bg-matrix rotate-45 shadow-matrix-strong" />
+                </div>
+                <div>
+                  <div className="font-serif text-xl md:text-2xl tracking-[0.2em] text-[#FAFAFA]">
+                    TIMECHAIN
                   </div>
-                  <div>
-                    <div className="font-serif text-xl md:text-2xl tracking-[0.2em] text-[#FAFAFA]">
-                      TIMECHAIN
-                    </div>
-                    <div className="font-mono text-[8px] md:text-[9.5px] text-gray-500 tracking-[0.3em] mt-1.5">
-                      OBSERVATORY / v3.1 GENESIS
-                    </div>
+                  <div className="font-mono text-[8px] md:text-[9.5px] text-gray-500 tracking-[0.3em] mt-1.5">
+                    OBSERVATORY / v3.1 GENESIS
                   </div>
                 </div>
+              </div>
 
-                <div
-                  ref={miningRef}
-                  className="bg-black/80 border border-matrix/30 backdrop-blur-md rounded-2xl md:rounded-3xl p-4 md:p-6 w-full md:max-w-xs"
+              <div className="bg-black/80 border border-matrix/30 backdrop-blur-md rounded-2xl md:rounded-3xl p-4 md:p-6 w-full md:max-w-xs">
+                <div className="flex items-center gap-2 mb-2 text-[9px] md:text-[10px] font-mono text-matrix uppercase tracking-[0.2em]">
+                  <Clock className="h-3.5 w-3.5 animate-pulse" /> Próximo Bloque
+                </div>
+                <div 
+                  className="font-vt323 text-5xl md:text-7xl text-matrix tracking-widest tabular-nums"
+                  aria-live="polite"
+                  aria-atomic="true"
+                  aria-label={`Tiempo restante para el próximo bloque: ${timeUntilNext}`}
                 >
-                  <div className="flex items-center gap-2 mb-2 text-[9px] md:text-[10px] font-mono text-matrix uppercase tracking-[0.2em]">
-                    <Clock className="h-3.5 w-3.5 animate-pulse" /> Próximo Bloque
-                  </div>
-                  <div 
-                    className="font-vt323 text-5xl md:text-7xl text-matrix tracking-widest tabular-nums"
-                    aria-live="polite"
-                    aria-atomic="true"
-                    aria-label={`Tiempo restante para el próximo bloque: ${timeUntilNext}`}
-                  >
-                    {timeUntilNext}
-                  </div>
-                  <div className="mt-2 text-[8px] md:text-[9px] font-mono text-gray-600 uppercase">
-                    Block Height: <span className="text-matrix">#{timechainBlocks.length}</span>
-                  </div>
+                  {timeUntilNext}
+                </div>
+                <div className="mt-2 text-[8px] md:text-[9px] font-mono text-gray-600 uppercase">
+                  Block Height: <span className="text-matrix">#{timechainBlocks.length}</span>
                 </div>
               </div>
+            </div>
 
-              {/* Audio toggle + status */}
-              <div className="flex flex-col items-end gap-3">
-                <button
-                  onClick={toggleAudio}
-                  aria-label={audioEnabled ? "Desactivar audio ambiental" : "Activar audio ambiental"}
-                  className="flex items-center gap-2 px-3 py-2 bg-black/70 border border-white/10 rounded-full text-xs font-mono text-gray-400 hover:text-matrix hover:border-matrix/40 transition"
-                >
-                  {audioEnabled ? <Volume2 className="w-4 h-4" /> : <VolumeX className="w-4 h-4" />}
-                  {audioEnabled ? 'AUDIO ON' : 'AUDIO OFF'}
-                </button>
-
-                <div className="hidden md:flex flex-col gap-2 text-right text-[10px] font-mono text-gray-400 tracking-[0.18em]">
-                  <div className="flex items-center justify-end gap-2">
-                    <span>HOLO-FIELD STABLE</span>
-                    <span className="h-[7px] w-[7px] bg-matrix rounded-full animate-pulse shadow-terminal" />
-                  </div>
-                  <div className="flex items-center justify-end gap-2">
-                    <span>CHAIN SYNC 99.7%</span>
-                    <span className="h-[7px] w-[7px] bg-matrix rounded-full animate-pulse shadow-terminal" />
-                  </div>
-                </div>
-              </div>
-            </header>
-
-            {/* Desktop side panel */}
-            <aside className="hidden md:block fixed right-[56px] top-1/2 -translate-y-1/2 w-[260px] bg-black/80 backdrop-blur-xl border border-white/10 shadow-2xl">
-              <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-matrix/60 to-transparent animate-scanline" />
-              <div className="p-5 border-b border-white/10 flex items-center gap-3 bg-black/60 shrink-0">
-                <Hash className="h-5 w-5 text-matrix" />
-                <span className="font-vt323 text-xl text-matrix tracking-wider">CADENA DE EVENTOS • LOG</span>
-              </div>
-              <div className="p-4 flex flex-col gap-2 overflow-y-auto max-h-[60vh] custom-scrollbar">
-                {timechainBlocks.map((block) => (
-                  <button
-                    key={block.height}
-                    onClick={() => handleSpecSelect(block)}
-                    className={`flex items-center gap-3 p-3 border text-left transition-all
-                      ${activeSpec.height === block.height
-                        ? 'bg-matrix/10 border-matrix shadow-matrix'
-                        : 'border-white/10 hover:border-matrix/30 hover:bg-matrix/5'}
-                    `}
-                  >
-                    <span className={`flex items-center justify-center w-8 h-8 rounded border transition-colors
-                      ${activeSpec.height === block.height ? 'border-matrix text-matrix' : 'border-white/10 text-gray-500'}
-                    `}>
-                      <block.Icon className="h-4 w-4" />
-                    </span>
-                    <div className="flex-1 min-w-0">
-                      <div className={`font-mono text-[11px] truncate ${activeSpec.height === block.height ? 'text-matrix' : 'text-gray-400'}`}>
-                        {block.title}
-                      </div>
-                      <div className="font-mono text-[9px] text-gray-600 mt-0.5">
-                        {block.hash.slice(0, 12)}...
-                      </div>
-                    </div>
-                  </button>
-                ))}
-              </div>
-            </aside>
-
-            {/* Mobile button */}
-            {isMobile && (
+            <div className="flex flex-col items-end gap-3">
               <button
-                onClick={() => setShowMobileSheet(true)}
-                className="fixed bottom-24 right-4 z-40 flex items-center gap-2 px-4 py-3 bg-black/90 border border-matrix/40 rounded-full shadow-matrix-strong backdrop-blur-md"
+                onClick={toggleAudio}
+                aria-label={audioEnabled ? "Desactivar audio ambiental" : "Activar audio ambiental"}
+                className="flex items-center gap-2 px-3 py-2 bg-black/70 border border-white/10 rounded-full text-xs font-mono text-gray-400 hover:text-matrix hover:border-matrix/40 transition"
               >
-                <Menu className="h-5 w-5 text-matrix" />
-                <span className="font-mono text-xs text-matrix tracking-wider">EXPLORAR HITOS</span>
+                {audioEnabled ? <Volume2 className="w-4 h-4" /> : <VolumeX className="w-4 h-4" />}
+                {audioEnabled ? 'AUDIO ON' : 'AUDIO OFF'}
               </button>
-            )}
 
-            {/* Mobile sheet */}
-            {showMobileSheet && isMobile && (
-              <div className="fixed inset-0 z-50 md:hidden" role="dialog" aria-modal="true">
-                <div className="absolute inset-0 bg-black/80 backdrop-blur-sm" onClick={() => setShowMobileSheet(false)} />
-                <div className="absolute inset-x-0 bottom-0 bg-black border-t-2 border-matrix/40 rounded-t-3xl max-h-[80vh] flex flex-col">
-                  <div className="p-4 border-b border-white/10 flex items-center justify-between bg-black/60">
-                    <div className="flex items-center gap-3">
-                      <Hash className="h-5 w-5 text-matrix" />
-                      <span className="font-vt323 text-xl text-matrix tracking-wider">CADENA DE EVENTOS • LOG</span>
+              <div className="hidden md:flex flex-col gap-2 text-right text-[10px] font-mono text-gray-400 tracking-[0.18em]">
+                <div className="flex items-center justify-end gap-2">
+                  <span>HOLO-FIELD STABLE</span>
+                  <span className="h-[7px] w-[7px] bg-matrix rounded-full animate-pulse shadow-terminal" />
+                </div>
+                <div className="flex items-center justify-end gap-2">
+                  <span>CHAIN SYNC 99.7%</span>
+                  <span className="h-[7px] w-[7px] bg-matrix rounded-full animate-pulse shadow-terminal" />
+                </div>
+              </div>
+            </div>
+          </header>
+
+          {/* Desktop side panel: pointer-events-auto + Tron Corners (Design System v3.0) */}
+          <aside className="pointer-events-auto hidden md:block fixed right-[56px] top-1/2 -translate-y-1/2 w-[260px] bg-black/80 backdrop-blur-xl border border-white/10 shadow-2xl rounded-xl overflow-hidden">
+            {/* Tron Corner Brackets */}
+            <div className="absolute top-3 left-3 w-5 h-5 border-t-2 border-l-2 border-matrix/40 pointer-events-none" />
+            <div className="absolute bottom-3 right-3 w-5 h-5 border-b-2 border-r-2 border-matrix/40 pointer-events-none" />
+            
+            <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-matrix/60 to-transparent animate-scanline" />
+            
+            <div className="p-5 border-b border-white/10 flex items-center gap-3 bg-black/60 shrink-0">
+              <Hash className="h-5 w-5 text-matrix" />
+              <span className="font-vt323 text-xl text-matrix tracking-wider">CADENA DE EVENTOS • LOG</span>
+            </div>
+            <div className="p-4 flex flex-col gap-2 overflow-y-auto max-h-[60vh] custom-scrollbar">
+              {timechainBlocks.map((block) => (
+                <button
+                  key={block.height}
+                  onClick={() => handleSpecSelect(block)}
+                  className={`flex items-center gap-3 p-3 border text-left transition-all
+                    ${activeSpec.height === block.height
+                      ? 'bg-matrix/10 border-matrix shadow-matrix'
+                      : 'border-white/10 hover:border-matrix/30 hover:bg-matrix/5'}
+                  `}
+                >
+                  <span className={`flex items-center justify-center w-8 h-8 rounded border transition-colors
+                    ${activeSpec.height === block.height ? 'border-matrix text-matrix' : 'border-white/10 text-gray-500'}
+                  `}>
+                    <block.Icon className="h-4 w-4" />
+                  </span>
+                  <div className="flex-1 min-w-0">
+                    <div className={`font-mono text-[11px] truncate ${activeSpec.height === block.height ? 'text-matrix' : 'text-gray-400'}`}>
+                      {block.title}
                     </div>
-                    <button onClick={() => setShowMobileSheet(false)} aria-label="Cerrar panel">
-                      <X className="h-5 w-5 text-gray-400" />
-                    </button>
+                    <div className="font-mono text-[9px] text-gray-600 mt-0.5">
+                      {block.hash.slice(0, 12)}...
+                    </div>
                   </div>
-                  <div className="p-4 flex flex-col gap-2 overflow-y-auto flex-1 custom-scrollbar">
-                    {timechainBlocks.map((block) => (
-                      <button
-                        key={block.height}
-                        onClick={() => handleSpecSelect(block)}
-                        className={`flex items-center gap-3 p-3 border text-left transition-all
-                          ${activeSpec.height === block.height ? 'border-matrix bg-matrix/10' : 'border-white/10 hover:border-matrix/30'}
-                        `}
-                      >
-                        <span className={`flex items-center justify-center w-8 h-8 rounded border transition-colors
-                          ${activeSpec.height === block.height ? 'border-matrix text-matrix' : 'border-white/10 text-gray-500'}
-                        `}>
-                          <block.Icon className="h-4 w-4" />
-                        </span>
-                        <div className="flex-1 min-w-0">
-                          <div className={`font-mono text-sm truncate ${activeSpec.height === block.height ? 'text-matrix' : 'text-gray-400'}`}>
-                            {block.title}
-                          </div>
-                          <div className="font-mono text-xs text-gray-600 mt-0.5">
-                            {block.quarter} • {block.hash.slice(0, 12)}...
-                          </div>
+                </button>
+              ))}
+            </div>
+          </aside>
+
+          {/* Mobile button */}
+          {isMobile && (
+            <button
+              onClick={() => setShowMobileSheet(true)}
+              className="pointer-events-auto fixed bottom-24 right-4 z-40 flex items-center gap-2 px-4 py-3 bg-black/90 border border-matrix/40 rounded-full shadow-matrix-strong backdrop-blur-md"
+            >
+              <Menu className="h-5 w-5 text-matrix" />
+              <span className="font-mono text-xs text-matrix tracking-wider">EXPLORAR HITOS</span>
+            </button>
+          )}
+
+          {/* Mobile sheet */}
+          {showMobileSheet && isMobile && (
+            <div className="pointer-events-auto fixed inset-0 z-50 md:hidden" role="dialog" aria-modal="true">
+              <div className="absolute inset-0 bg-black/80 backdrop-blur-sm" onClick={() => setShowMobileSheet(false)} />
+              <div className="absolute inset-x-0 bottom-0 bg-black border-t-2 border-matrix/40 rounded-t-3xl max-h-[80vh] flex flex-col">
+                <div className="p-4 border-b border-white/10 flex items-center justify-between bg-black/60">
+                  <div className="flex items-center gap-3">
+                    <Hash className="h-5 w-5 text-matrix" />
+                    <span className="font-vt323 text-xl text-matrix tracking-wider">CADENA DE EVENTOS • LOG</span>
+                  </div>
+                  <button onClick={() => setShowMobileSheet(false)} aria-label="Cerrar panel">
+                    <X className="h-5 w-5 text-gray-400" />
+                  </button>
+                </div>
+                <div className="p-4 flex flex-col gap-2 overflow-y-auto flex-1 custom-scrollbar">
+                  {timechainBlocks.map((block) => (
+                    <button
+                      key={block.height}
+                      onClick={() => handleSpecSelect(block)}
+                      className={`flex items-center gap-3 p-3 border text-left transition-all
+                        ${activeSpec.height === block.height ? 'border-matrix bg-matrix/10' : 'border-white/10 hover:border-matrix/30'}
+                      `}
+                    >
+                      <span className={`flex items-center justify-center w-8 h-8 rounded border transition-colors
+                        ${activeSpec.height === block.height ? 'border-matrix text-matrix' : 'border-white/10 text-gray-500'}
+                      `}>
+                        <block.Icon className="h-4 w-4" />
+                      </span>
+                      <div className="flex-1 min-w-0">
+                        <div className={`font-mono text-sm truncate ${activeSpec.height === block.height ? 'text-matrix' : 'text-gray-400'}`}>
+                          {block.title}
                         </div>
-                      </button>
-                    ))}
-                  </div>
+                        <div className="font-mono text-xs text-gray-600 mt-0.5">
+                          {block.quarter} • {block.hash.slice(0, 12)}...
+                        </div>
+                      </div>
+                    </button>
+                  ))}
                 </div>
               </div>
-            )}
+            </div>
+          )}
 
-            {/* Bottom HUD */}
-            <footer className="fixed bottom-0 left-0 right-0 p-4 md:bottom-[44px] md:left-[56px] md:right-[56px]">
-              <div className={`bg-black/80 backdrop-blur-xl border p-4 rounded-xl transition-colors duration-300
-                ${isHovering ? 'border-accent' : 'border-white/10'}
-              `}>
-                <div className="flex flex-col md:flex-row md:items-center gap-3 md:gap-8">
-                  <div>
-                    <div className="text-[9px] font-mono text-gray-500 tracking-widest uppercase">HITO ACTIVO</div>
-                    <div className={`font-mono text-sm md:text-base tracking-[0.1em] transition-colors duration-300
-                      ${isHovering ? 'text-accent' : 'text-matrix'}
-                    `}>
-                      #{activeSpec.height.toString().padStart(3, '0')} • {activeSpec.title}
-                    </div>
-                  </div>
-                  <div className="hidden md:block text-xs text-gray-400 font-mono max-w-md">
-                    {activeSpec.desc}
+          {/* Bottom HUD */}
+          <div className="pointer-events-auto fixed bottom-0 left-0 right-0 p-4 md:bottom-[44px] md:left-[56px] md:right-[56px]">
+            <div className={`bg-black/80 backdrop-blur-xl border p-4 rounded-xl transition-colors duration-300
+              ${isHovering ? 'border-accent' : 'border-white/10'}
+            `}>
+              <div className="flex flex-col md:flex-row md:items-center gap-3 md:gap-8">
+                <div>
+                  <div className="text-[9px] font-mono text-gray-500 tracking-widest uppercase">HITO ACTIVO</div>
+                  <div className={`font-mono text-sm md:text-base tracking-[0.1em] transition-colors duration-300
+                    ${isHovering ? 'text-accent' : 'text-matrix'}
+                  `}>
+                    #{activeSpec.height.toString().padStart(3, '0')} • {activeSpec.title}
                   </div>
                 </div>
+                <div className="hidden md:block text-xs text-gray-400 font-mono max-w-md">
+                  {activeSpec.desc}
+                </div>
               </div>
-            </footer>
+            </div>
           </div>
+        </div>
 
-          {/* Spacer to push Footer down */}
-          <div className="h-40 md:h-56" />
+        {/* 4. Footer (Interactivo, se sitúa al final del flujo del documento) */}
+        {/* 🌟 mt-auto lo empuja al fondo. bg-black/95 evita que "invada" visualmente el canvas 3D */}
+        <div className="relative z-20 mt-auto pointer-events-auto bg-black/95 backdrop-blur-xl border-t border-matrix/30">
           <Footer />
         </div>
-      </div>
+
+      </main>
     </>
   );
 }

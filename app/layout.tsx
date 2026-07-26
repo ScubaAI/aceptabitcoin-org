@@ -3,6 +3,7 @@ import { IBM_Plex_Serif, Fira_Code, VT323 } from "next/font/google";
 import "./globals.css";
 import { cn } from "@/lib/utils";
 import { Toaster } from "sonner";
+import { ThemeProvider } from "@/components/theme";
 
 // 1. Títulos: IBM Plex Serif (Con "patillas", Estilo Bank/Periódico Futurista)
 const ibmPlex = IBM_Plex_Serif({
@@ -86,7 +87,9 @@ export default function RootLayout({
           "bg-black text-white antialiased min-h-screen selection:bg-bitcoin selection:text-black"
         )}
       >
-        {children}
+        <ThemeProvider defaultTheme="matrix">
+          {children}
+        </ThemeProvider>
         <Toaster position="top-center" richColors closeButton />
       </body>
     </html>
