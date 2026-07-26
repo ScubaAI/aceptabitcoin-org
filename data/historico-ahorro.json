@@ -1,0 +1,13 @@
+[
+  { "date": "03/31", "valorUSD": 8.84, "feesUSD": 0.02, "tipo": "SOL/cbBTC" },
+  { "date": "07/16", "valorUSD": 4.38, "feesUSD": 0.00, "tipo": "SOL/USDC" },
+  { "date": "07/17", "valorUSD": 7.63, "feesUSD": 0.02, "tipo": "SOL/USDC" },
+  { "date": "07/18", "valorUSD": 51.11, "feesUSD": 0.04, "tipo": "SOL/USDC" },
+  { "date": "07/19", "valorUSD": 49.14, "feesUSD": 0.16, "tipo": "SOL/USDC + cbBTC" },
+  { "date": "07/20", "valorUSD": 29.78, "feesUSD": 0.26, "tipo": "SOL/USDC + cbBTC" },
+  { "date": "07/21", "valorUSD": 36.04, "feesUSD": 0.42, "tipo": "SOL/USDC" },
+  { "date": "07/22", "valorUSD": 22.93, "feesUSD": 0.22, "tipo": "SOL/USDC" },
+  { "date": "07/23", "valorUSD": 14.59, "feesUSD": 0.00, "tipo": "SOL/USDC" },
+  { "date": "07/24", "valorUSD": 14.61, "feesUSD": 0.02, "tipo": "SOL/USDC" },
+  { "date": "07/25", "valorUSD": 103.13, "feesUSD": 0.20, "tipo": "SOL/USDC" }
+]

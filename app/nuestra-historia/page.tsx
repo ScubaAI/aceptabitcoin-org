@@ -7,18 +7,19 @@ import { Float } from '@react-three/drei/core/Float';
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
 import * as THREE from 'three';
-
-// Workaround for drei v8 + fiber v8 type mismatch on Float component
-const AnyFloat = Float as any;
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
-import { 
+import {
   Clock, Hash, Zap, Users, Sprout, Store, Trophy, Coins, ShieldCheck, Map, Rocket,
+  Menu, X, Volume2, VolumeX,
   type LucideIcon
 } from 'lucide-react';
 
+// Workaround for drei v8 + fiber v8
+const AnyFloat = Float as any;
+
 // ============================================================
-// BITCOIN TIMECHAIN — OBSERVATORY MODE (v3.0 NEXUS Fusion)
+// BITCOIN TIMECHAIN — OBSERVATORY MODE (v3.1 GENESIS)
 // ============================================================
 
 interface TimechainBlock {
@@ -35,62 +36,62 @@ interface TimechainBlock {
 
 const timechainBlocks: TimechainBlock[] = [
   {
-    height: 1, timestamp: "2021-10-15T18:00:00Z", quarter: "Q4 2021",
-    title: "GENESIS BLOCK", desc: "Primera reunión cypherpunk en Mérida. Nace la semilla de la soberanía financiera en Yucatán.",
+    height: 1, timestamp: "2021-11-15T18:00:00Z", quarter: "Q4 2021",
+    title: "GÉNESIS YUCATÁN", desc: "Primera reunión cypherpunk en Mérida. Despliegue del primer nano-nodo educativo. Inicio del protocolo 'Lunes de Bitcoin'.",
     hash: "0000a7f3b2c1...", prevHash: "0000000000000000000000000000000000000000000000000000000000000000",
     Icon: Sprout, category: "genesis"
   },
   {
-    height: 2, timestamp: "2022-01-20T12:00:00Z", quarter: "Q1 2022",
-    title: "NODO LIGHTNING", desc: "Primer nodo LN público en Yucatán. Canal establecido con CDMX. La red comienza a fluir.",
+    height: 2, timestamp: "2022-05-22T12:00:00Z", quarter: "Q2 2022",
+    title: "PRIMER COMERCIO", desc: "Nodo comercial activo. La Bianca Tropical integra BTCPay Server. Primera transacción Lightning validada en la península.",
     hash: "0000b8e4c3d2...", prevHash: "0000a7f3b2c1d8e9f4a5b6c7d8e9f0a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7",
-    Icon: Zap, category: "infrastructure"
-  },
-  {
-    height: 3, timestamp: "2022-07-10T15:30:00Z", quarter: "Q3 2022",
-    title: "PRIMER COMERCIO", desc: "Pizzería local acepta BTC via BTCPay Server. Primera transacción real en la península.",
-    hash: "0000c9f5d4e3...", prevHash: "0000b8e4c3d2e1f0a9b8c7d6e5f4a3b2c1d0e9f8a7b6c5d4e3f2a1b0c9d8e7f6",
     Icon: Store, category: "adoption"
   },
   {
-    height: 4, timestamp: "2023-02-28T09:00:00Z", quarter: "Q1 2023",
-    title: "TIANGUIS BITCOIN", desc: "Marketplace P2P descentralizado. Nostr + Lightning Network. Sin intermediarios, sin KYC.",
-    hash: "0000d0a6e5f4...", prevHash: "0000c9f5d4e3f2a1b0c9d8e7f6a5b4c3d2e1f0a9b8c7d6e5f4a3b2c1d0e9f8a7",
-    Icon: Coins, category: "infrastructure"
-  },
-  {
-    height: 5, timestamp: "2023-11-15T10:00:00Z", quarter: "Q4 2023",
-    title: "HACKATHON BTC MÉXICO", desc: "48 horas de código. 5 equipos. Nace B.O.B. Hotel. Partnership con Blockchain University.",
-    hash: "0000e1b7f6a5...", prevHash: "0000d0a6e5f4a3b2c1d0e9f8a7b6c5d4e3f2a1b0c9d8e7f6a5b4c3d2e1f0a9b8",
-    Icon: Trophy, category: "community"
-  },
-  {
-    height: 6, timestamp: "2024-04-20T14:00:00Z", quarter: "Q2 2024",
-    title: "BLINK API INTEGRATION", desc: "Migración a Blink. Stablesats USD. TipJar con QR dinámico. Lightning Address activo.",
-    hash: "0000f2c8a7b6...", prevHash: "0000e1b7f6a5b4c3d2e1f0a9b8c7d6e5f4a3b2c1d0e9f8a7b6c5d4e3f2a1b0c9",
-    Icon: Zap, category: "infrastructure"
-  },
-  {
-    height: 7, timestamp: "2024-09-10T11:00:00Z", quarter: "Q3 2024",
-    title: "ORACLE SYSTEM v2.0", desc: "Rebranding Matrix. Design System completo. Market Mood Widget. Price Converter live.",
-    hash: "0000a3d9b8c7...", prevHash: "0000f2c8a7b6c5d4e3f2a1b0c9d8e7f6a5b4c3d2e1f0a9b8c7d6e5f4a3b2c1d0",
+    height: 3, timestamp: "2022-10-10T09:00:00Z", quarter: "Q4 2022",
+    title: "DIRECTORIO SOBERANO", desc: "Lanzamiento del registro de proveedores de intercambio verificados. Soberanía financiera sin intermediarios ni custodia tercera.",
+    hash: "0000c9f5d4e3...", prevHash: "0000b8e4c3d2e1f0a9b8c7d6e5f4a3b2c1d0e9f8a7b6c5d4e3f2a1b0c9d8e7f6",
     Icon: ShieldCheck, category: "infrastructure"
   },
   {
-    height: 8, timestamp: "2024-12-05T16:00:00Z", quarter: "Q4 2024",
-    title: "DIRECTORIOS ACTIVOS", desc: "8 proveedores confirmados. 4 proyectos showcase. Cal.com integrado. Onboarding automatizado.",
-    hash: "0000b4eac9d8...", prevHash: "0000a3d9b8c7d6e5f4a3b2c1d0e9f8a7b6c5d4e3f2a1b0c9d8e7f6a5b4c3d2e1",
-    Icon: Users, category: "adoption"
+    height: 4, timestamp: "2024-03-07T08:00:00Z", quarter: "Q1 2024",
+    title: "HACKATHON BTC MX", desc: "Alianza con el Tecnológico de Software de Mérida. 48 horas de código, prueba de concepto y construcción de comunidad.",
+    hash: "0000d0a6e5f4...", prevHash: "0000c9f5d4e3f2a1b0c9d8e7f6a5b4c3d2e1f0a9b8c7d6e5f4a3b2c1d0e9f8a7",
+    Icon: Trophy, category: "community"
   },
   {
-    height: 9, timestamp: "2025-03-01T08:00:00Z", quarter: "Q1 2025",
-    title: "BTC MAP INTEGRATION", desc: "Mapa interactivo de merchants. Leaflet + CARTO dark tiles. Marcadores personalizados.",
-    hash: "0000c5fbdae9...", prevHash: "0000b4eac9d8e7f6a5b4c3d2e1f0a9b8c7d6e5f4a3b2c1d0e9f8a7b6c5d4e3f2",
+    height: 5, timestamp: "2024-09-10T11:00:00Z", quarter: "Q3 2024",
+    title: "ORACLE SYSTEM v2.0", desc: "Rebranding a Cypherpunk Bank. Design System v3.0. Integración de Market Mood Widget y Price Converter en tiempo real.",
+    hash: "0000e1b7f6a5...", prevHash: "0000d0a6e5f4a3b2c1d0e9f8a7b6c5d4e3f2a1b0c9d8e7f6a5b4c3d2e1f0a9b8",
+    Icon: Zap, category: "infrastructure"
+  },
+  {
+    height: 6, timestamp: "2024-12-05T16:00:00Z", quarter: "Q4 2024",
+    title: "TIANGUIS BITCOIN", desc: "Marketplace P2P descentralizado. Nostr + Lightning Network. Comercio sin KYC, sin censura y sin custodia.",
+    hash: "0000f2c8a7b6...", prevHash: "0000e1b7f6a5b4c3d2e1f0a9b8c7d6e5f4a3b2c1d0e9f8a7b6c5d4e3f2a1b0c9",
+    Icon: Coins, category: "adoption"
+  },
+  {
+    height: 7, timestamp: "2025-02-20T14:00:00Z", quarter: "Q1 2025",
+    title: "BLINK API & STABLESATS", desc: "Migración de infraestructura de pagos. Lightning Address activo y tip-jars dinámicos para onboarding de comercios.",
+    hash: "0000a3d9b8c7...", prevHash: "0000f2c8a7b6c5d4e3f2a1b0c9d8e7f6a5b4c3d2e1f0a9b8c7d6e5f4a3b2c1d0",
+    Icon: Zap, category: "infrastructure"
+  },
+  {
+    height: 8, timestamp: "2025-04-15T08:00:00Z", quarter: "Q2 2025",
+    title: "BTC MAP INTEGRATION", desc: "Mapa interactivo de merchants. Leaflet + CARTO dark tiles. Marcadores personalizados de adopción real.",
+    hash: "0000b4eac9d8...", prevHash: "0000a3d9b8c7d6e5f4a3b2c1d0e9f8a7b6c5d4e3f2a1b0c9d8e7f6a5b4c3d2e1",
     Icon: Map, category: "adoption"
   },
   {
-    height: 10, timestamp: "2025-05-03T00:00:00Z", quarter: "Q2 2025",
-    title: "ESTADO ACTUAL", desc: "+150 usuarios Tianguis. 8 proveedores activos. 4 proyectos dev. Open-source AGPL-3.0.",
+    height: 9, timestamp: "2025-05-22T00:00:00Z", quarter: "Q2 2025",
+    title: "PIZZA DAY MÉRIDA", desc: "Celebración del Bitcoin Pizza Day en alianza con AWS Mérida y Bull Bitcoin. Adopción masiva y educativa.",
+    hash: "0000c5fbdae9...", prevHash: "0000b4eac9d8e7f6a5b4c3d2e1f0a9b8c7d6e5f4a3b2c1d0e9f8a7b6c5d4e3f2",
+    Icon: Users, category: "community"
+  },
+  {
+    height: 10, timestamp: "2025-08-01T12:00:00Z", quarter: "Q3 2025",
+    title: "ESTADO ACTUAL", desc: "+150 usuarios en Tianguis. 8 proveedores activos. 4 proyectos dev. Infraestructura open-source bajo licencia AGPL-3.0.",
     hash: "0000d60cebf0...", prevHash: "0000c5fbdae9f8a7b6c5d4e3f2a1b0c9d8e7f6a5b4c3d2e1f0a9b8c7d6e5f4a3",
     Icon: Rocket, category: "community"
   }
@@ -115,48 +116,76 @@ const categoryToColor = (category: TimechainBlock["category"]) => {
 };
 
 // ============================================================
-// REACT THREE FIBER - 3D SCENE COMPONENTS
+// 3D COMPONENTS
 // ============================================================
 
-function HologramBlock({ block, index }: { block: TimechainBlock; index: number }) {
-  const meshRef = useRef<THREE.Mesh>(null);
+function HologramBlock({
+  block,
+  index,
+  isActive,
+  onSelect,
+  genesisComplete
+}: {
+  block: TimechainBlock;
+  index: number;
+  isActive: boolean;
+  onSelect: (block: TimechainBlock) => void;
+  genesisComplete: boolean;
+}) {
   const groupRef = useRef<THREE.Group>(null);
   const color = new THREE.Color(categoryToColor(block.category));
-
   const angle = (index / timechainBlocks.length) * Math.PI * 2;
   const radius = 3.5;
   const yBase = (index - timechainBlocks.length / 2) * 1.2;
-  
+
   useFrame(({ clock }) => {
-    if (!groupRef.current) return;
+    if (!groupRef.current || !genesisComplete) return;
     const t = clock.getElapsedTime();
-    groupRef.current.position.y = yBase + Math.sin(t * 0.6 + index) * 0.15;
-    groupRef.current.rotation.y = t * 0.1 + angle;
+    groupRef.current.position.y = yBase + Math.sin(t * 0.55 + index) * 0.13;
+    groupRef.current.rotation.y = t * 0.07 + angle;
   });
 
   return (
-    <AnyFloat speed={2} rotationIntensity={0.3} floatIntensity={0.5}>
-      <group ref={groupRef} position={[Math.cos(angle) * radius, yBase, Math.sin(angle) * radius]}>
-        <mesh position={[0, -0.6, 0]} rotation={[-Math.PI / 2, 0, 0]}>
-          <ringGeometry args={[0.5, 0.6, 6]} />
-          <meshBasicMaterial color={color} transparent opacity={0.6} side={2} />
+    <AnyFloat speed={1.4} rotationIntensity={0.18} floatIntensity={0.35}>
+      <group
+        ref={groupRef}
+        position={[0, 0, 0]} // GSAP will move this during Genesis
+        onClick={(e) => {
+          e.stopPropagation();
+          onSelect(block);
+        }}
+        // R3F maneja el cursor automáticamente si el mesh es interactivo, 
+        // evitando mutaciones manuales de document.body que causan bugs.
+      >
+        <mesh position={[0, -0.55, 0]} rotation={[-Math.PI / 2, 0, 0]}>
+          <ringGeometry args={[0.48, 0.58, 6]} />
+          <meshBasicMaterial
+            color={color}
+            transparent
+            opacity={isActive ? 0.9 : 0.4}
+            side={THREE.DoubleSide}
+          />
         </mesh>
-        
-        <mesh ref={meshRef}>
+
+        <mesh scale={isActive ? 1.18 : 1}>
           <boxGeometry args={[0.8, 0.8, 0.8]} />
-          <meshStandardMaterial 
+          <meshStandardMaterial
             color={color}
             emissive={color}
-            emissiveIntensity={0.8}
+            emissiveIntensity={isActive ? 1.5 : 0.65}
             wireframe
             transparent
-            opacity={0.9}
+            opacity={isActive ? 1 : 0.75}
           />
         </mesh>
 
         <mesh>
-          <sphereGeometry args={[0.25, 16, 16]} />
-          <meshBasicMaterial color={color} transparent opacity={0.4} />
+          <sphereGeometry args={[0.22, 16, 16]} />
+          <meshBasicMaterial
+            color={color}
+            transparent
+            opacity={isActive ? 0.7 : 0.3}
+          />
         </mesh>
       </group>
     </AnyFloat>
@@ -164,13 +193,13 @@ function HologramBlock({ block, index }: { block: TimechainBlock; index: number 
 }
 
 function AtmosphericParticles() {
-  const count = 200;
+  const count = 120;
   const positions = useMemo(() => {
     const pos = new Float32Array(count * 3);
     for (let i = 0; i < count; i++) {
-      pos[i * 3] = (Math.random() - 0.5) * 20;
-      pos[i * 3 + 1] = (Math.random() - 0.5) * 20;
-      pos[i * 3 + 2] = (Math.random() - 0.5) * 20;
+      pos[i * 3] = (Math.random() - 0.5) * 18;
+      pos[i * 3 + 1] = (Math.random() - 0.5) * 18;
+      pos[i * 3 + 2] = (Math.random() - 0.5) * 18;
     }
     return pos;
   }, []);
@@ -186,10 +215,10 @@ function AtmosphericParticles() {
         />
       </bufferGeometry>
       <pointsMaterial
-        size={0.05}
+        size={0.045}
         color={COLORS.matrix}
         transparent
-        opacity={0.4}
+        opacity={0.35}
         sizeAttenuation
       />
     </points>
@@ -197,22 +226,39 @@ function AtmosphericParticles() {
 }
 
 // ============================================================
-// MAIN PAGE COMPONENT - ORACLE SYSTEM OBSERVATORY
+// MAIN PAGE
 // ============================================================
 
 export default function NuestraHistoriaPage() {
   const [isMounted, setIsMounted] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
   const [timeUntilNext, setTimeUntilNext] = useState("10:00");
   const [activeSpec, setActiveSpec] = useState<TimechainBlock>(timechainBlocks[9]);
   const [isHovering, setIsHovering] = useState(false);
+  const [showMobileSheet, setShowMobileSheet] = useState(false);
+  const [genesisComplete, setGenesisComplete] = useState(false);
+  const [audioEnabled, setAudioEnabled] = useState(false);
+  const [audioReady, setAudioReady] = useState(false);
+
   const headerRef = useRef<HTMLDivElement>(null);
   const miningRef = useRef<HTMLDivElement>(null);
+  const ambientRef = useRef<HTMLAudioElement | null>(null);
+  const genesisSoundRef = useRef<HTMLAudioElement | null>(null);
 
-  // 1. Patrón anti-hidratación: Solo se activa en el cliente
+  // Mobile detection
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
+  // Anti-hydration guard
   useEffect(() => {
     setIsMounted(true);
   }, []);
 
+  // Timer
   useEffect(() => {
     if (!isMounted) return;
     const updateTimer = () => {
@@ -220,8 +266,12 @@ export default function NuestraHistoriaPage() {
       const minutes = now.getMinutes();
       const nextBlockMinutes = Math.ceil((minutes + 1) / 10) * 10;
       const next = new Date(now);
-      if (nextBlockMinutes >= 60) { next.setHours(now.getHours() + 1); next.setMinutes(0); }
-      else { next.setMinutes(nextBlockMinutes); }
+      if (nextBlockMinutes >= 60) {
+        next.setHours(now.getHours() + 1);
+        next.setMinutes(0);
+      } else {
+        next.setMinutes(nextBlockMinutes);
+      }
       next.setSeconds(0);
       const diff = next.getTime() - now.getTime();
       const mins = Math.floor(diff / 60000);
@@ -233,26 +283,116 @@ export default function NuestraHistoriaPage() {
     return () => clearInterval(interval);
   }, [isMounted]);
 
-  // 2. useGSAP con array vacío: se ejecuta una sola vez al montar en el cliente
+  // Audio setup
+  useEffect(() => {
+    if (!isMounted) return;
+
+    // Nota: Asegúrate de que estos archivos existan en la carpeta `public/audio/`
+    ambientRef.current = new Audio('/audio/timechain-ambient.mp3');
+    genesisSoundRef.current = new Audio('/audio/genesis-chime.mp3');
+
+    if (ambientRef.current) {
+      ambientRef.current.loop = true;
+      ambientRef.current.volume = 0.25;
+    }
+    if (genesisSoundRef.current) {
+      genesisSoundRef.current.volume = 0.45;
+    }
+
+    setAudioReady(true);
+
+    return () => {
+      ambientRef.current?.pause();
+      genesisSoundRef.current?.pause();
+    };
+  }, [isMounted]);
+
+  // Genesis sequence (GSAP)
   useGSAP(() => {
+    if (!isMounted) return;
+
+    // gsap.context asegura la limpieza correcta en React 18 Strict Mode
     const ctx = gsap.context(() => {
-      gsap.from(headerRef.current, { opacity: 0, y: -50, duration: 1.2, ease: "power3.out" });
-      gsap.from(miningRef.current, { opacity: 0, scale: 0.8, rotationX: 15, duration: 1, delay: 0.3, ease: "back.out(1.7)", transformPerspective: 600 });
+      const tl = gsap.timeline({
+        delay: 0.8,
+        onComplete: () => setGenesisComplete(true)
+      });
+
+      // Central singularity flash
+      tl.fromTo('.genesis-core',
+        { scale: 0, opacity: 0 },
+        { scale: 2.2, opacity: 0.85, duration: 0.7, ease: 'power2.out' }
+      )
+      .to('.genesis-core', {
+        scale: 0,
+        opacity: 0,
+        duration: 0.5,
+        ease: 'power2.in'
+      });
+
+      // Blocks assemble from center
+      timechainBlocks.forEach((_, index) => {
+        const angle = (index / timechainBlocks.length) * Math.PI * 2;
+        const radius = 3.5;
+        const yBase = (index - timechainBlocks.length / 2) * 1.2;
+
+        tl.fromTo(`.block-group-${index}`,
+          {
+            x: 0, y: 0, z: 0, scale: 0.05, opacity: 0
+          },
+          {
+            x: Math.cos(angle) * radius,
+            y: yBase,
+            z: Math.sin(angle) * radius,
+            scale: 1,
+            opacity: 1,
+            duration: 1.5,
+            ease: 'power3.out'
+          },
+          1.1 + index * 0.09
+        );
+      });
+
+      // Header entrance
+      gsap.from(headerRef.current, {
+        opacity: 0,
+        y: -40,
+        duration: 1.1,
+        delay: 2.8,
+        ease: 'power3.out'
+      });
     });
+
     return () => ctx.revert();
-  }, []);
+  }, [isMounted]);
+
+  const toggleAudio = () => {
+    if (!audioReady) return;
+
+    if (audioEnabled) {
+      ambientRef.current?.pause();
+      setAudioEnabled(false);
+    } else {
+      if (genesisSoundRef.current && genesisSoundRef.current.paused) {
+        genesisSoundRef.current.currentTime = 0;
+        genesisSoundRef.current.play().catch(() => {});
+      }
+      ambientRef.current?.play().catch(() => {});
+      setAudioEnabled(true);
+    }
+  };
 
   const handleSpecSelect = (block: TimechainBlock) => {
     setActiveSpec(block);
     setIsHovering(true);
-    setTimeout(() => setIsHovering(false), 2000);
+    setTimeout(() => setIsHovering(false), 1800);
+    if (isMobile) setShowMobileSheet(false);
   };
 
-  // 3. Skeleton de hidratación: Debe ser idéntico en servidor y primer render del cliente
   if (!isMounted) {
     return (
       <div className="min-h-screen bg-black flex items-center justify-center">
-        <div className="w-64 h-64 bg-black border-2 border-matrix/30 rounded-full animate-pulse shadow-matrix-strong" />
+        <div className="w-64 h-64 bg-black border-2 border-matrix/30 rounded-full animate-pulse" />
       </div>
     );
   }
@@ -260,32 +400,44 @@ export default function NuestraHistoriaPage() {
   return (
     <>
       <Navbar />
-      {/* 4. suppressHydrationWarning previene fallos por micro-discrepancias de terceros */}
-      <div className="min-h-screen bg-black text-[hsl(var(--foreground))] relative overflow-hidden" suppressHydrationWarning>
-        
-        {/* LAYER 1: THREE.JS CANVAS */}
+
+      <div className="relative min-h-screen bg-black text-[hsl(var(--foreground))]">
+        {/* 3D Canvas */}
         <div className="fixed inset-0 z-0">
           <Suspense fallback={null}>
             <Canvas
-              camera={{ position: [0, 2, 12], fov: 50 }}
-              dpr={[1, 2]}
-              // 5. Usar el valor numérico 3 evita evaluaciones raras de THREE en SSR
-              gl={{ antialias: true, toneMapping: 3 }} 
+              camera={{ position: [0, 2.2, 13], fov: 48 }}
+              dpr={[1, 1.75]}
+              gl={{ antialias: true, toneMapping: 3 }}
             >
-              <fog attach="fog" args={[COLORS.black, 8, 25]} />
-              <ambientLight intensity={0.2} />
-              <pointLight position={[0, 5, 0]} intensity={2} color={isHovering ? COLORS.accent : COLORS.matrix} />
-              
-              <OrbitControls 
-                autoRotate 
-                autoRotateSpeed={0.4} 
-                enableDamping 
-                dampingFactor={0.06} 
-                maxPolarAngle={Math.PI / 2 - 0.02}
+              <fog attach="fog" args={[COLORS.black, 9, 26]} />
+              <ambientLight intensity={0.18} />
+              <pointLight
+                position={[0, 6, 0]}
+                intensity={2.2}
+                color={isHovering ? COLORS.accent : COLORS.matrix}
+              />
+
+              <OrbitControls
+                autoRotate
+                autoRotateSpeed={isMobile ? 0.18 : 0.35}
+                enableDamping
+                dampingFactor={0.06}
+                enableZoom={!isMobile}
+                enablePan={!isMobile}
+                maxPolarAngle={Math.PI / 2 - 0.03}
               />
 
               {timechainBlocks.map((block, idx) => (
-                <HologramBlock key={block.height} block={block} index={idx} />
+                <group key={block.height} name={`block-group-${idx}`}>
+                  <HologramBlock
+                    block={block}
+                    index={idx}
+                    isActive={activeSpec.height === block.height}
+                    onSelect={handleSpecSelect}
+                    genesisComplete={genesisComplete}
+                  />
+                </group>
               ))}
 
               <AtmosphericParticles />
@@ -293,82 +445,97 @@ export default function NuestraHistoriaPage() {
           </Suspense>
         </div>
 
-        {/* Vignette & Grain */}
-        <div className="fixed inset-0 pointer-events-none z-[5] bg-[radial-gradient(ellipse_75%_65%_at_center,transparent_30%,rgba(0,0,0,0.72)_100%)]" />
-        <div className="fixed inset-0 pointer-events-none z-[6] opacity-[0.045] mix-blend-overlay bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0IiBoZWlnaHQ9IjQiPgo8cmVjdCB3aWR0aD0iNCIgaGVpZ2h0PSI0IiBmaWxsPSIjZmZmIiBmaWxsLW9wYWNpdHk9IjAuMDUiLz4KPC9zdmc+')]"/>
+        {/* Genesis core flash (CSS) */}
+        <div className="genesis-core fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-32 h-32 rounded-full bg-matrix blur-3xl opacity-0 pointer-events-none z-[1]" />
 
-        {/* LAYER 2: HUD OVERLAY */}
-        <div className="fixed inset-0 pointer-events-none z-10">
-          <div className="pointer-events-auto">
-            
-            <div className="absolute top-[22px] right-[22px] w-8 h-8 border-t-2 border-r-2 border-matrix/30 pointer-events-none" />
-            <div className="absolute bottom-[22px] left-[22px] w-8 h-8 border-b-2 border-l-2 border-matrix/30 pointer-events-none" />
+        {/* Vignette + grain */}
+        <div className="fixed inset-0 pointer-events-none z-[5] bg-[radial-gradient(ellipse_75%_65%_at_center,transparent_30%,rgba(0,0,0,0.75)_100%)]" />
+        <div className="fixed inset-0 pointer-events-none z-[6] opacity-[0.04] mix-blend-overlay bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0IiBoZWlnaHQ9IjQiPgo8cmVjdCB3aWR0aD0iNCIgaGVpZ2h0PSI0IiBmaWxsPSIjZmZmIiBmaWxsLW9wYWNpdHk9IjAuMDUiLz4KPC9zdmc+')]"/>
 
-            <header ref={headerRef} className="absolute top-[44px] left-[56px] right-[56px] flex justify-between items-start">
-              <div className="flex flex-col gap-6">
+        {/* HUD */}
+        <div className="relative z-10 min-h-screen flex flex-col">
+          <div className="flex-1 relative">
+            {/* Header */}
+            <header
+              ref={headerRef}
+              className="absolute top-4 left-4 right-4 md:top-[44px] md:left-[56px] md:right-[56px] flex flex-col md:flex-row justify-between items-start gap-4"
+            >
+              <div className="flex flex-col gap-4 md:gap-6">
                 <div className="flex items-center gap-4">
-                  <div className="relative w-8 h-8 flex-shrink-0">
+                  <div className="relative w-8 h-8">
                     <div className="absolute inset-0 border-[1.5px] border-matrix rotate-45" />
                     <div className="absolute inset-[9px] bg-matrix rotate-45 shadow-matrix-strong" />
                   </div>
                   <div>
-                    <div className="font-serif text-2xl tracking-[0.2em] leading-none text-[#FAFAFA]">TIMECHAIN</div>
-                    <div className="font-mono text-[9.5px] text-gray-500 tracking-[0.3em] mt-1.5">OBSERVATORY / v3.0</div>
+                    <div className="font-serif text-xl md:text-2xl tracking-[0.2em] text-[#FAFAFA]">
+                      TIMECHAIN
+                    </div>
+                    <div className="font-mono text-[8px] md:text-[9.5px] text-gray-500 tracking-[0.3em] mt-1.5">
+                      OBSERVATORY / v3.1 GENESIS
+                    </div>
                   </div>
                 </div>
 
-                <div ref={miningRef} className="bg-black/80 border border-matrix/30 backdrop-blur-md rounded-3xl p-6 max-w-xs">
-                  <div className="flex items-center gap-2 mb-3 text-[10px] font-mono text-matrix uppercase tracking-[0.2em]">
-                    <Clock className="h-4 w-4 animate-pulse" /> Próximo Bloque
+                <div
+                  ref={miningRef}
+                  className="bg-black/80 border border-matrix/30 backdrop-blur-md rounded-2xl md:rounded-3xl p-4 md:p-6 w-full md:max-w-xs"
+                >
+                  <div className="flex items-center gap-2 mb-2 text-[9px] md:text-[10px] font-mono text-matrix uppercase tracking-[0.2em]">
+                    <Clock className="h-3.5 w-3.5 animate-pulse" /> Próximo Bloque
                   </div>
                   <div 
-                    className="font-vt323 text-7xl text-matrix tracking-widest tabular-nums"
-                    aria-live="polite" 
+                    className="font-vt323 text-5xl md:text-7xl text-matrix tracking-widest tabular-nums"
+                    aria-live="polite"
                     aria-atomic="true"
-                    aria-label={`Tiempo restante para el próximo bloque: ${timeUntilNext} minutos`}
+                    aria-label={`Tiempo restante para el próximo bloque: ${timeUntilNext}`}
                   >
                     {timeUntilNext}
                   </div>
-                  <div className="mt-2 text-[9px] font-mono text-gray-600 uppercase tracking-wider">
-                    Block Height: <span className="text-matrix">#{timechainBlocks.length}</span> • Dificultad: <span className="text-matrix">0000...</span>
+                  <div className="mt-2 text-[8px] md:text-[9px] font-mono text-gray-600 uppercase">
+                    Block Height: <span className="text-matrix">#{timechainBlocks.length}</span>
                   </div>
                 </div>
               </div>
 
-              <div className="flex flex-col gap-3 text-right">
-                <div className="flex items-center justify-end gap-2 text-[10px] font-mono text-gray-400 tracking-[0.18em]">
-                  <span>HOLO-FIELD STABLE</span>
-                  <span className="h-[7px] w-[7px] bg-matrix rounded-full shadow-terminal animate-pulse" />
-                </div>
-                <div className="flex items-center justify-end gap-2 text-[10px] font-mono text-gray-400 tracking-[0.18em]">
-                  <span>CHAIN SYNC 99.7%</span>
-                  <span className="h-[7px] w-[7px] bg-matrix rounded-full shadow-terminal animate-pulse" />
-                </div>
-                <div className="flex items-center justify-end gap-2 text-[10px] font-mono text-gray-400 tracking-[0.18em]">
-                  <span>POWER 4.2 kJ</span>
-                  <span className="h-[7px] w-[7px] bg-bitcoin rounded-full shadow-terminal animate-pulse" />
+              {/* Audio toggle + status */}
+              <div className="flex flex-col items-end gap-3">
+                <button
+                  onClick={toggleAudio}
+                  aria-label={audioEnabled ? "Desactivar audio ambiental" : "Activar audio ambiental"}
+                  className="flex items-center gap-2 px-3 py-2 bg-black/70 border border-white/10 rounded-full text-xs font-mono text-gray-400 hover:text-matrix hover:border-matrix/40 transition"
+                >
+                  {audioEnabled ? <Volume2 className="w-4 h-4" /> : <VolumeX className="w-4 h-4" />}
+                  {audioEnabled ? 'AUDIO ON' : 'AUDIO OFF'}
+                </button>
+
+                <div className="hidden md:flex flex-col gap-2 text-right text-[10px] font-mono text-gray-400 tracking-[0.18em]">
+                  <div className="flex items-center justify-end gap-2">
+                    <span>HOLO-FIELD STABLE</span>
+                    <span className="h-[7px] w-[7px] bg-matrix rounded-full animate-pulse shadow-terminal" />
+                  </div>
+                  <div className="flex items-center justify-end gap-2">
+                    <span>CHAIN SYNC 99.7%</span>
+                    <span className="h-[7px] w-[7px] bg-matrix rounded-full animate-pulse shadow-terminal" />
+                  </div>
                 </div>
               </div>
             </header>
 
-            <aside className="absolute right-[56px] top-1/2 -translate-y-1/2 w-[248px] bg-black/80 backdrop-blur-xl border border-white/10 shadow-2xl">
+            {/* Desktop side panel */}
+            <aside className="hidden md:block fixed right-[56px] top-1/2 -translate-y-1/2 w-[260px] bg-black/80 backdrop-blur-xl border border-white/10 shadow-2xl">
               <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-matrix/60 to-transparent animate-scanline" />
-              
-              <div className="p-5 border-b border-white/10 flex items-center justify-between bg-black/60 shrink-0">
-                <div className="flex items-center gap-3">
-                  <Hash className="h-5 w-5 text-matrix" />
-                  <span className="font-vt323 text-2xl text-matrix tracking-wider">SPECIMEN • LOG</span>
-                </div>
+              <div className="p-5 border-b border-white/10 flex items-center gap-3 bg-black/60 shrink-0">
+                <Hash className="h-5 w-5 text-matrix" />
+                <span className="font-vt323 text-xl text-matrix tracking-wider">CADENA DE EVENTOS • LOG</span>
               </div>
-
               <div className="p-4 flex flex-col gap-2 overflow-y-auto max-h-[60vh] custom-scrollbar">
                 {timechainBlocks.map((block) => (
-                  <button 
+                  <button
                     key={block.height}
                     onClick={() => handleSpecSelect(block)}
-                    className={`group flex items-center gap-3 p-3 border text-left transition-all duration-300
-                      ${activeSpec.height === block.height 
-                        ? 'bg-matrix/10 border-matrix shadow-matrix' 
+                    className={`flex items-center gap-3 p-3 border text-left transition-all
+                      ${activeSpec.height === block.height
+                        ? 'bg-matrix/10 border-matrix shadow-matrix'
                         : 'border-white/10 hover:border-matrix/30 hover:bg-matrix/5'}
                     `}
                   >
@@ -378,80 +545,99 @@ export default function NuestraHistoriaPage() {
                       <block.Icon className="h-4 w-4" />
                     </span>
                     <div className="flex-1 min-w-0">
-                      <div className={`font-mono text-[11px] tracking-wider truncate ${activeSpec.height === block.height ? 'text-matrix' : 'text-gray-400'}`}>
+                      <div className={`font-mono text-[11px] truncate ${activeSpec.height === block.height ? 'text-matrix' : 'text-gray-400'}`}>
                         {block.title}
                       </div>
                       <div className="font-mono text-[9px] text-gray-600 mt-0.5">
                         {block.hash.slice(0, 12)}...
                       </div>
                     </div>
-                    <span className={`font-mono text-[9px] ${activeSpec.height === block.height ? 'text-matrix' : 'text-gray-500'}`}>
-                      #{block.height.toString().padStart(3, '0')}
-                    </span>
                   </button>
                 ))}
               </div>
             </aside>
 
-            <footer className="absolute bottom-[44px] left-[56px] right-[56px] flex justify-between items-end gap-6">
-              <div className="flex gap-5 text-[10px] font-mono text-gray-500 tracking-[0.18em]">
-                <div className="flex items-center gap-2">
-                  <span className="px-2 py-1 bg-white/4 border border-white/10 text-[#FAFAFA] text-[9.5px] tracking-[0.15em]">CLICK</span> 
-                  inspect block
-                </div>
-                <div className="flex items-center gap-2">
-                  <span className="px-2 py-1 bg-white/4 border border-white/10 text-[#FAFAFA] text-[9.5px] tracking-[0.15em]">DRAG</span> 
-                  orbit view
-                </div>
-                <div className="flex items-center gap-2">
-                  <span className="px-2 py-1 bg-white/4 border border-white/10 text-[#FAFAFA] text-[9.5px] tracking-[0.15em]">1-0</span> 
-                  direct select
+            {/* Mobile button */}
+            {isMobile && (
+              <button
+                onClick={() => setShowMobileSheet(true)}
+                className="fixed bottom-24 right-4 z-40 flex items-center gap-2 px-4 py-3 bg-black/90 border border-matrix/40 rounded-full shadow-matrix-strong backdrop-blur-md"
+              >
+                <Menu className="h-5 w-5 text-matrix" />
+                <span className="font-mono text-xs text-matrix tracking-wider">EXPLORAR HITOS</span>
+              </button>
+            )}
+
+            {/* Mobile sheet */}
+            {showMobileSheet && isMobile && (
+              <div className="fixed inset-0 z-50 md:hidden" role="dialog" aria-modal="true">
+                <div className="absolute inset-0 bg-black/80 backdrop-blur-sm" onClick={() => setShowMobileSheet(false)} />
+                <div className="absolute inset-x-0 bottom-0 bg-black border-t-2 border-matrix/40 rounded-t-3xl max-h-[80vh] flex flex-col">
+                  <div className="p-4 border-b border-white/10 flex items-center justify-between bg-black/60">
+                    <div className="flex items-center gap-3">
+                      <Hash className="h-5 w-5 text-matrix" />
+                      <span className="font-vt323 text-xl text-matrix tracking-wider">CADENA DE EVENTOS • LOG</span>
+                    </div>
+                    <button onClick={() => setShowMobileSheet(false)} aria-label="Cerrar panel">
+                      <X className="h-5 w-5 text-gray-400" />
+                    </button>
+                  </div>
+                  <div className="p-4 flex flex-col gap-2 overflow-y-auto flex-1 custom-scrollbar">
+                    {timechainBlocks.map((block) => (
+                      <button
+                        key={block.height}
+                        onClick={() => handleSpecSelect(block)}
+                        className={`flex items-center gap-3 p-3 border text-left transition-all
+                          ${activeSpec.height === block.height ? 'border-matrix bg-matrix/10' : 'border-white/10 hover:border-matrix/30'}
+                        `}
+                      >
+                        <span className={`flex items-center justify-center w-8 h-8 rounded border transition-colors
+                          ${activeSpec.height === block.height ? 'border-matrix text-matrix' : 'border-white/10 text-gray-500'}
+                        `}>
+                          <block.Icon className="h-4 w-4" />
+                        </span>
+                        <div className="flex-1 min-w-0">
+                          <div className={`font-mono text-sm truncate ${activeSpec.height === block.height ? 'text-matrix' : 'text-gray-400'}`}>
+                            {block.title}
+                          </div>
+                          <div className="font-mono text-xs text-gray-600 mt-0.5">
+                            {block.quarter} • {block.hash.slice(0, 12)}...
+                          </div>
+                        </div>
+                      </button>
+                    ))}
+                  </div>
                 </div>
               </div>
+            )}
 
-              <div className={`flex gap-7 bg-black/80 backdrop-blur-xl border transition-colors duration-300 p-3 px-5
+            {/* Bottom HUD */}
+            <footer className="fixed bottom-0 left-0 right-0 p-4 md:bottom-[44px] md:left-[56px] md:right-[56px]">
+              <div className={`bg-black/80 backdrop-blur-xl border p-4 rounded-xl transition-colors duration-300
                 ${isHovering ? 'border-accent' : 'border-white/10'}
               `}>
-                <div className="flex flex-col gap-1">
-                  <span className="text-[9px] font-mono text-gray-500 tracking-[0.25em]">CATEGORY</span>
-                  <span className={`text-[11px] font-mono tracking-[0.1em] transition-colors duration-300
-                    ${isHovering ? 'text-accent' : 'text-matrix'}
-                  `}>
-                    {activeSpec.category.toUpperCase()}
-                  </span>
-                </div>
-                <div className="flex flex-col gap-1">
-                  <span className="text-[9px] font-mono text-gray-500 tracking-[0.25em]">SPEC</span>
-                  <span className={`text-[11px] font-mono tracking-[0.1em] transition-colors duration-300
-                    ${isHovering ? 'text-accent' : 'text-bitcoin'}
-                  `}>
-                    {activeSpec.title}
-                  </span>
-                </div>
-                <div className="flex flex-col gap-1">
-                  <span className="text-[9px] font-mono text-gray-500 tracking-[0.25em]">HASH</span>
-                  <span className={`text-[11px] font-mono tracking-[0.1em] transition-colors duration-300
-                    ${isHovering ? 'text-accent' : 'text-matrix'}
-                  `}>
-                    {activeSpec.hash.slice(0, 12)}...
-                  </span>
-                </div>
-                <div className="flex flex-col gap-1">
-                  <span className="text-[9px] font-mono text-gray-500 tracking-[0.25em]">CONF</span>
-                  <span className={`text-[11px] font-mono tracking-[0.1em] transition-colors duration-300
-                    ${isHovering ? 'text-accent' : 'text-matrix'}
-                  `}>
-                    {timechainBlocks.length - activeSpec.height}
-                  </span>
+                <div className="flex flex-col md:flex-row md:items-center gap-3 md:gap-8">
+                  <div>
+                    <div className="text-[9px] font-mono text-gray-500 tracking-widest uppercase">HITO ACTIVO</div>
+                    <div className={`font-mono text-sm md:text-base tracking-[0.1em] transition-colors duration-300
+                      ${isHovering ? 'text-accent' : 'text-matrix'}
+                    `}>
+                      #{activeSpec.height.toString().padStart(3, '0')} • {activeSpec.title}
+                    </div>
+                  </div>
+                  <div className="hidden md:block text-xs text-gray-400 font-mono max-w-md">
+                    {activeSpec.desc}
+                  </div>
                 </div>
               </div>
             </footer>
-
           </div>
-        </div>
 
+          {/* Spacer to push Footer down */}
+          <div className="h-40 md:h-56" />
+          <Footer />
+        </div>
       </div>
-      <Footer />
     </>
   );
 }
