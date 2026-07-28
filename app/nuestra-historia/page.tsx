@@ -1,33 +1,24 @@
 'use client';
-
 import { useState, useEffect, useRef, useMemo, Suspense } from 'react';
-import { Canvas } from '@react-three/fiber';
+import { Canvas, useFrame } from '@react-three/fiber';
 import { OrbitControls } from '@react-three/drei/core/OrbitControls';
 import { Float } from '@react-three/drei/core/Float';
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
 import * as THREE from 'three';
-import dynamic from 'next/dynamic';
+// Workaround for drei v8 + fiber v8 type mismatch on Float component
+const AnyFloat = Float as any;
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 import {
   Clock, Hash, Zap, Users, Sprout, Store, Trophy, Coins, ShieldCheck, Map, Rocket,
-  Menu, X, Volume2, VolumeX,
+  Menu, X,
   type LucideIcon
 } from 'lucide-react';
 
-// ✅ IMPORTACIÓN CORREGIDA (Apunta al archivo que creamos en el Paso 1)
-const Grid3D = dynamic(
-  () => import('@/components/ui/Grid3D').then((m) => m.Grid3D),
-  { ssr: false }
-);
-
-const AnyFloat = Float as any;
-
 // ============================================================
-// BITCOIN TIMECHAIN — OBSERVATORY MODE (v3.1 GENESIS)
+// BITCOIN TIMECHAIN — OBSERVATORY MODE (v3.0 NEXUS Fusion)
 // ============================================================
-
 interface TimechainBlock {
   height: number;
   timestamp: string;
@@ -122,65 +113,45 @@ const categoryToColor = (category: TimechainBlock["category"]) => {
 };
 
 // ============================================================
-// 3D COMPONENTS
+// REACT THREE FIBER - 3D SCENE COMPONENTS
 // ============================================================
-
-function HologramBlock({
-  block,
-  index,
-  isActive,
-  onSelect,
-  genesisComplete
-}: {
-  block: TimechainBlock;
-  index: number;
-  isActive: boolean;
-  onSelect: (block: TimechainBlock) => void;
-  genesisComplete: boolean;
-}) {
+function HologramBlock({ block, index }: { block: TimechainBlock; index: number }) {
+  const meshRef = useRef<THREE.Mesh>(null);
   const groupRef = useRef<THREE.Group>(null);
   const color = new THREE.Color(categoryToColor(block.category));
   const angle = (index / timechainBlocks.length) * Math.PI * 2;
   const radius = 3.5;
   const yBase = (index - timechainBlocks.length / 2) * 1.2;
-
-  useGSAP(() => {
-    if (!groupRef.current || !genesisComplete) return;
-    gsap.fromTo(groupRef.current, 
-      { x: 0, y: yBase, z: 0, scale: 0.05 },
-      { 
-        x: Math.cos(angle) * radius,
-        z: Math.sin(angle) * radius,
-        scale: 1,
-        duration: 1.5,
-        delay: 1.1 + index * 0.09,
-        ease: 'power3.out'
-      }
-    );
-  }, [genesisComplete, index, angle, radius, yBase]);
+ 
+  useFrame(({ clock }) => {
+    if (!groupRef.current) return;
+    const t = clock.getElapsedTime();
+    groupRef.current.position.y = yBase + Math.sin(t * 0.6 + index) * 0.15;
+    groupRef.current.rotation.y = t * 0.1 + angle;
+  });
 
   return (
-    <AnyFloat speed={1.4} rotationIntensity={0.18} floatIntensity={0.35}>
-      <group
-        ref={groupRef}
-        onClick={(e) => {
-          e.stopPropagation();
-          onSelect(block);
-        }}
-        onPointerOver={() => { if (typeof document !== 'undefined') document.body.style.cursor = 'pointer'; }}
-        onPointerOut={() => { if (typeof document !== 'undefined') document.body.style.cursor = 'auto'; }}
-      >
-        <mesh position={[0, -0.55, 0]} rotation={[-Math.PI / 2, 0, 0]}>
-          <ringGeometry args={[0.48, 0.58, 6]} />
-          <meshBasicMaterial color={color} transparent opacity={isActive ? 0.9 : 0.4} side={THREE.DoubleSide} />
+    <AnyFloat speed={2} rotationIntensity={0.3} floatIntensity={0.5}>
+      <group ref={groupRef} position={[Math.cos(angle) * radius, yBase, Math.sin(angle) * radius]}>
+        <mesh position={[0, -0.6, 0]} rotation={[-Math.PI / 2, 0, 0]}>
+          <ringGeometry args={[0.5, 0.6, 6]} />
+          <meshBasicMaterial color={color} transparent opacity={0.6} side={2} />
         </mesh>
-        <mesh scale={isActive ? 1.18 : 1}>
+       
+        <mesh ref={meshRef}>
           <boxGeometry args={[0.8, 0.8, 0.8]} />
-          <meshStandardMaterial color={color} emissive={color} emissiveIntensity={isActive ? 1.5 : 0.65} wireframe transparent opacity={isActive ? 1 : 0.75} />
+          <meshStandardMaterial
+            color={color}
+            emissive={color}
+            emissiveIntensity={0.8}
+            wireframe
+            transparent
+            opacity={0.9}
+          />
         </mesh>
         <mesh>
-          <sphereGeometry args={[0.22, 16, 16]} />
-          <meshBasicMaterial color={color} transparent opacity={isActive ? 0.7 : 0.3} />
+          <sphereGeometry args={[0.25, 16, 16]} />
+          <meshBasicMaterial color={color} transparent opacity={0.4} />
         </mesh>
       </group>
     </AnyFloat>
@@ -188,13 +159,13 @@ function HologramBlock({
 }
 
 function AtmosphericParticles() {
-  const count = 120;
+  const count = 200;
   const positions = useMemo(() => {
     const pos = new Float32Array(count * 3);
     for (let i = 0; i < count; i++) {
-      pos[i * 3] = (Math.random() - 0.5) * 18;
-      pos[i * 3 + 1] = (Math.random() - 0.5) * 18;
-      pos[i * 3 + 2] = (Math.random() - 0.5) * 18;
+      pos[i * 3] = (Math.random() - 0.5) * 20;
+      pos[i * 3 + 1] = (Math.random() - 0.5) * 20;
+      pos[i * 3 + 2] = (Math.random() - 0.5) * 20;
     }
     return pos;
   }, []);
@@ -202,17 +173,27 @@ function AtmosphericParticles() {
   return (
     <points>
       <bufferGeometry>
-        <bufferAttribute attach="attributes-position" count={count} array={positions} itemSize={3} />
+        <bufferAttribute
+          attach="attributes-position"
+          count={count}
+          array={positions}
+          itemSize={3}
+        />
       </bufferGeometry>
-      <pointsMaterial size={0.045} color={COLORS.matrix} transparent opacity={0.35} sizeAttenuation />
+      <pointsMaterial
+        size={0.05}
+        color={COLORS.matrix}
+        transparent
+        opacity={0.4}
+        sizeAttenuation
+      />
     </points>
   );
 }
 
 // ============================================================
-// MAIN PAGE
+// MAIN PAGE COMPONENT - ORACLE SYSTEM OBSERVATORY
 // ============================================================
-
 export default function NuestraHistoriaPage() {
   const [isMounted, setIsMounted] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
@@ -220,14 +201,11 @@ export default function NuestraHistoriaPage() {
   const [activeSpec, setActiveSpec] = useState<TimechainBlock>(timechainBlocks[9]);
   const [isHovering, setIsHovering] = useState(false);
   const [showMobileSheet, setShowMobileSheet] = useState(false);
-  const [genesisComplete, setGenesisComplete] = useState(false);
-  const [audioEnabled, setAudioEnabled] = useState(false);
-  const [audioReady, setAudioReady] = useState(false);
-
+  
   const headerRef = useRef<HTMLDivElement>(null);
-  const ambientRef = useRef<HTMLAudioElement | null>(null);
-  const genesisSoundRef = useRef<HTMLAudioElement | null>(null);
+  const miningRef = useRef<HTMLDivElement>(null);
 
+  // Detectar móvil de forma segura (anti-hidratación)
   useEffect(() => {
     const checkMobile = () => setIsMobile(window.innerWidth < 768);
     checkMobile();
@@ -235,7 +213,10 @@ export default function NuestraHistoriaPage() {
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
-  useEffect(() => { setIsMounted(true); }, []);
+  // 1. Patrón anti-hidratación: Solo se activa en el cliente
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
 
   useEffect(() => {
     if (!isMounted) return;
@@ -244,16 +225,17 @@ export default function NuestraHistoriaPage() {
       const minutes = now.getMinutes();
       const nextBlockMinutes = Math.ceil((minutes + 1) / 10) * 10;
       const next = new Date(now);
-      if (nextBlockMinutes >= 60) {
-        next.setHours(now.getHours() + 1);
-        next.setMinutes(0);
-      } else {
-        next.setMinutes(nextBlockMinutes);
+      if (nextBlockMinutes >= 60) { 
+        next.setHours(now.getHours() + 1); 
+        next.setMinutes(0); 
+      } else { 
+        next.setMinutes(nextBlockMinutes); 
       }
       next.setSeconds(0);
       const diff = next.getTime() - now.getTime();
       const mins = Math.floor(diff / 60000);
       const secs = Math.floor((diff % 60000) / 1000);
+      // CORREGIDO: Se añadieron las backticks faltantes
       setTimeUntilNext(`${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`);
     };
     updateTimer();
@@ -261,48 +243,27 @@ export default function NuestraHistoriaPage() {
     return () => clearInterval(interval);
   }, [isMounted]);
 
-  useEffect(() => {
-    if (!isMounted) return;
-    ambientRef.current = new Audio('/audio/timechain-ambient.mp3');
-    genesisSoundRef.current = new Audio('/audio/genesis-chime.mp3');
-    if (ambientRef.current) { ambientRef.current.loop = true; ambientRef.current.volume = 0.25; }
-    if (genesisSoundRef.current) { genesisSoundRef.current.volume = 0.45; }
-    setAudioReady(true);
-    return () => { ambientRef.current?.pause(); genesisSoundRef.current?.pause(); };
-  }, [isMounted]);
-
+  // 2. useGSAP con array vacío: se ejecuta una sola vez al montar en el cliente
   useGSAP(() => {
-    if (!isMounted) return;
     const ctx = gsap.context(() => {
-      const tl = gsap.timeline({ delay: 0.8, onComplete: () => setGenesisComplete(true) });
-      tl.fromTo('.genesis-core', { scale: 0, opacity: 0 }, { scale: 2.2, opacity: 0.85, duration: 0.7, ease: 'power2.out' })
-        .to('.genesis-core', { scale: 0, opacity: 0, duration: 0.5, ease: 'power2.in' });
-      gsap.from(headerRef.current, { opacity: 0, y: -40, duration: 1.1, delay: 2.8, ease: 'power3.out' });
+      gsap.from(headerRef.current, { opacity: 0, y: -50, duration: 1.2, ease: "power3.out" });
+      gsap.from(miningRef.current, { opacity: 0, scale: 0.8, rotationX: 15, duration: 1, delay: 0.3, ease: "back.out(1.7)", transformPerspective: 600 });
     });
     return () => ctx.revert();
-  }, [isMounted]);
-
-  const toggleAudio = () => {
-    if (!audioReady) return;
-    if (audioEnabled) { ambientRef.current?.pause(); setAudioEnabled(false); } 
-    else {
-      if (genesisSoundRef.current && genesisSoundRef.current.paused) { genesisSoundRef.current.currentTime = 0; genesisSoundRef.current.play().catch(() => {}); }
-      ambientRef.current?.play().catch(() => {});
-      setAudioEnabled(true);
-    }
-  };
+  }, []);
 
   const handleSpecSelect = (block: TimechainBlock) => {
     setActiveSpec(block);
     setIsHovering(true);
-    setTimeout(() => setIsHovering(false), 1800);
+    setTimeout(() => setIsHovering(false), 2000);
     if (isMobile) setShowMobileSheet(false);
   };
 
+  // 3. Skeleton de hidratación: Debe ser idéntico en servidor y primer render del cliente
   if (!isMounted) {
     return (
       <div className="min-h-screen bg-black flex items-center justify-center">
-        <div className="w-64 h-64 bg-black border-2 border-matrix/30 rounded-full animate-pulse" />
+        <div className="w-64 h-64 bg-black border-2 border-matrix/30 rounded-full animate-pulse shadow-matrix-strong" />
       </div>
     );
   }
@@ -310,156 +271,303 @@ export default function NuestraHistoriaPage() {
   return (
     <>
       <Navbar />
-
-      {/* ✅ FIX 1: min-h-[150vh] y pb-64 dan altura real a la página para que el footer no invada */}
-      <main className="relative min-h-[150vh] bg-black text-[hsl(var(--foreground))] flex flex-col pb-64 md:pb-80">
-        
-        {/* 1. 3D Canvas (Fondo, Interactivo) */}
+     
+      {/* CONTENEDOR PRINCIPAL: Estructura corregida para respetar el flujo del Footer */}
+      <div className="relative min-h-screen bg-black text-[hsl(var(--foreground))]">
+       
+        {/* LAYER 1: THREE.JS CANVAS (fijo de fondo) */}
         <div className="fixed inset-0 z-0">
           <Suspense fallback={null}>
-            <Canvas camera={{ position: [0, 2.2, 13], fov: 48 }} dpr={[1, 1.75]} gl={{ antialias: true, toneMapping: 3 }}>
-              <fog attach="fog" args={[COLORS.black, 9, 26]} />
-              <ambientLight intensity={0.18} />
-              <pointLight position={[0, 6, 0]} intensity={2.2} color={isHovering ? COLORS.accent : COLORS.matrix} />
-              
-              <Grid3D cellSize={1.5} cellColor="#00FF41" cellThickness={1} rotateX={80} followMouse={true} interactive={true} position={[0, -4, 0]} scale={[10, 10, 1]} />
-
-              <OrbitControls autoRotate autoRotateSpeed={isMobile ? 0.18 : 0.35} enableDamping dampingFactor={0.06} enableZoom={!isMobile} enablePan={!isMobile} maxPolarAngle={Math.PI / 2 - 0.03} />
-
+            <Canvas
+              camera={{ position: [0, 2, 12], fov: 50 }}
+              dpr={[1, 2]}
+              gl={{ antialias: true, toneMapping: 3 }}
+            >
+              <fog attach="fog" args={[COLORS.black, 8, 25]} />
+              <ambientLight intensity={0.2} />
+              <pointLight position={[0, 5, 0]} intensity={2} color={isHovering ? COLORS.accent : COLORS.matrix} />
+             
+              <OrbitControls
+                autoRotate
+                autoRotateSpeed={isMobile ? 0.2 : 0.4}
+                enableDamping
+                dampingFactor={0.06}
+                enableZoom={!isMobile}
+                enablePan={!isMobile}
+                maxPolarAngle={Math.PI / 2 - 0.02}
+              />
               {timechainBlocks.map((block, idx) => (
-                <group key={block.height}>
-                  <HologramBlock block={block} index={idx} isActive={activeSpec.height === block.height} onSelect={handleSpecSelect} genesisComplete={genesisComplete} />
-                </group>
+                <HologramBlock key={block.height} block={block} index={idx} />
               ))}
               <AtmosphericParticles />
             </Canvas>
           </Suspense>
         </div>
 
-        {/* 2. Overlays */}
-        <div className="genesis-core fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-32 h-32 rounded-full bg-matrix blur-3xl opacity-0 pointer-events-none z-[1]" />
-        <div className="fixed inset-0 pointer-events-none z-[5] bg-[radial-gradient(ellipse_75%_65%_at_center,transparent_30%,rgba(0,0,0,0.75)_100%)]" />
-        <div className="fixed inset-0 pointer-events-none z-[6] opacity-[0.04] mix-blend-overlay bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0IiBoZWlnaHQ9IjQiPgo8cmVjdCB3aWR0aD0iNCIgaGVpZ2h0PSI0IiBmaWxsPSIjZmZmIiBmaWxsLW9wYWNpdHk9IjAuMDUiLz4KPC9zdmc+')]"/>
+        {/* Vignette & Grain (fijos) */}
+        <div className="fixed inset-0 pointer-events-none z-[5] bg-[radial-gradient(ellipse_75%_65%_at_center,transparent_30%,rgba(0,0,0,0.72)_100%)]" />
+        <div className="fixed inset-0 pointer-events-none z-[6] opacity-[0.045] mix-blend-overlay bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0IiBoZWlnaHQ9IjQiPgo8cmVjdCB3aWR0aD0iNCIgaGVpZ2h0PSI0IiBmaWxsPSIjZmZmIiBmaWxsLW9wYWNpdHk9IjAuMDUiLz4KPC9zdmc+')]"/>
 
-        {/* 3. HUD Layer */}
-        <div className="fixed inset-0 z-10 pointer-events-none flex flex-col">
-          
-          <header ref={headerRef} className="pointer-events-auto absolute top-4 left-4 right-4 md:top-[44px] md:left-[56px] md:right-[56px] flex flex-col md:flex-row justify-between items-start gap-4">
-            <div className="flex flex-col gap-4 md:gap-6">
-              <div className="flex items-center gap-4">
-                <div className="relative w-8 h-8">
-                  <div className="absolute inset-0 border-[1.5px] border-matrix rotate-45" />
-                  <div className="absolute inset-[9px] bg-matrix rotate-45 shadow-matrix-strong" />
-                </div>
-                <div>
-                  <div className="font-serif text-xl md:text-2xl tracking-[0.2em] text-[#FAFAFA]">TIMECHAIN</div>
-                  <div className="font-mono text-[8px] md:text-[9.5px] text-gray-500 tracking-[0.3em] mt-1.5">OBSERVATORY / v3.1 GENESIS</div>
-                </div>
-              </div>
+        {/* LAYER 2: HUD OVERLAY (Scrolleable en móvil, fijo en desktop) */}
+        <div className="relative z-10 min-h-screen flex flex-col">
+          <div className="flex-1 relative">
+           
+            {/* Esquinas decorativas (solo desktop) */}
+            <div className="absolute top-[22px] right-[22px] w-8 h-8 border-t-2 border-r-2 border-matrix/30 pointer-events-none hidden md:block" />
+            <div className="absolute bottom-[22px] left-[22px] w-8 h-8 border-b-2 border-l-2 border-matrix/30 pointer-events-none hidden md:block" />
 
-              <div className="bg-black/80 border border-matrix/30 backdrop-blur-md rounded-2xl md:rounded-3xl p-4 md:p-6 w-full md:max-w-xs">
-                <div className="flex items-center gap-2 mb-2 text-[9px] md:text-[10px] font-mono text-matrix uppercase tracking-[0.2em]">
-                  <Clock className="h-3.5 w-3.5 animate-pulse" /> Próximo Bloque
-                </div>
-                <div className="font-vt323 text-5xl md:text-7xl text-matrix tracking-widest tabular-nums" aria-live="polite" aria-atomic="true" aria-label={`Tiempo restante: ${timeUntilNext}`}>
-                  {timeUntilNext}
-                </div>
-                <div className="mt-2 text-[8px] md:text-[9px] font-mono text-gray-600 uppercase">Block Height: <span className="text-matrix">#{timechainBlocks.length}</span></div>
-              </div>
-            </div>
-
-            <div className="flex flex-col items-end gap-3">
-              <button onClick={toggleAudio} aria-label={audioEnabled ? "Desactivar audio" : "Activar audio"} className="flex items-center gap-2 px-3 py-2 bg-black/70 border border-white/10 rounded-full text-xs font-mono text-gray-400 hover:text-matrix hover:border-matrix/40 transition">
-                {audioEnabled ? <Volume2 className="w-4 h-4" /> : <VolumeX className="w-4 h-4" />}
-                {audioEnabled ? 'AUDIO ON' : 'AUDIO OFF'}
-              </button>
-              <div className="hidden md:flex flex-col gap-2 text-right text-[10px] font-mono text-gray-400 tracking-[0.18em]">
-                <div className="flex items-center justify-end gap-2"><span>HOLO-FIELD STABLE</span><span className="h-[7px] w-[7px] bg-matrix rounded-full animate-pulse shadow-terminal" /></div>
-                <div className="flex items-center justify-end gap-2"><span>CHAIN SYNC 99.7%</span><span className="h-[7px] w-[7px] bg-matrix rounded-full animate-pulse shadow-terminal" /></div>
-              </div>
-            </div>
-          </header>
-
-          <aside className="pointer-events-auto hidden md:block fixed right-[56px] top-1/2 -translate-y-1/2 w-[260px] bg-black/80 backdrop-blur-xl border border-white/10 shadow-2xl rounded-xl overflow-hidden">
-            <div className="absolute top-3 left-3 w-5 h-5 border-t-2 border-l-2 border-matrix/40 pointer-events-none" />
-            <div className="absolute bottom-3 right-3 w-5 h-5 border-b-2 border-r-2 border-matrix/40 pointer-events-none" />
-            <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-matrix/60 to-transparent animate-scanline" />
-            <div className="p-5 border-b border-white/10 flex items-center gap-3 bg-black/60 shrink-0">
-              <Hash className="h-5 w-5 text-matrix" />
-              <span className="font-vt323 text-xl text-matrix tracking-wider">CADENA DE EVENTOS • LOG</span>
-            </div>
-            <div className="p-4 flex flex-col gap-2 overflow-y-auto max-h-[60vh] custom-scrollbar">
-              {timechainBlocks.map((block) => (
-                <button key={block.height} onClick={() => handleSpecSelect(block)} className={`flex items-center gap-3 p-3 border text-left transition-all ${activeSpec.height === block.height ? 'bg-matrix/10 border-matrix shadow-matrix' : 'border-white/10 hover:border-matrix/30 hover:bg-matrix/5'}`}>
-                  <span className={`flex items-center justify-center w-8 h-8 rounded border transition-colors ${activeSpec.height === block.height ? 'border-matrix text-matrix' : 'border-white/10 text-gray-500'}`}>
-                    <block.Icon className="h-4 w-4" />
-                  </span>
-                  <div className="flex-1 min-w-0">
-                    <div className={`font-mono text-[11px] truncate ${activeSpec.height === block.height ? 'text-matrix' : 'text-gray-400'}`}>{block.title}</div>
-                    <div className="font-mono text-[9px] text-gray-600 mt-0.5">{block.hash.slice(0, 12)}...</div>
+            {/* HEADER */}
+            <header ref={headerRef} className="absolute top-4 left-4 right-4 md:top-[44px] md:left-[56px] md:right-[56px] flex flex-col md:flex-row justify-between items-start gap-4 md:gap-0">
+              <div className="flex flex-col gap-4 md:gap-6 w-full md:w-auto">
+                <div className="flex items-center gap-4">
+                  <div className="relative w-8 h-8 flex-shrink-0">
+                    <div className="absolute inset-0 border-[1.5px] border-matrix rotate-45" />
+                    <div className="absolute inset-[9px] bg-matrix rotate-45 shadow-matrix-strong" />
                   </div>
-                </button>
-              ))}
-            </div>
-          </aside>
-
-          {isMobile && (
-            <button onClick={() => setShowMobileSheet(true)} className="pointer-events-auto fixed bottom-24 right-4 z-40 flex items-center gap-2 px-4 py-3 bg-black/90 border border-matrix/40 rounded-full shadow-matrix-strong backdrop-blur-md">
-              <Menu className="h-5 w-5 text-matrix" />
-              <span className="font-mono text-xs text-matrix tracking-wider">EXPLORAR HITOS</span>
-            </button>
-          )}
-
-          {showMobileSheet && isMobile && (
-            <div className="pointer-events-auto fixed inset-0 z-50 md:hidden" role="dialog" aria-modal="true">
-              <div className="absolute inset-0 bg-black/80 backdrop-blur-sm" onClick={() => setShowMobileSheet(false)} />
-              <div className="absolute inset-x-0 bottom-0 bg-black border-t-2 border-matrix/40 rounded-t-3xl max-h-[80vh] flex flex-col">
-                <div className="p-4 border-b border-white/10 flex items-center justify-between bg-black/60">
-                  <div className="flex items-center gap-3">
-                    <Hash className="h-5 w-5 text-matrix" />
-                    <span className="font-vt323 text-xl text-matrix tracking-wider">CADENA DE EVENTOS • LOG</span>
+                  <div>
+                    <div className="font-serif text-xl md:text-2xl tracking-[0.2em] leading-none text-[#FAFAFA]">TIMECHAIN</div>
+                    <div className="font-mono text-[8px] md:text-[9.5px] text-gray-500 tracking-[0.3em] mt-1.5">OBSERVATORY / v3.0</div>
                   </div>
-                  <button onClick={() => setShowMobileSheet(false)} aria-label="Cerrar panel"><X className="h-5 w-5 text-gray-400" /></button>
                 </div>
-                <div className="p-4 flex flex-col gap-2 overflow-y-auto flex-1 custom-scrollbar">
-                  {timechainBlocks.map((block) => (
-                    <button key={block.height} onClick={() => handleSpecSelect(block)} className={`flex items-center gap-3 p-3 border text-left transition-all ${activeSpec.height === block.height ? 'border-matrix bg-matrix/10' : 'border-white/10 hover:border-matrix/30'}`}>
-                      <span className={`flex items-center justify-center w-8 h-8 rounded border transition-colors ${activeSpec.height === block.height ? 'border-matrix text-matrix' : 'border-white/10 text-gray-500'}`}>
-                        <block.Icon className="h-4 w-4" />
-                      </span>
-                      <div className="flex-1 min-w-0">
-                        <div className={`font-mono text-sm truncate ${activeSpec.height === block.height ? 'text-matrix' : 'text-gray-400'}`}>{block.title}</div>
-                        <div className="font-mono text-xs text-gray-600 mt-0.5">{block.quarter} • {block.hash.slice(0, 12)}...</div>
+                <div ref={miningRef} className="bg-black/80 border border-matrix/30 backdrop-blur-md rounded-2xl md:rounded-3xl p-4 md:p-6 w-full md:max-w-xs">
+                  <div className="flex items-center gap-2 mb-2 md:mb-3 text-[9px] md:text-[10px] font-mono text-matrix uppercase tracking-[0.2em]">
+                    <Clock className="h-3 w-3 md:h-4 md:w-4 animate-pulse" /> Próximo Bloque
+                  </div>
+                  <div
+                    className="font-vt323 text-5xl md:text-7xl text-matrix tracking-widest tabular-nums"
+                    aria-live="polite"
+                    aria-atomic="true"
+                    // CORREGIDO: Se añadieron las backticks faltantes
+                    aria-label={`Tiempo restante para el próximo bloque: ${timeUntilNext}`}
+                  >
+                    {timeUntilNext}
+                  </div>
+                  <div className="mt-2 text-[8px] md:text-[9px] font-mono text-gray-600 uppercase tracking-wider">
+                    Block Height: <span className="text-matrix">#{timechainBlocks.length}</span> • Dificultad: <span className="text-matrix">0000...</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Status Indicators - Solo desktop */}
+              <div className="hidden md:flex flex-col gap-3 text-right">
+                <div className="flex items-center justify-end gap-2 text-[10px] font-mono text-gray-400 tracking-[0.18em]">
+                  <span>HOLO-FIELD STABLE</span>
+                  <span className="h-[7px] w-[7px] bg-matrix rounded-full shadow-terminal animate-pulse" />
+                </div>
+                <div className="flex items-center justify-end gap-2 text-[10px] font-mono text-gray-400 tracking-[0.18em]">
+                  <span>CHAIN SYNC 99.7%</span>
+                  <span className="h-[7px] w-[7px] bg-matrix rounded-full shadow-terminal animate-pulse" />
+                </div>
+                <div className="flex items-center justify-end gap-2 text-[10px] font-mono text-gray-400 tracking-[0.18em]">
+                  <span>POWER 4.2 kJ</span>
+                  <span className="h-[7px] w-[7px] bg-bitcoin rounded-full shadow-terminal animate-pulse" />
+                </div>
+              </div>
+            </header>
+
+            {/* ASIDE DERECHO - Solo desktop */}
+            <aside className="hidden md:block fixed right-[56px] top-1/2 -translate-y-1/2 w-[260px] bg-black/80 backdrop-blur-xl border border-white/10 shadow-2xl">
+              <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-matrix/60 to-transparent animate-scanline" />
+             
+              <div className="p-5 border-b border-white/10 flex items-center justify-between bg-black/60 shrink-0">
+                <div className="flex items-center gap-3">
+                  <Hash className="h-5 w-5 text-matrix" />
+                  <span className="font-vt323 text-xl text-matrix tracking-wider">CADENA DE EVENTOS • LOG</span>
+                </div>
+              </div>
+              <div className="p-4 flex flex-col gap-2 overflow-y-auto max-h-[60vh] custom-scrollbar">
+                {timechainBlocks.map((block) => (
+                  <button
+                    key={block.height}
+                    onClick={() => handleSpecSelect(block)}
+                    // CORREGIDO: Template literal limpio y sin &nbsp;
+                    className={`group flex items-center gap-3 p-3 border text-left transition-all duration-300 ${
+                      activeSpec.height === block.height 
+                        ? 'bg-matrix/10 border-matrix shadow-matrix' 
+                        : 'border-white/10 hover:border-matrix/30 hover:bg-matrix/5'
+                    }`}
+                  >
+                    <span className={`flex items-center justify-center w-8 h-8 rounded border transition-colors ${
+                      activeSpec.height === block.height ? 'border-matrix text-matrix' : 'border-white/10 text-gray-500'
+                    }`}>
+                      <block.Icon className="h-4 w-4" />
+                    </span>
+                    <div className="flex-1 min-w-0">
+                      <div className={`font-mono text-[11px] tracking-wider truncate ${
+                        activeSpec.height === block.height ? 'text-matrix' : 'text-gray-400'
+                      }`}>
+                        {block.title}
                       </div>
-                    </button>
-                  ))}
-                </div>
+                      <div className="font-mono text-[9px] text-gray-600 mt-0.5">
+                        {block.hash.slice(0, 12)}...
+                      </div>
+                    </div>
+                    <span className={`font-mono text-[9px] ${
+                      activeSpec.height === block.height ? 'text-matrix' : 'text-gray-500'
+                    }`}>
+                      #{block.height.toString().padStart(3, '0')}
+                    </span>
+                  </button>
+                ))}
               </div>
-            </div>
-          )}
+            </aside>
 
-          {/* ✅ FIX 2: Bottom HUD movido a bottom-32/40 para NO invadir el footer */}
-          <div className="pointer-events-auto fixed bottom-32 md:bottom-40 left-0 right-0 p-4 md:left-[56px] md:right-[56px] md:max-w-4xl md:mx-auto">
-            <div className={`bg-black/80 backdrop-blur-xl border p-4 rounded-xl transition-colors duration-300 ${isHovering ? 'border-accent' : 'border-white/10'}`}>
-              <div className="flex flex-col md:flex-row md:items-center gap-3 md:gap-8">
-                <div>
-                  <div className="text-[9px] font-mono text-gray-500 tracking-widest uppercase">HITO ACTIVO</div>
-                  <div className={`font-mono text-sm md:text-base tracking-[0.1em] transition-colors duration-300 ${isHovering ? 'text-accent' : 'text-matrix'}`}>
-                    #{activeSpec.height.toString().padStart(3, '0')} • {activeSpec.title}
+            {/* BOTÓN FLOTANTE MÓVIL - Explorar Hitos */}
+            {isMobile && (
+              <button
+                onClick={() => setShowMobileSheet(true)}
+                className="fixed bottom-24 right-4 z-40 flex items-center gap-2 px-4 py-3 bg-black/90 border border-matrix/40 rounded-full shadow-matrix-strong backdrop-blur-md"
+              >
+                <Menu className="h-5 w-5 text-matrix" />
+                <span className="font-mono text-xs text-matrix tracking-wider">EXPLORAR HITOS</span>
+              </button>
+            )}
+
+            {/* BOTTOM SHEET MÓVIL */}
+            {showMobileSheet && isMobile && (
+              <div className="fixed inset-0 z-50 md:hidden">
+                <div
+                  className="absolute inset-0 bg-black/80 backdrop-blur-sm"
+                  onClick={() => setShowMobileSheet(false)}
+                />
+                <div className="absolute inset-x-0 bottom-0 bg-black border-t-2 border-matrix/40 rounded-t-3xl max-h-[80vh] flex flex-col">
+                  <div className="p-4 border-b border-white/10 flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      <Hash className="h-5 w-5 text-matrix" />
+                      <span className="font-vt323 text-xl text-matrix tracking-wider">CADENA DE EVENTOS • LOG</span>
+                    </div>
+                    <button
+                      onClick={() => setShowMobileSheet(false)}
+                      className="p-2 hover:bg-white/5 rounded-lg transition-colors"
+                      aria-label="Cerrar panel"
+                    >
+                      <X className="h-5 w-5 text-gray-400" />
+                    </button>
+                  </div>
+                  <div className="p-4 flex flex-col gap-2 overflow-y-auto flex-1 custom-scrollbar">
+                    {timechainBlocks.map((block) => (
+                      <button
+                        key={block.height}
+                        onClick={() => handleSpecSelect(block)}
+                        // CORREGIDO: Template literal limpio y sin &nbsp;
+                        className={`group flex items-center gap-3 p-3 border text-left transition-all duration-300 ${
+                          activeSpec.height === block.height 
+                            ? 'bg-matrix/10 border-matrix shadow-matrix' 
+                            : 'border-white/10 hover:border-matrix/30 hover:bg-matrix/5'
+                        }`}
+                      >
+                        <span className={`flex items-center justify-center w-8 h-8 rounded border transition-colors ${
+                          activeSpec.height === block.height ? 'border-matrix text-matrix' : 'border-white/10 text-gray-500'
+                        }`}>
+                          <block.Icon className="h-4 w-4" />
+                        </span>
+                        <div className="flex-1 min-w-0">
+                          <div className={`font-mono text-sm tracking-wider truncate ${
+                            activeSpec.height === block.height ? 'text-matrix' : 'text-gray-400'
+                          }`}>
+                            {block.title}
+                          </div>
+                          <div className="font-mono text-xs text-gray-600 mt-0.5">
+                            {block.quarter} • {block.hash.slice(0, 12)}...
+                          </div>
+                        </div>
+                        <span className={`font-mono text-xs ${
+                          activeSpec.height === block.height ? 'text-matrix' : 'text-gray-500'
+                        }`}>
+                          #{block.height.toString().padStart(3, '0')}
+                        </span>
+                      </button>
+                    ))}
                   </div>
                 </div>
-                <div className="hidden md:block text-xs text-gray-400 font-mono max-w-md">{activeSpec.desc}</div>
               </div>
-            </div>
-          </div>
-        </div>
+            )}
 
-        {/* ✅ FIX 3: Espaciador real + Footer fuera del flujo fixed */}
-        <div className="relative z-20 w-full pointer-events-auto bg-black/95 backdrop-blur-xl border-t border-matrix/30 mt-auto">
+            {/* FOOTER DE ESPECIFICACIONES (HUD Inferior) */}
+            <footer className="fixed bottom-0 left-0 right-0 p-4 md:p-0 md:bottom-[44px] md:left-[56px] md:right-[56px]">
+              <div className={`flex flex-col md:flex-row gap-3 md:gap-7 bg-black/80 backdrop-blur-xl border transition-colors duration-300 p-3 md:p-3 md:px-5 rounded-xl md:rounded-none ${
+                isHovering ? 'border-accent' : 'border-white/10'
+              }`}>
+                {/* Móvil: versión simplificada */}
+                <div className="flex md:hidden items-center justify-between gap-3">
+                  <div className="flex flex-col gap-1 flex-1">
+                    <span className="text-[8px] font-mono text-gray-500 tracking-[0.25em]">HITO ACTIVO</span>
+                    <span className={`text-sm font-mono tracking-[0.1em] transition-colors duration-300 ${
+                      isHovering ? 'text-accent' : 'text-matrix'
+                    }`}>
+                      #{activeSpec.height.toString().padStart(3, '0')} • {activeSpec.title}
+                    </span>
+                  </div>
+                  <button
+                    onClick={() => setShowMobileSheet(true)}
+                    className="px-3 py-1.5 bg-matrix/10 border border-matrix/40 rounded-lg text-xs font-mono text-matrix tracking-wider"
+                  >
+                    VER TODOS
+                  </button>
+                </div>
+
+                {/* Desktop: versión completa */}
+                <div className="hidden md:flex gap-7">
+                  <div className="flex flex-col gap-1">
+                    <span className="text-[9px] font-mono text-gray-500 tracking-[0.25em]">CATEGORÍA</span>
+                    <span className={`text-[11px] font-mono tracking-[0.1em] transition-colors duration-300 ${
+                      isHovering ? 'text-accent' : 'text-matrix'
+                    }`}>
+                      {activeSpec.category.toUpperCase()}
+                    </span>
+                  </div>
+                  <div className="flex flex-col gap-1">
+                    <span className="text-[9px] font-mono text-gray-500 tracking-[0.25em]">HITO</span>
+                    <span className={`text-[11px] font-mono tracking-[0.1em] transition-colors duration-300 ${
+                      isHovering ? 'text-accent' : 'text-bitcoin'
+                    }`}>
+                      {activeSpec.title}
+                    </span>
+                  </div>
+                  <div className="flex flex-col gap-1">
+                    <span className="text-[9px] font-mono text-gray-500 tracking-[0.25em]">HASH</span>
+                    <span className={`text-[11px] font-mono tracking-[0.1em] transition-colors duration-300 ${
+                      isHovering ? 'text-accent' : 'text-matrix'
+                    }`}>
+                      {activeSpec.hash.slice(0, 12)}...
+                    </span>
+                  </div>
+                  <div className="flex flex-col gap-1">
+                    <span className="text-[9px] font-mono text-gray-500 tracking-[0.25em]">CONF</span>
+                    <span className={`text-[11px] font-mono tracking-[0.1em] transition-colors duration-300 ${
+                      isHovering ? 'text-accent' : 'text-matrix'
+                    }`}>
+                      {timechainBlocks.length - activeSpec.height}
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Controles - Solo desktop */}
+              <div className="hidden md:flex gap-5 text-[10px] font-mono text-gray-500 tracking-[0.18em] mt-4">
+                <div className="flex items-center gap-2">
+                  <span className="px-2 py-1 bg-white/4 border border-white/10 text-[#FAFAFA] text-[9.5px] tracking-[0.15em]">CLICK</span>
+                  inspeccionar bloque
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="px-2 py-1 bg-white/4 border border-white/10 text-[#FAFAFA] text-[9.5px] tracking-[0.15em]">DRAG</span>
+                  vista orbital
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="px-2 py-1 bg-white/4 border border-white/10 text-[#FAFAFA] text-[9.5px] tracking-[0.15em]">1-0</span>
+                  selección directa
+                </div>
+              </div>
+            </footer>
+          </div>
+
+          {/* ESPACIADOR para empujar el Footer real y evitar que se encime */}
+          <div className="h-40 md:h-60" />
+
+          {/* FOOTER REAL - Ahora en el flujo normal del documento */}
           <Footer />
         </div>
-
-      </main>
+      </div>
     </>
   );
 }
