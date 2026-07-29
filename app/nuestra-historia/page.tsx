@@ -307,16 +307,16 @@ export default function NuestraHistoriaPage() {
         <div className="fixed inset-0 pointer-events-none z-[5] bg-[radial-gradient(ellipse_75%_65%_at_center,transparent_30%,rgba(0,0,0,0.72)_100%)]" />
         <div className="fixed inset-0 pointer-events-none z-[6] opacity-[0.045] mix-blend-overlay bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0IiBoZWlnaHQ9IjQiPgo8cmVjdCB3aWR0aD0iNCIgaGVpZ2h0PSI0IiBmaWxsPSIjZmZmIiBmaWxsLW9wYWNpdHk9IjAuMDUiLz4KPC9zdmc+')]"/>
 
-        {/* LAYER 2: HUD OVERLAY (Scrolleable en móvil, fijo en desktop) */}
-        <div className="relative z-10 min-h-screen flex flex-col">
+        {/* LAYER 2: HUD OVERLAY (Scrolleable en móvil, fijo en desktop) - REPARADO: pointer-events-none */}
+        <div className="relative z-10 min-h-screen flex flex-col pointer-events-none">
           <div className="flex-1 relative">
            
             {/* Esquinas decorativas (solo desktop) */}
             <div className="absolute top-[22px] right-[22px] w-8 h-8 border-t-2 border-r-2 border-matrix/30 pointer-events-none hidden md:block" />
             <div className="absolute bottom-[22px] left-[22px] w-8 h-8 border-b-2 border-l-2 border-matrix/30 pointer-events-none hidden md:block" />
 
-            {/* HEADER */}
-            <header ref={headerRef} className="absolute top-4 left-4 right-4 md:top-[44px] md:left-[56px] md:right-[56px] flex flex-col md:flex-row justify-between items-start gap-4 md:gap-0">
+            {/* HEADER - REPARADO: pointer-events-auto */}
+            <header ref={headerRef} className="absolute top-4 left-4 right-4 md:top-[44px] md:left-[56px] md:right-[56px] flex flex-col md:flex-row justify-between items-start gap-4 md:gap-0 pointer-events-auto">
               <div className="flex flex-col gap-4 md:gap-6 w-full md:w-auto">
                 <div className="flex items-center gap-4">
                   <div className="relative w-8 h-8 flex-shrink-0">
@@ -363,8 +363,8 @@ export default function NuestraHistoriaPage() {
               </div>
             </header>
 
-            {/* ASIDE DERECHO - Solo desktop */}
-            <aside className="hidden md:block fixed right-[56px] top-1/2 -translate-y-1/2 w-[260px] bg-black/80 backdrop-blur-xl border border-white/10 shadow-2xl">
+            {/* ASIDE DERECHO - Solo desktop - REPARADO: pointer-events-auto */}
+            <aside className="hidden md:block fixed right-[56px] top-1/2 -translate-y-1/2 w-[260px] bg-black/80 backdrop-blur-xl border border-white/10 shadow-2xl pointer-events-auto">
               <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-matrix/60 to-transparent animate-scanline" />
              
               <div className="p-5 border-b border-white/10 flex items-center justify-between bg-black/60 shrink-0">
@@ -409,20 +409,20 @@ export default function NuestraHistoriaPage() {
               </div>
             </aside>
 
-            {/* BOTÓN FLOTANTE MÓVIL - Explorar Hitos */}
+            {/* BOTÓN FLOTANTE MÓVIL - Explorar Hitos - REPARADO: pointer-events-auto */}
             {isMobile && (
               <button
                 onClick={() => setShowMobileSheet(true)}
-                className="fixed bottom-24 right-4 z-40 flex items-center gap-2 px-4 py-3 bg-black/90 border border-matrix/40 rounded-full shadow-matrix-strong backdrop-blur-md"
+                className="fixed bottom-24 right-4 z-40 flex items-center gap-2 px-4 py-3 bg-black/90 border border-matrix/40 rounded-full shadow-matrix-strong backdrop-blur-md pointer-events-auto"
               >
                 <Menu className="h-5 w-5 text-matrix" />
                 <span className="font-mono text-xs text-matrix tracking-wider">EXPLORAR HITOS</span>
               </button>
             )}
 
-            {/* BOTTOM SHEET MÓVIL */}
+            {/* BOTTOM SHEET MÓVIL - REPARADO: pointer-events-auto */}
             {showMobileSheet && isMobile && (
-              <div className="fixed inset-0 z-50 md:hidden">
+              <div className="fixed inset-0 z-50 md:hidden pointer-events-auto">
                 <div
                   className="absolute inset-0 bg-black/80 backdrop-blur-sm"
                   onClick={() => setShowMobileSheet(false)}
@@ -479,8 +479,8 @@ export default function NuestraHistoriaPage() {
               </div>
             )}
 
-            {/* FOOTER DE ESPECIFICACIONES (HUD Inferior) */}
-            <footer className="fixed bottom-0 left-0 right-0 p-4 md:p-0 md:bottom-[44px] md:left-[56px] md:right-[56px]">
+            {/* FOOTER DE ESPECIFICACIONES (HUD Inferior) - REPARADO: pointer-events-auto */}
+            <footer className="fixed bottom-0 left-0 right-0 p-4 md:p-0 md:bottom-[44px] md:left-[56px] md:right-[56px] pointer-events-auto">
               <div className={`flex flex-col md:flex-row gap-3 md:gap-7 bg-black/80 backdrop-blur-xl border transition-colors duration-300 p-3 md:p-3 md:px-5 rounded-xl md:rounded-none ${
                 isHovering ? 'border-accent' : 'border-white/10'
               }`}>
