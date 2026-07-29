@@ -9,7 +9,7 @@ import * as THREE from 'three';
 // Workaround for drei v8 + fiber v8 type mismatch on Float component
 const AnyFloat = Float as any;
 import Navbar from '@/components/layout/Navbar';
-import Footer from '@/components/layout/Footer';
+// IMPORT DEL FOOTER ELIMINADO TEMPORALMENTE PARA DIAGNÓSTICO
 import {
   Clock, Hash, Zap, Users, Sprout, Store, Trophy, Coins, ShieldCheck, Map, Rocket,
   Menu, X,
@@ -235,7 +235,6 @@ export default function NuestraHistoriaPage() {
       const diff = next.getTime() - now.getTime();
       const mins = Math.floor(diff / 60000);
       const secs = Math.floor((diff % 60000) / 1000);
-      // CORREGIDO: Se añadieron las backticks faltantes
       setTimeUntilNext(`${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`);
     };
     updateTimer();
@@ -337,7 +336,6 @@ export default function NuestraHistoriaPage() {
                     className="font-vt323 text-5xl md:text-7xl text-matrix tracking-widest tabular-nums"
                     aria-live="polite"
                     aria-atomic="true"
-                    // CORREGIDO: Se añadieron las backticks faltantes
                     aria-label={`Tiempo restante para el próximo bloque: ${timeUntilNext}`}
                   >
                     {timeUntilNext}
@@ -380,7 +378,6 @@ export default function NuestraHistoriaPage() {
                   <button
                     key={block.height}
                     onClick={() => handleSpecSelect(block)}
-                    // CORREGIDO: Template literal limpio y sin &nbsp;
                     className={`group flex items-center gap-3 p-3 border text-left transition-all duration-300 ${
                       activeSpec.height === block.height 
                         ? 'bg-matrix/10 border-matrix shadow-matrix' 
@@ -449,7 +446,6 @@ export default function NuestraHistoriaPage() {
                       <button
                         key={block.height}
                         onClick={() => handleSpecSelect(block)}
-                        // CORREGIDO: Template literal limpio y sin &nbsp;
                         className={`group flex items-center gap-3 p-3 border text-left transition-all duration-300 ${
                           activeSpec.height === block.height 
                             ? 'bg-matrix/10 border-matrix shadow-matrix' 
@@ -560,12 +556,8 @@ export default function NuestraHistoriaPage() {
               </div>
             </footer>
           </div>
-
-          {/* ESPACIADOR para empujar el Footer real y evitar que se encime */}
-          <div className="h-40 md:h-60" />
-
-          {/* FOOTER REAL - Ahora en el flujo normal del documento */}
-          <Footer />
+          
+          {/* ESPACIADOR Y FOOTER REAL ELIMINADOS TEMPORALMENTE PARA DIAGNÓSTICO */}
         </div>
       </div>
     </>
