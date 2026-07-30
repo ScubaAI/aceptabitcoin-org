@@ -12,9 +12,19 @@ import Navbar from '@/components/layout/Navbar';
 // IMPORT DEL FOOTER ELIMINADO TEMPORALMENTE PARA DIAGNÓSTICO
 import {
   Clock, Hash, Zap, Users, Sprout, Store, Trophy, Coins, ShieldCheck, Map, Rocket,
-  Menu, X,
+  Menu, X, Volume2, VolumeX,
   type LucideIcon
 } from 'lucide-react';
+
+// ============================================================
+// CONFIGURACIÓN DE AUDIO
+// ============================================================
+const AUDIO_CONFIG = {
+  chimeUrl: 'genesis-chime.mp3',        // Ruta a tu MP3 de inicio
+  ambientUrl: 'timechain-ambient.mp3',     // Ruta a tu MP3 de fondo
+  ambientVolume: 0.3,                   // Volumen del fondo (0.0 a 1.0)
+  chimeVolume: 0.6                      // Volumen del inicio (0.0 a 1.0)
+};
 
 // ============================================================
 // BITCOIN TIMECHAIN — OBSERVATORY MODE (v3.0 NEXUS Fusion)
@@ -202,6 +212,12 @@ export default function NuestraHistoriaPage() {
   const [isHovering, setIsHovering] = useState(false);
   const [showMobileSheet, setShowMobileSheet] = useState(false);
   
+  // Audio State
+  const [isAudioEnabled, setIsAudioEnabled] = useState(false);
+  const audioContextRef = useRef<AudioContext | null>(null);
+  const ambientSourceRef = useRef<AudioBufferSourceNode | null>(null);
+  const gainNodeRef = useRef<GainNode | null>(null);
+
   const headerRef = useRef<HTMLDivElement>(null);
   const miningRef = useRef<HTMLDivElement>(null);
 
@@ -213,7 +229,6 @@ export default function NuestraHistoriaPage() {
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
-  // 1. Patrón anti-hidratación: Solo se activa en el cliente
   useEffect(() => {
     setIsMounted(true);
   }, []);
@@ -242,7 +257,63 @@ export default function NuestraHistoriaPage() {
     return () => clearInterval(interval);
   }, [isMounted]);
 
-  // 2. useGSAP con array vacío: se ejecuta una sola vez al montar en el cliente
+  // Audio Initialization Logic
+  const initAudio = async () => {
+    if (audioContextRef.current) return; // Already initialized
+
+    try {
+      const ctx = new AudioContext();
+      audioContextRef.current = ctx;
+      
+      const gainNode = ctx.createGain();
+      gainNode.gain.value = AUDIO_CONFIG.ambientVolume;
+      gainNode.connect(ctx.destination);
+      gainNodeRef.current = gainNode;
+
+      // Load and play chime
+      const chimeRes = await fetch(AUDIO_CONFIG.chimeUrl);
+      const chimeBuffer = await chimeRes.arrayBuffer();
+      const chimeAudio = await ctx.decodeAudioData(chimeBuffer);
+      const chimeSource = ctx.createBufferSource();
+      chimeSource.buffer = chimeAudio;
+      const chimeGain = ctx.createGain();
+      chimeGain.gain.value = AUDIO_CONFIG.chimeVolume;
+      chimeSource.connect(chimeGain);
+      chimeGain.connect(ctx.destination);
+      chimeSource.start(0);
+
+      // Load and play ambient loop
+      const ambientRes = await fetch(AUDIO_CONFIG.ambientUrl);
+      const ambientBuffer = await ambientRes.arrayBuffer();
+      const ambientAudio = await ctx.decodeAudioData(ambientBuffer);
+      const ambientSource = ctx.createBufferSource();
+      ambientSource.buffer = ambientAudio;
+      ambientSource.loop = true;
+      ambientSource.connect(gainNode);
+      ambientSource.start(0);
+      ambientSourceRef.current = ambientSource;
+
+      setIsAudioEnabled(true);
+    } catch (error) {
+      console.error("Audio initialization failed:", error);
+    }
+  };
+
+  const toggleAudio = () => {
+    if (!audioContextRef.current) {
+      initAudio();
+      return;
+    }
+
+    if (isAudioEnabled) {
+      gainNodeRef.current?.gain.linearRampToValueAtTime(0, audioContextRef.current!.currentTime + 0.5);
+      setIsAudioEnabled(false);
+    } else {
+      gainNodeRef.current?.gain.linearRampToValueAtTime(AUDIO_CONFIG.ambientVolume, audioContextRef.current!.currentTime + 0.5);
+      setIsAudioEnabled(true);
+    }
+  };
+
   useGSAP(() => {
     const ctx = gsap.context(() => {
       gsap.from(headerRef.current, { opacity: 0, y: -50, duration: 1.2, ease: "power3.out" });
@@ -258,7 +329,6 @@ export default function NuestraHistoriaPage() {
     if (isMobile) setShowMobileSheet(false);
   };
 
-  // 3. Skeleton de hidratación: Debe ser idéntico en servidor y primer render del cliente
   if (!isMounted) {
     return (
       <div className="min-h-screen bg-black flex items-center justify-center">
@@ -271,10 +341,9 @@ export default function NuestraHistoriaPage() {
     <>
       <Navbar />
      
-      {/* CONTENEDOR PRINCIPAL: Estructura corregida para respetar el flujo del Footer */}
       <div className="relative min-h-screen bg-black text-[hsl(var(--foreground))]">
        
-        {/* LAYER 1: THREE.JS CANVAS (fijo de fondo) */}
+        {/* LAYER 1: THREE.JS CANVAS */}
         <div className="fixed inset-0 z-0">
           <Suspense fallback={null}>
             <Canvas
@@ -303,20 +372,20 @@ export default function NuestraHistoriaPage() {
           </Suspense>
         </div>
 
-        {/* Vignette & Grain (fijos) */}
+        {/* Vignette & Grain */}
         <div className="fixed inset-0 pointer-events-none z-[5] bg-[radial-gradient(ellipse_75%_65%_at_center,transparent_30%,rgba(0,0,0,0.72)_100%)]" />
         <div className="fixed inset-0 pointer-events-none z-[6] opacity-[0.045] mix-blend-overlay bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0IiBoZWlnaHQ9IjQiPgo8cmVjdCB3aWR0aD0iNCIgaGVpZ2h0PSI0IiBmaWxsPSIjZmZmIiBmaWxsLW9wYWNpdHk9IjAuMDUiLz4KPC9zdmc+')]"/>
 
-        {/* LAYER 2: HUD OVERLAY (Scrolleable en móvil, fijo en desktop) - REPARADO: pointer-events-none */}
+        {/* LAYER 2: HUD OVERLAY */}
         <div className="relative z-10 min-h-screen flex flex-col pointer-events-none">
           <div className="flex-1 relative">
            
-            {/* Esquinas decorativas (solo desktop) */}
+            {/* Esquinas decorativas */}
             <div className="absolute top-[22px] right-[22px] w-8 h-8 border-t-2 border-r-2 border-matrix/30 pointer-events-none hidden md:block" />
             <div className="absolute bottom-[22px] left-[22px] w-8 h-8 border-b-2 border-l-2 border-matrix/30 pointer-events-none hidden md:block" />
 
-            {/* HEADER - REPARADO: pointer-events-auto */}
-            <header ref={headerRef} className="absolute top-4 left-4 right-4 md:top-[44px] md:left-[56px] md:right-[56px] flex flex-col md:flex-row justify-between items-start gap-4 md:gap-0 pointer-events-auto">
+            {/* HEADER - AJUSTADO: top-20 en móvil y top-[90px] en desktop para librar el Navbar */}
+            <header ref={headerRef} className="absolute top-20 left-4 right-4 md:top-[90px] md:left-[56px] md:right-[56px] flex flex-col md:flex-row justify-between items-start gap-4 md:gap-0 pointer-events-auto">
               <div className="flex flex-col gap-4 md:gap-6 w-full md:w-auto">
                 <div className="flex items-center gap-4">
                   <div className="relative w-8 h-8 flex-shrink-0">
@@ -363,7 +432,7 @@ export default function NuestraHistoriaPage() {
               </div>
             </header>
 
-            {/* ASIDE DERECHO - Solo desktop - REPARADO: pointer-events-auto */}
+            {/* ASIDE DERECHO - Solo desktop */}
             <aside className="hidden md:block fixed right-[56px] top-1/2 -translate-y-1/2 w-[260px] bg-black/80 backdrop-blur-xl border border-white/10 shadow-2xl pointer-events-auto">
               <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-matrix/60 to-transparent animate-scanline" />
              
@@ -409,7 +478,7 @@ export default function NuestraHistoriaPage() {
               </div>
             </aside>
 
-            {/* BOTÓN FLOTANTE MÓVIL - Explorar Hitos - REPARADO: pointer-events-auto */}
+            {/* BOTÓN FLOTANTE MÓVIL - Explorar Hitos */}
             {isMobile && (
               <button
                 onClick={() => setShowMobileSheet(true)}
@@ -420,7 +489,7 @@ export default function NuestraHistoriaPage() {
               </button>
             )}
 
-            {/* BOTTOM SHEET MÓVIL - REPARADO: pointer-events-auto */}
+            {/* BOTTOM SHEET MÓVIL */}
             {showMobileSheet && isMobile && (
               <div className="fixed inset-0 z-50 md:hidden pointer-events-auto">
                 <div
@@ -479,7 +548,7 @@ export default function NuestraHistoriaPage() {
               </div>
             )}
 
-            {/* FOOTER DE ESPECIFICACIONES (HUD Inferior) - REPARADO: pointer-events-auto */}
+            {/* FOOTER DE ESPECIFICACIONES (HUD Inferior) */}
             <footer className="fixed bottom-0 left-0 right-0 p-4 md:p-0 md:bottom-[44px] md:left-[56px] md:right-[56px] pointer-events-auto">
               <div className={`flex flex-col md:flex-row gap-3 md:gap-7 bg-black/80 backdrop-blur-xl border transition-colors duration-300 p-3 md:p-3 md:px-5 rounded-xl md:rounded-none ${
                 isHovering ? 'border-accent' : 'border-white/10'
@@ -556,10 +625,21 @@ export default function NuestraHistoriaPage() {
               </div>
             </footer>
           </div>
-          
-          {/* ESPACIADOR Y FOOTER REAL ELIMINADOS TEMPORALMENTE PARA DIAGNÓSTICO */}
         </div>
       </div>
+
+      {/* BOTÓN DE AUDIO FLOTANTE - NUEVO */}
+      <button
+        onClick={toggleAudio}
+        className="fixed bottom-6 right-6 z-50 p-3 bg-black/80 border border-white/10 backdrop-blur-md rounded-full shadow-2xl hover:border-matrix/50 transition-colors pointer-events-auto"
+        aria-label={isAudioEnabled ? "Silenciar audio" : "Activar audio"}
+      >
+        {isAudioEnabled ? (
+          <Volume2 className="h-5 w-5 text-matrix animate-pulse" />
+        ) : (
+          <VolumeX className="h-5 w-5 text-gray-500" />
+        )}
+      </button>
     </>
   );
 }
