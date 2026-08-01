@@ -22,10 +22,10 @@ import {
 // CONFIGURACIÓN DE AUDIO
 // ============================================================
 const AUDIO_CONFIG = {
-  chimeUrl: '/audio/genesis-chime.mp3',        // ← Ruta corregida a /public/audio/
-  ambientUrl: '/audio/timechain-ambient.mp3',  // ← Ruta corregida a /public/audio/
-  ambientVolume: 0.3,                          // Volumen del fondo (0.0 a 1.0)
-  chimeVolume: 0.6                             // Volumen del inicio (0.0 a 1.0)
+  chimeUrl: '/audio/genesis-chime.mp3',
+  ambientUrl: '/audio/timechain-ambient.mp3',
+  ambientVolume: 0.3,
+  chimeVolume: 0.6
 };
 
 // ============================================================
@@ -40,7 +40,7 @@ interface TimechainBlock {
   hash: string;
   prevHash: string;
   Icon: LucideIcon;
-  category: "genesis" | "infrastructure" | "adoption" | "community" | "warning"; // ← Agregado "warning"
+  category: "genesis" | "infrastructure" | "adoption" | "community" | "warning";
 }
 
 const timechainBlocks: TimechainBlock[] = [
@@ -104,7 +104,7 @@ const timechainBlocks: TimechainBlock[] = [
     hash: "0000d60cebf0...", prevHash: "0000c5fbdae9f8a7b6c5d4e3f2a1b0c9d8e7f6a5b4c3d2e1f0a9b8c7d6e5f4a3",
     Icon: Rocket, category: "community"
   },
-  // 🚨 NUEVO BLOQUE: INCIDENTE DE SEGURIDAD
+  // 🚨 BLOQUE DE ALERTA — INCIDENTE DE SEGURIDAD
   {
     height: 11, timestamp: "2026-08-01T00:00:00Z", quarter: "Q3 2026",
     title: "INCIDENTE DE SEGURIDAD EN LA RED",
@@ -118,6 +118,7 @@ const COLORS = {
   matrix: 0x00FF41,
   bitcoin: 0xF7931A,
   accent: 0x06B6D4,
+  warning: 0xEF4444, // ← Rojo semántico para warnings
   black: 0x000000,
   white: 0xFAFAFA,
 };
@@ -128,7 +129,7 @@ const categoryToColor = (category: TimechainBlock["category"]) => {
     case "infrastructure": return COLORS.bitcoin;
     case "adoption": return COLORS.accent;
     case "community": return COLORS.bitcoin;
-    case "warning": return 0xEF4444; // ← Rojo semántico (Tailwind red-500)
+    case "warning": return COLORS.warning;
     default: return COLORS.white;
   }
 };
@@ -143,37 +144,50 @@ function HologramBlock({ block, index }: { block: TimechainBlock; index: number 
   const angle = (index / timechainBlocks.length) * Math.PI * 2;
   const radius = 3.5;
   const yBase = (index - timechainBlocks.length / 2) * 1.2;
- 
+  const isWarning = block.category === "warning";
+
   useFrame(({ clock }) => {
     if (!groupRef.current) return;
     const t = clock.getElapsedTime();
-    groupRef.current.position.y = yBase + Math.sin(t * 0.6 + index) * 0.15;
+    // El bloque warning tiene una flotación más dramática
+    const floatAmplitude = isWarning ? 0.25 : 0.15;
+    const floatSpeed = isWarning ? 1.2 : 0.6;
+    groupRef.current.position.y = yBase + Math.sin(t * floatSpeed + index) * floatAmplitude;
     groupRef.current.rotation.y = t * 0.1 + angle;
+    // El bloque warning rota más rápido para llamar la atención
+    if (isWarning && meshRef.current) {
+      meshRef.current.rotation.x = t * 0.8;
+      meshRef.current.rotation.z = t * 0.5;
+    }
   });
 
   return (
-    <AnyFloat speed={2} rotationIntensity={0.3} floatIntensity={0.5}>
+    <AnyFloat speed={isWarning ? 3 : 2} rotationIntensity={isWarning ? 0.6 : 0.3} floatIntensity={isWarning ? 0.8 : 0.5}>
       <group ref={groupRef} position={[Math.cos(angle) * radius, yBase, Math.sin(angle) * radius]}>
         <mesh position={[0, -0.6, 0]} rotation={[-Math.PI / 2, 0, 0]}>
-          <ringGeometry args={[0.5, 0.6, 6]} />
-          <meshBasicMaterial color={color} transparent opacity={0.6} side={2} />
+          <ringGeometry args={[isWarning ? 0.6 : 0.5, isWarning ? 0.72 : 0.6, 6]} />
+          <meshBasicMaterial color={color} transparent opacity={isWarning ? 0.85 : 0.6} side={2} />
         </mesh>
-       
+
         <mesh ref={meshRef}>
-          <boxGeometry args={[0.8, 0.8, 0.8]} />
+          <boxGeometry args={[isWarning ? 0.95 : 0.8, isWarning ? 0.95 : 0.8, isWarning ? 0.95 : 0.8]} />
           <meshStandardMaterial
             color={color}
             emissive={color}
-            emissiveIntensity={0.8}
+            emissiveIntensity={isWarning ? 1.4 : 0.8}
             wireframe
             transparent
             opacity={0.9}
           />
         </mesh>
         <mesh>
-          <sphereGeometry args={[0.25, 16, 16]} />
-          <meshBasicMaterial color={color} transparent opacity={0.4} />
+          <sphereGeometry args={[isWarning ? 0.32 : 0.25, 16, 16]} />
+          <meshBasicMaterial color={color} transparent opacity={isWarning ? 0.65 : 0.4} />
         </mesh>
+        {/* Luz puntual extra para el bloque warning — aura roja */}
+        {isWarning && (
+          <pointLight color={COLORS.warning} intensity={1.5} distance={3} decay={2} />
+        )}
       </group>
     </AnyFloat>
   );
@@ -219,10 +233,10 @@ export default function NuestraHistoriaPage() {
   const [isMounted, setIsMounted] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const [timeUntilNext, setTimeUntilNext] = useState("10:00");
-  const [activeSpec, setActiveSpec] = useState<TimechainBlock>(timechainBlocks[10]); // ← Actualizado al último bloque
+  const [activeSpec, setActiveSpec] = useState<TimechainBlock>(timechainBlocks[10]);
   const [isHovering, setIsHovering] = useState(false);
   const [showMobileSheet, setShowMobileSheet] = useState(false);
-  
+
   // Audio State
   const [isAudioEnabled, setIsAudioEnabled] = useState(false);
   const audioContextRef = useRef<AudioContext | null>(null);
@@ -231,6 +245,9 @@ export default function NuestraHistoriaPage() {
 
   const headerRef = useRef<HTMLDivElement>(null);
   const miningRef = useRef<HTMLDivElement>(null);
+
+  // 🚨 Detectar si el bloque activo es el de warning (la idea loca)
+  const isWarningActive = activeSpec.category === "warning";
 
   // Detectar móvil de forma segura (anti-hidratación)
   useEffect(() => {
@@ -251,11 +268,11 @@ export default function NuestraHistoriaPage() {
       const minutes = now.getMinutes();
       const nextBlockMinutes = Math.ceil((minutes + 1) / 10) * 10;
       const next = new Date(now);
-      if (nextBlockMinutes >= 60) { 
-        next.setHours(now.getHours() + 1); 
-        next.setMinutes(0); 
-      } else { 
-        next.setMinutes(nextBlockMinutes); 
+      if (nextBlockMinutes >= 60) {
+        next.setHours(now.getHours() + 1);
+        next.setMinutes(0);
+      } else {
+        next.setMinutes(nextBlockMinutes);
       }
       next.setSeconds(0);
       const diff = next.getTime() - now.getTime();
@@ -268,21 +285,19 @@ export default function NuestraHistoriaPage() {
     return () => clearInterval(interval);
   }, [isMounted]);
 
-  // Audio Initialization Logic (Mejorada con fallback y manejo de errores)
+  // Audio Initialization Logic (con fallback Safari/WebKit)
   const initAudio = async () => {
     if (audioContextRef.current) return;
 
     try {
-      // Fallback para Safari/WebKit
       const ctx = new (window.AudioContext || (window as any).webkitAudioContext)();
       audioContextRef.current = ctx;
-      
+
       const gainNode = ctx.createGain();
       gainNode.gain.value = AUDIO_CONFIG.ambientVolume;
       gainNode.connect(ctx.destination);
       gainNodeRef.current = gainNode;
 
-      // Función auxiliar para cargar audio con mejor manejo de errores
       const loadAudio = async (url: string) => {
         const res = await fetch(url);
         if (!res.ok) throw new Error(`HTTP ${res.status} al cargar ${url}`);
@@ -290,7 +305,6 @@ export default function NuestraHistoriaPage() {
         return await ctx.decodeAudioData(arrayBuffer);
       };
 
-      // 1. Cargar y reproducir chime
       const chimeAudio = await loadAudio(AUDIO_CONFIG.chimeUrl);
       const chimeSource = ctx.createBufferSource();
       chimeSource.buffer = chimeAudio;
@@ -300,7 +314,6 @@ export default function NuestraHistoriaPage() {
       chimeGain.connect(ctx.destination);
       chimeSource.start(0);
 
-      // 2. Cargar y reproducir ambient loop
       const ambientAudio = await loadAudio(AUDIO_CONFIG.ambientUrl);
       const ambientSource = ctx.createBufferSource();
       ambientSource.buffer = ambientAudio;
@@ -312,7 +325,6 @@ export default function NuestraHistoriaPage() {
       setIsAudioEnabled(true);
     } catch (error) {
       console.error("⚠️ FALLO DE AUDIO ORACLE:", error);
-      // Opcional: alert("No se pudieron cargar los archivos de audio. Verifica que estén en /public/audio/");
     }
   };
 
@@ -357,9 +369,9 @@ export default function NuestraHistoriaPage() {
   return (
     <>
       <Navbar />
-     
+
       <div className="relative min-h-screen bg-black text-[hsl(var(--foreground))]">
-       
+
         {/* LAYER 1: THREE.JS CANVAS */}
         <div className="fixed inset-0 z-0">
           <Suspense fallback={null}>
@@ -370,8 +382,12 @@ export default function NuestraHistoriaPage() {
             >
               <fog attach="fog" args={[COLORS.black, 8, 25]} />
               <ambientLight intensity={0.2} />
-              <pointLight position={[0, 5, 0]} intensity={2} color={isHovering ? COLORS.accent : COLORS.matrix} />
-             
+              <pointLight
+                position={[0, 5, 0]}
+                intensity={isWarningActive ? 2.5 : 2}
+                color={isWarningActive ? COLORS.warning : (isHovering ? COLORS.accent : COLORS.matrix)}
+              />
+
               <OrbitControls
                 autoRotate
                 autoRotateSpeed={isMobile ? 0.2 : 0.4}
@@ -396,7 +412,7 @@ export default function NuestraHistoriaPage() {
         {/* LAYER 2: HUD OVERLAY */}
         <div className="relative z-10 min-h-screen flex flex-col pointer-events-none">
           <div className="flex-1 relative">
-           
+
             {/* Esquinas decorativas */}
             <div className="absolute top-[22px] right-[22px] w-8 h-8 border-t-2 border-r-2 border-matrix/30 pointer-events-none hidden md:block" />
             <div className="absolute bottom-[22px] left-[22px] w-8 h-8 border-b-2 border-l-2 border-matrix/30 pointer-events-none hidden md:block" />
@@ -452,7 +468,7 @@ export default function NuestraHistoriaPage() {
             {/* ASIDE DERECHO - Solo desktop */}
             <aside className="hidden md:block fixed right-[56px] top-1/2 -translate-y-1/2 w-[260px] bg-black/80 backdrop-blur-xl border border-white/10 shadow-2xl pointer-events-auto">
               <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-matrix/60 to-transparent animate-scanline" />
-             
+
               <div className="p-5 border-b border-white/10 flex items-center justify-between bg-black/60 shrink-0">
                 <div className="flex items-center gap-3">
                   <Hash className="h-5 w-5 text-matrix" />
@@ -460,38 +476,58 @@ export default function NuestraHistoriaPage() {
                 </div>
               </div>
               <div className="p-4 flex flex-col gap-2 overflow-y-auto max-h-[60vh] custom-scrollbar">
-                {timechainBlocks.map((block) => (
-                  <button
-                    key={block.height}
-                    onClick={() => handleSpecSelect(block)}
-                    className={`group flex items-center gap-3 p-3 border text-left transition-all duration-300 ${
-                      activeSpec.height === block.height 
-                        ? 'bg-matrix/10 border-matrix shadow-matrix' 
-                        : 'border-white/10 hover:border-matrix/30 hover:bg-matrix/5'
-                    }`}
-                  >
-                    <span className={`flex items-center justify-center w-8 h-8 rounded border transition-colors ${
-                      activeSpec.height === block.height ? 'border-matrix text-matrix' : 'border-white/10 text-gray-500'
-                    }`}>
-                      <block.Icon className="h-4 w-4" />
-                    </span>
-                    <div className="flex-1 min-w-0">
-                      <div className={`font-mono text-[11px] tracking-wider truncate ${
-                        activeSpec.height === block.height ? 'text-matrix' : 'text-gray-400'
+                {timechainBlocks.map((block) => {
+                  const isWarningBlock = block.category === "warning";
+                  const isActive = activeSpec.height === block.height;
+                  return (
+                    <button
+                      key={block.height}
+                      onClick={() => handleSpecSelect(block)}
+                      className={`group flex items-center gap-3 p-3 border text-left transition-all duration-300 ${
+                        isActive
+                          ? isWarningBlock
+                            ? 'bg-red-500/10 border-red-500/60 shadow-[0_0_20px_rgba(239,68,68,0.3)]'
+                            : 'bg-matrix/10 border-matrix shadow-matrix'
+                          : isWarningBlock
+                            ? 'border-red-500/30 hover:border-red-500/60 hover:bg-red-500/5'
+                            : 'border-white/10 hover:border-matrix/30 hover:bg-matrix/5'
+                      }`}
+                    >
+                      <span className={`flex items-center justify-center w-8 h-8 rounded border transition-colors ${
+                        isActive
+                          ? isWarningBlock
+                            ? 'border-red-500 text-red-500'
+                            : 'border-matrix text-matrix'
+                          : isWarningBlock
+                            ? 'border-red-500/40 text-red-500/70'
+                            : 'border-white/10 text-gray-500'
                       }`}>
-                        {block.title}
+                        <block.Icon className={`h-4 w-4 ${isWarningBlock && isActive ? 'animate-pulse' : ''}`} />
+                      </span>
+                      <div className="flex-1 min-w-0">
+                        <div className={`font-mono text-[11px] tracking-wider truncate ${
+                          isActive
+                            ? isWarningBlock ? 'text-red-500' : 'text-matrix'
+                            : isWarningBlock ? 'text-red-400/80' : 'text-gray-400'
+                        }`}>
+                          {block.title}
+                        </div>
+                        <div className={`font-mono text-[9px] mt-0.5 ${
+                          isWarningBlock ? 'text-red-500/50' : 'text-gray-600'
+                        }`}>
+                          {block.hash.slice(0, 12)}...
+                        </div>
                       </div>
-                      <div className="font-mono text-[9px] text-gray-600 mt-0.5">
-                        {block.hash.slice(0, 12)}...
-                      </div>
-                    </div>
-                    <span className={`font-mono text-[9px] ${
-                      activeSpec.height === block.height ? 'text-matrix' : 'text-gray-500'
-                    }`}>
-                      #{block.height.toString().padStart(3, '0')}
-                    </span>
-                  </button>
-                ))}
+                      <span className={`font-mono text-[9px] ${
+                        isActive
+                          ? isWarningBlock ? 'text-red-500' : 'text-matrix'
+                          : isWarningBlock ? 'text-red-500/60' : 'text-gray-500'
+                      }`}>
+                        #{block.height.toString().padStart(3, '0')}
+                      </span>
+                    </button>
+                  );
+                })}
               </div>
             </aside>
 
@@ -528,61 +564,95 @@ export default function NuestraHistoriaPage() {
                     </button>
                   </div>
                   <div className="p-4 flex flex-col gap-2 overflow-y-auto flex-1 custom-scrollbar">
-                    {timechainBlocks.map((block) => (
-                      <button
-                        key={block.height}
-                        onClick={() => handleSpecSelect(block)}
-                        className={`group flex items-center gap-3 p-3 border text-left transition-all duration-300 ${
-                          activeSpec.height === block.height 
-                            ? 'bg-matrix/10 border-matrix shadow-matrix' 
-                            : 'border-white/10 hover:border-matrix/30 hover:bg-matrix/5'
-                        }`}
-                      >
-                        <span className={`flex items-center justify-center w-8 h-8 rounded border transition-colors ${
-                          activeSpec.height === block.height ? 'border-matrix text-matrix' : 'border-white/10 text-gray-500'
-                        }`}>
-                          <block.Icon className="h-4 w-4" />
-                        </span>
-                        <div className="flex-1 min-w-0">
-                          <div className={`font-mono text-sm tracking-wider truncate ${
-                            activeSpec.height === block.height ? 'text-matrix' : 'text-gray-400'
+                    {timechainBlocks.map((block) => {
+                      const isWarningBlock = block.category === "warning";
+                      const isActive = activeSpec.height === block.height;
+                      return (
+                        <button
+                          key={block.height}
+                          onClick={() => handleSpecSelect(block)}
+                          className={`group flex items-center gap-3 p-3 border text-left transition-all duration-300 ${
+                            isActive
+                              ? isWarningBlock
+                                ? 'bg-red-500/10 border-red-500/60 shadow-[0_0_20px_rgba(239,68,68,0.3)]'
+                                : 'bg-matrix/10 border-matrix shadow-matrix'
+                              : isWarningBlock
+                                ? 'border-red-500/30 hover:border-red-500/60 hover:bg-red-500/5'
+                                : 'border-white/10 hover:border-matrix/30 hover:bg-matrix/5'
+                          }`}
+                        >
+                          <span className={`flex items-center justify-center w-8 h-8 rounded border transition-colors ${
+                            isActive
+                              ? isWarningBlock
+                                ? 'border-red-500 text-red-500'
+                                : 'border-matrix text-matrix'
+                              : isWarningBlock
+                                ? 'border-red-500/40 text-red-500/70'
+                                : 'border-white/10 text-gray-500'
                           }`}>
-                            {block.title}
+                            <block.Icon className={`h-4 w-4 ${isWarningBlock && isActive ? 'animate-pulse' : ''}`} />
+                          </span>
+                          <div className="flex-1 min-w-0">
+                            <div className={`font-mono text-sm tracking-wider truncate ${
+                              isActive
+                                ? isWarningBlock ? 'text-red-500' : 'text-matrix'
+                                : isWarningBlock ? 'text-red-400/80' : 'text-gray-400'
+                            }`}>
+                              {block.title}
+                            </div>
+                            <div className={`font-mono text-xs mt-0.5 ${
+                              isWarningBlock ? 'text-red-500/50' : 'text-gray-600'
+                            }`}>
+                              {block.quarter} • {block.hash.slice(0, 12)}...
+                            </div>
                           </div>
-                          <div className="font-mono text-xs text-gray-600 mt-0.5">
-                            {block.quarter} • {block.hash.slice(0, 12)}...
-                          </div>
-                        </div>
-                        <span className={`font-mono text-xs ${
-                          activeSpec.height === block.height ? 'text-matrix' : 'text-gray-500'
-                        }`}>
-                          #{block.height.toString().padStart(3, '0')}
-                        </span>
-                      </button>
-                    ))}
+                          <span className={`font-mono text-xs ${
+                            isActive
+                              ? isWarningBlock ? 'text-red-500' : 'text-matrix'
+                              : isWarningBlock ? 'text-red-500/60' : 'text-gray-500'
+                          }`}>
+                            #{block.height.toString().padStart(3, '0')}
+                          </span>
+                        </button>
+                      );
+                    })}
                   </div>
                 </div>
               </div>
             )}
 
             {/* FOOTER DE ESPECIFICACIONES (HUD Inferior) */}
-            <footer className="fixed bottom-0 left-0 right-0 p-4 md:p-0 md:bottom-[44px] md:left-[56px] md:right-[56px] pointer-events-auto">
-              <div className={`flex flex-col md:flex-row gap-3 md:gap-7 bg-black/80 backdrop-blur-xl border transition-colors duration-300 p-3 md:p-3 md:px-5 rounded-xl md:rounded-none ${
-                isHovering ? 'border-accent' : 'border-white/10'
+            <footer className="fixed bottom-0 left-0 right-0 p-4 z-30 md:bottom-[24px] md:left-[56px] md:right-[336px] md:p-0 pointer-events-auto">
+              <div className={`flex flex-col md:flex-row gap-3 md:gap-7 bg-black/80 backdrop-blur-xl border transition-all duration-500 p-3 md:p-3 md:px-5 rounded-xl md:rounded-none ${
+                isWarningActive
+                  ? 'border-red-500/60 shadow-[0_0_30px_rgba(239,68,68,0.25)]'
+                  : isHovering
+                    ? 'border-accent'
+                    : 'border-white/10'
               }`}>
                 {/* Móvil: versión simplificada */}
                 <div className="flex md:hidden items-center justify-between gap-3">
                   <div className="flex flex-col gap-1 flex-1">
-                    <span className="text-[8px] font-mono text-gray-500 tracking-[0.25em]">HITO ACTIVO</span>
+                    <span className={`text-[8px] font-mono tracking-[0.25em] ${
+                      isWarningActive ? 'text-red-500' : 'text-gray-500'
+                    }`}>
+                      {isWarningActive ? '⚠ ALERTA ACTIVA' : 'HITO ACTIVO'}
+                    </span>
                     <span className={`text-sm font-mono tracking-[0.1em] transition-colors duration-300 ${
-                      isHovering ? 'text-accent' : 'text-matrix'
+                      isWarningActive
+                        ? 'text-red-500'
+                        : isHovering ? 'text-accent' : 'text-matrix'
                     }`}>
                       #{activeSpec.height.toString().padStart(3, '0')} • {activeSpec.title}
                     </span>
                   </div>
                   <button
                     onClick={() => setShowMobileSheet(true)}
-                    className="px-3 py-1.5 bg-matrix/10 border border-matrix/40 rounded-lg text-xs font-mono text-matrix tracking-wider"
+                    className={`px-3 py-1.5 border rounded-lg text-xs font-mono tracking-wider ${
+                      isWarningActive
+                        ? 'bg-red-500/10 border-red-500/40 text-red-500'
+                        : 'bg-matrix/10 border-matrix/40 text-matrix'
+                    }`}
                   >
                     VER TODOS
                   </button>
@@ -591,33 +661,54 @@ export default function NuestraHistoriaPage() {
                 {/* Desktop: versión completa */}
                 <div className="hidden md:flex gap-7">
                   <div className="flex flex-col gap-1">
-                    <span className="text-[9px] font-mono text-gray-500 tracking-[0.25em]">CATEGORÍA</span>
+                    <span className={`text-[9px] font-mono tracking-[0.25em] ${
+                      isWarningActive ? 'text-red-500' : 'text-gray-500'
+                    }`}>CATEGORÍA</span>
                     <span className={`text-[11px] font-mono tracking-[0.1em] transition-colors duration-300 ${
-                      isHovering ? 'text-accent' : 'text-matrix'
+                      isWarningActive
+                        ? 'text-red-500'
+                        : isHovering ? 'text-accent' : 'text-matrix'
                     }`}>
                       {activeSpec.category.toUpperCase()}
                     </span>
                   </div>
                   <div className="flex flex-col gap-1">
-                    <span className="text-[9px] font-mono text-gray-500 tracking-[0.25em]">HITO</span>
-                    <span className={`text-[11px] font-mono tracking-[0.1em] transition-colors duration-300 ${
-                      isHovering ? 'text-accent' : 'text-bitcoin'
+                    <span className={`text-[9px] font-mono tracking-[0.25em] ${
+                      isWarningActive ? 'text-red-500' : 'text-gray-500'
+                    }`}>HITO</span>
+                    <span className={`text-[11px] font-mono tracking-[0.1em] transition-colors duration-300 flex items-center gap-2 ${
+                      isWarningActive
+                        ? 'text-red-500'
+                        : isHovering ? 'text-accent' : 'text-bitcoin'
                     }`}>
+                      {isWarningActive && (
+                        <span className="inline-flex items-center gap-1 px-1.5 py-0.5 bg-red-500/20 border border-red-500/40 rounded text-[9px] font-mono tracking-wider animate-pulse">
+                          <AlertTriangle className="h-3 w-3" /> ALERT
+                        </span>
+                      )}
                       {activeSpec.title}
                     </span>
                   </div>
                   <div className="flex flex-col gap-1">
-                    <span className="text-[9px] font-mono text-gray-500 tracking-[0.25em]">HASH</span>
+                    <span className={`text-[9px] font-mono tracking-[0.25em] ${
+                      isWarningActive ? 'text-red-500' : 'text-gray-500'
+                    }`}>HASH</span>
                     <span className={`text-[11px] font-mono tracking-[0.1em] transition-colors duration-300 ${
-                      isHovering ? 'text-accent' : 'text-matrix'
+                      isWarningActive
+                        ? 'text-red-500'
+                        : isHovering ? 'text-accent' : 'text-matrix'
                     }`}>
                       {activeSpec.hash.slice(0, 12)}...
                     </span>
                   </div>
                   <div className="flex flex-col gap-1">
-                    <span className="text-[9px] font-mono text-gray-500 tracking-[0.25em]">CONF</span>
+                    <span className={`text-[9px] font-mono tracking-[0.25em] ${
+                      isWarningActive ? 'text-red-500' : 'text-gray-500'
+                    }`}>CONF</span>
                     <span className={`text-[11px] font-mono tracking-[0.1em] transition-colors duration-300 ${
-                      isHovering ? 'text-accent' : 'text-matrix'
+                      isWarningActive
+                        ? 'text-red-500'
+                        : isHovering ? 'text-accent' : 'text-matrix'
                     }`}>
                       {timechainBlocks.length - activeSpec.height}
                     </span>
@@ -626,17 +717,31 @@ export default function NuestraHistoriaPage() {
               </div>
 
               {/* Controles - Solo desktop */}
-              <div className="hidden md:flex gap-5 text-[10px] font-mono text-gray-500 tracking-[0.18em] mt-4">
+              <div className={`hidden md:flex gap-5 text-[10px] font-mono tracking-[0.18em] mt-4 px-1 transition-colors duration-500 ${
+                isWarningActive ? 'text-red-500/60' : 'text-gray-500'
+              }`}>
                 <div className="flex items-center gap-2">
-                  <span className="px-2 py-1 bg-white/4 border border-white/10 text-[#FAFAFA] text-[9.5px] tracking-[0.15em]">CLICK</span>
+                  <span className={`px-2 py-1 border text-[9.5px] tracking-[0.15em] ${
+                    isWarningActive
+                      ? 'bg-red-500/5 border-red-500/30 text-red-400'
+                      : 'bg-white/4 border-white/10 text-[#FAFAFA]'
+                  }`}>CLICK</span>
                   inspeccionar bloque
                 </div>
                 <div className="flex items-center gap-2">
-                  <span className="px-2 py-1 bg-white/4 border border-white/10 text-[#FAFAFA] text-[9.5px] tracking-[0.15em]">DRAG</span>
+                  <span className={`px-2 py-1 border text-[9.5px] tracking-[0.15em] ${
+                    isWarningActive
+                      ? 'bg-red-500/5 border-red-500/30 text-red-400'
+                      : 'bg-white/4 border-white/10 text-[#FAFAFA]'
+                  }`}>DRAG</span>
                   vista orbital
                 </div>
                 <div className="flex items-center gap-2">
-                  <span className="px-2 py-1 bg-white/4 border border-white/10 text-[#FAFAFA] text-[9.5px] tracking-[0.15em]">1-0</span>
+                  <span className={`px-2 py-1 border text-[9.5px] tracking-[0.15em] ${
+                    isWarningActive
+                      ? 'bg-red-500/5 border-red-500/30 text-red-400'
+                      : 'bg-white/4 border-white/10 text-[#FAFAFA]'
+                  }`}>1-0</span>
                   selección directa
                 </div>
               </div>
@@ -648,7 +753,7 @@ export default function NuestraHistoriaPage() {
       {/* BOTÓN DE AUDIO FLOTANTE */}
       <button
         onClick={toggleAudio}
-        className="fixed bottom-6 right-6 z-50 p-3 bg-black/80 border border-white/10 backdrop-blur-md rounded-full shadow-2xl hover:border-matrix/50 transition-colors pointer-events-auto"
+        className="fixed bottom-[88px] right-4 z-[60] p-3 bg-black/80 border border-white/10 backdrop-blur-md rounded-full shadow-2xl hover:border-matrix/50 transition-colors pointer-events-auto md:bottom-6 md:right-6"
         aria-label={isAudioEnabled ? "Silenciar audio" : "Activar audio"}
       >
         {isAudioEnabled ? (
