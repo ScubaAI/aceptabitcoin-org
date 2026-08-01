@@ -86,8 +86,8 @@ export default function Footer() {
                 </a>
               </li>
               <li>
-                <a href="https://dev.blink.sv" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-bitcoin transition-colors flex items-center gap-2 group">
-                  <Hash className="h-3 w-3 opacity-50" /> Lightning_Liquidity
+                <a href="https://btcpayserver.org" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-bitcoin transition-colors flex items-center gap-2 group">
+                  <Hash className="h-3 w-3 opacity-50" /> BTCPay_Server
                 </a>
               </li>
               <li>

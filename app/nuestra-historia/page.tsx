@@ -1,4 +1,5 @@
 'use client';
+
 import { useState, useEffect, useRef, useMemo, Suspense } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { OrbitControls } from '@react-three/drei/core/OrbitControls';
@@ -6,13 +7,14 @@ import { Float } from '@react-three/drei/core/Float';
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
 import * as THREE from 'three';
+
 // Workaround for drei v8 + fiber v8 type mismatch on Float component
 const AnyFloat = Float as any;
+
 import Navbar from '@/components/layout/Navbar';
-// IMPORT DEL FOOTER ELIMINADO TEMPORALMENTE PARA DIAGNÓSTICO
 import {
   Clock, Hash, Zap, Users, Sprout, Store, Trophy, Coins, ShieldCheck, Map, Rocket,
-  Menu, X, Volume2, VolumeX,
+  Menu, X, Volume2, VolumeX, AlertTriangle,
   type LucideIcon
 } from 'lucide-react';
 
@@ -20,10 +22,10 @@ import {
 // CONFIGURACIÓN DE AUDIO
 // ============================================================
 const AUDIO_CONFIG = {
-  chimeUrl: 'genesis-chime.mp3',        // Ruta a tu MP3 de inicio
-  ambientUrl: 'timechain-ambient.mp3',     // Ruta a tu MP3 de fondo
-  ambientVolume: 0.3,                   // Volumen del fondo (0.0 a 1.0)
-  chimeVolume: 0.6                      // Volumen del inicio (0.0 a 1.0)
+  chimeUrl: '/audio/genesis-chime.mp3',        // ← Ruta corregida a /public/audio/
+  ambientUrl: '/audio/timechain-ambient.mp3',  // ← Ruta corregida a /public/audio/
+  ambientVolume: 0.3,                          // Volumen del fondo (0.0 a 1.0)
+  chimeVolume: 0.6                             // Volumen del inicio (0.0 a 1.0)
 };
 
 // ============================================================
@@ -38,7 +40,7 @@ interface TimechainBlock {
   hash: string;
   prevHash: string;
   Icon: LucideIcon;
-  category: "genesis" | "infrastructure" | "adoption" | "community";
+  category: "genesis" | "infrastructure" | "adoption" | "community" | "warning"; // ← Agregado "warning"
 }
 
 const timechainBlocks: TimechainBlock[] = [
@@ -101,6 +103,14 @@ const timechainBlocks: TimechainBlock[] = [
     title: "ESTADO ACTUAL", desc: "+150 usuarios en Tianguis. 8 proveedores activos. 4 proyectos dev. Infraestructura open-source bajo licencia AGPL-3.0.",
     hash: "0000d60cebf0...", prevHash: "0000c5fbdae9f8a7b6c5d4e3f2a1b0c9d8e7f6a5b4c3d2e1f0a9b8c7d6e5f4a3",
     Icon: Rocket, category: "community"
+  },
+  // 🚨 NUEVO BLOQUE: INCIDENTE DE SEGURIDAD
+  {
+    height: 11, timestamp: "2026-08-01T00:00:00Z", quarter: "Q3 2026",
+    title: "INCIDENTE DE SEGURIDAD EN LA RED",
+    desc: "Lección aprendida: La soberanía no se delega. Un fallo en un fabricante no rompe a Bitcoin, pero nos recuerda que 'Not your keys, not your coins'. Aprende auto-custodia o paga el precio de no hacerlo.",
+    hash: "0000e71dfca1...", prevHash: "0000d60cebf0a9b8c7d6e5f4a3b2c1d0e9f8a7b6c5d4e3f2a1b0c9d8e7f6a5b4",
+    Icon: AlertTriangle, category: "warning"
   }
 ];
 
@@ -118,6 +128,7 @@ const categoryToColor = (category: TimechainBlock["category"]) => {
     case "infrastructure": return COLORS.bitcoin;
     case "adoption": return COLORS.accent;
     case "community": return COLORS.bitcoin;
+    case "warning": return 0xEF4444; // ← Rojo semántico (Tailwind red-500)
     default: return COLORS.white;
   }
 };
@@ -208,7 +219,7 @@ export default function NuestraHistoriaPage() {
   const [isMounted, setIsMounted] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const [timeUntilNext, setTimeUntilNext] = useState("10:00");
-  const [activeSpec, setActiveSpec] = useState<TimechainBlock>(timechainBlocks[9]);
+  const [activeSpec, setActiveSpec] = useState<TimechainBlock>(timechainBlocks[10]); // ← Actualizado al último bloque
   const [isHovering, setIsHovering] = useState(false);
   const [showMobileSheet, setShowMobileSheet] = useState(false);
   
@@ -257,12 +268,13 @@ export default function NuestraHistoriaPage() {
     return () => clearInterval(interval);
   }, [isMounted]);
 
-  // Audio Initialization Logic
+  // Audio Initialization Logic (Mejorada con fallback y manejo de errores)
   const initAudio = async () => {
-    if (audioContextRef.current) return; // Already initialized
+    if (audioContextRef.current) return;
 
     try {
-      const ctx = new AudioContext();
+      // Fallback para Safari/WebKit
+      const ctx = new (window.AudioContext || (window as any).webkitAudioContext)();
       audioContextRef.current = ctx;
       
       const gainNode = ctx.createGain();
@@ -270,10 +282,16 @@ export default function NuestraHistoriaPage() {
       gainNode.connect(ctx.destination);
       gainNodeRef.current = gainNode;
 
-      // Load and play chime
-      const chimeRes = await fetch(AUDIO_CONFIG.chimeUrl);
-      const chimeBuffer = await chimeRes.arrayBuffer();
-      const chimeAudio = await ctx.decodeAudioData(chimeBuffer);
+      // Función auxiliar para cargar audio con mejor manejo de errores
+      const loadAudio = async (url: string) => {
+        const res = await fetch(url);
+        if (!res.ok) throw new Error(`HTTP ${res.status} al cargar ${url}`);
+        const arrayBuffer = await res.arrayBuffer();
+        return await ctx.decodeAudioData(arrayBuffer);
+      };
+
+      // 1. Cargar y reproducir chime
+      const chimeAudio = await loadAudio(AUDIO_CONFIG.chimeUrl);
       const chimeSource = ctx.createBufferSource();
       chimeSource.buffer = chimeAudio;
       const chimeGain = ctx.createGain();
@@ -282,10 +300,8 @@ export default function NuestraHistoriaPage() {
       chimeGain.connect(ctx.destination);
       chimeSource.start(0);
 
-      // Load and play ambient loop
-      const ambientRes = await fetch(AUDIO_CONFIG.ambientUrl);
-      const ambientBuffer = await ambientRes.arrayBuffer();
-      const ambientAudio = await ctx.decodeAudioData(ambientBuffer);
+      // 2. Cargar y reproducir ambient loop
+      const ambientAudio = await loadAudio(AUDIO_CONFIG.ambientUrl);
       const ambientSource = ctx.createBufferSource();
       ambientSource.buffer = ambientAudio;
       ambientSource.loop = true;
@@ -295,7 +311,8 @@ export default function NuestraHistoriaPage() {
 
       setIsAudioEnabled(true);
     } catch (error) {
-      console.error("Audio initialization failed:", error);
+      console.error("⚠️ FALLO DE AUDIO ORACLE:", error);
+      // Opcional: alert("No se pudieron cargar los archivos de audio. Verifica que estén en /public/audio/");
     }
   };
 
@@ -384,7 +401,7 @@ export default function NuestraHistoriaPage() {
             <div className="absolute top-[22px] right-[22px] w-8 h-8 border-t-2 border-r-2 border-matrix/30 pointer-events-none hidden md:block" />
             <div className="absolute bottom-[22px] left-[22px] w-8 h-8 border-b-2 border-l-2 border-matrix/30 pointer-events-none hidden md:block" />
 
-            {/* HEADER - AJUSTADO: top-20 en móvil y top-[90px] en desktop para librar el Navbar */}
+            {/* HEADER */}
             <header ref={headerRef} className="absolute top-20 left-4 right-4 md:top-[90px] md:left-[56px] md:right-[56px] flex flex-col md:flex-row justify-between items-start gap-4 md:gap-0 pointer-events-auto">
               <div className="flex flex-col gap-4 md:gap-6 w-full md:w-auto">
                 <div className="flex items-center gap-4">
@@ -628,7 +645,7 @@ export default function NuestraHistoriaPage() {
         </div>
       </div>
 
-      {/* BOTÓN DE AUDIO FLOTANTE - NUEVO */}
+      {/* BOTÓN DE AUDIO FLOTANTE */}
       <button
         onClick={toggleAudio}
         className="fixed bottom-6 right-6 z-50 p-3 bg-black/80 border border-white/10 backdrop-blur-md rounded-full shadow-2xl hover:border-matrix/50 transition-colors pointer-events-auto"

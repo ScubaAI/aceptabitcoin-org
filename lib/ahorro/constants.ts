@@ -2,7 +2,7 @@ export const AHORRO_CONFIG = {
   cookieName: 'ahorro_access_granted',
   defaultSatAmount: 2100,
   cookieMaxAgeDays: 30,
-  webhookPath: '/api/ahorro/webhook/blink',
+  webhookPath: '/api/ahorro/webhook/btcpay',
 } as const;
 
 export const ACCESS_MODES: Record<string, { label: string; description: string }> = {

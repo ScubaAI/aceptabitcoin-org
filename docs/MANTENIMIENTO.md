@@ -64,8 +64,8 @@ Estado actual del proyecto — última actualización: 2026-07-21
   - ✅ Modo "Donación pura" — solo tipjar
 - **Infraestructura propia:**
   - Nueva dirección on-chain: `bc1q4kfrqsm60jxx8xva9p6erx6pp6zqaazy00nhrk`
-  - BTCPay Server propio (sin intermediarios Blink para on-chain)
-  - Lightning Address: `aceptabitcoin@blink.sv` (Blink POS)
+  - BTCPay Server propio (Lightning + On-chain)
+  - Lightning Address actualizada (ver `.env.local`)
 - **Mejoras estéticas:**
   - Efecto holográfico en QR codes (GSAP timeline infinito)
   - Badge "BTCPAY SERVER • ONLINE" con punto verde pulsante
@@ -232,7 +232,7 @@ Estado actual del proyecto — última actualización: 2026-07-21
 - `map.md` — Arquitectura de rutas y componentes
 
 **APIs Externas**
-- Blink.sv: GraphQL para Lightning (TipJar)
+- BTCPay Server: Lightning + On-chain para el TipJar (self-hosted)
 - Coingecko: Precios BTC/USD/MXN (PriceConverter)
 - Groq: LLM para B.O.B. (`llama-3.3-70b-versatile`)
 
@@ -319,7 +319,7 @@ Todos los cambios respetan la estética cypherpunk, la narrativa Bitcoin, y la s
 - Campos verificados: Nombre, Email, Negocio, Categoría, Volumen, Nivel Técnico e Infraestructura.
 
 ### ⚠️ Pending Actions
-- [ ] Eliminar `app/api/tipjar/route.ts` y `lib/blink.ts` tras configurar webhook en Blink dashboard.
+- [x] ~~Eliminar `app/api/tipjar/route.ts` y `lib/blink.ts`~~ — **Completado 2026-07-30. TipJar migrado a BTCPay Server.**
 - [ ] Verificar que `tailwind.config.ts` tenga mapeadas correctamente las fuentes `vt323`, `fira-code`, `ibm-plex-serif`.
 - [ ] Testear `MatrixArcadeWhatsApp` en iOS Safari para confirmar deep-linking funcional.
 
@@ -464,7 +464,7 @@ Todos los componentes con datos dinámicos o dependientes del navegador incluyen
 | `/agenda` | `app/agenda/page.tsx` | ✅ Cal.com Booking |
 | `/nuestra-historia` | `app/nuestra-historia/page.tsx` | ✅ Project History |
 | `/proveedores` | `app/proveedores/page.tsx` + `ProveedoresClient.tsx` | ✅ Sovereign Directory |
-| `/api/tipjar` | `app/api/tipjar/route.ts` | ✅ Blink.sv Proxy |
+| `/api/tipjar` | — | ~~Eliminado~~ — TipJar migrado a BTCPay Server |
 
 ### Módulo Hackathon (`app/hackathon/`)
 

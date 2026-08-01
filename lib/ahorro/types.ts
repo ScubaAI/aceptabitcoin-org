@@ -6,12 +6,6 @@ export interface UserAccess {
   method: AccessMode;
 }
 
-export interface BlinkInvoice {
-  paymentRequest: string;
-  invoiceId: string;
-  satAmount: number;
-  status: 'PENDING' | 'PAID' | 'EXPIRED';
-}
 
 export interface YieldStats {
   totalSatsEarned: number;

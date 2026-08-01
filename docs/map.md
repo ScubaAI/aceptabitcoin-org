@@ -2,7 +2,7 @@
 
 A comprehensive overview of the `aceptabitcoin-org` project structure, architecture, and current status.
 
-Last updated: 2026-07-24
+Last updated: 2026-07-30
 
 ## 🏗️ Project Architecture
 
@@ -55,9 +55,6 @@ aceptabitcoin-org/
 │   │       ├── layout.tsx             # Dashboard layout
 │   │       └── page.tsx               # ✅ LP Terminal dashboard — Orca positions, fees, PnL
 │   ├── api/
-│   │   ├── tipjar/
-│   │   │   ├── route.ts               # Blink.sv Lightning tip-jar proxy (GraphQL)
-│   │   │   └── route.test.ts          # Tipjar API unit tests
 │   │   ├── chat/
 │   │   │   └── route.ts               # Bob AI chat — Groq LLM endpoint
 │   │   ├── hackathon/
@@ -71,8 +68,8 @@ aceptabitcoin-org/
 │   │   │   ├── snapshot/
 │   │   │   │   └── route.ts           # ✅ Daily LP snapshot cron (Prisma + Orca data)
 │   │   │   └── webhook/
-│   │   │       └── blink/
-│   │   │           └── route.ts       # Blink.sv webhook handler for ahorro deposits
+│   │   │       └── btcpay/
+│   │   │           └── route.ts       # BTCPay Server webhook handler for ahorro deposits
 │   │   ├── auth/
 │   │   │   └── lnauth/
 │   │   │       ├── challenge/
@@ -83,11 +80,15 @@ aceptabitcoin-org/
 │   │       └── lnbits/
 │   │           └── route.ts           # LNbits webhook handler
 │   ├── actions/
-│   │   └── submit-onboarding.tsx      # Server action for merchant form
+│   │   └── submit-onboarding.tsx      # Server action for merchant form (BTCPay Server)
 │   ├── not-found.tsx                  # Global 404 page
 │   ├── layout.tsx                     # Root layout — metadata, global fonts, providers
 │   └── globals.css                    # Tailwind directives + custom keyframes & CSS variables
 ├── components/
+│   ├── data-card.tsx                  # Data card primitive component
+│   ├── grid.tsx                       # Grid layout component
+│   ├── hud-frame.tsx                  # HUD frame wrapper component
+│   ├── theme.tsx                      # Theme provider / component
 │   ├── layout/                        # Global wrappers
 │   │   ├── Navbar.tsx                 # Navigation bar (responsive)
 │   │   ├── Hero.tsx                   # Homepage hero — Cypherpunk Bank aesthetic
@@ -157,6 +158,7 @@ aceptabitcoin-org/
 │   │   │   ├── DashboardHeader.tsx    # ✅ Dashboard page header w/ clock + LnAuth status
 │   │   │   ├── DepositWidget.tsx      # Lightning deposit widget
 │   │   │   ├── LPTerminal.tsx         # ✅ Orca LP positions, fees, price range visualization
+│   │   │   ├── PerformancePanel.tsx   # ✅ Performance analytics panel
 │   │   │   ├── StatsPanel.tsx         # Savings stats panel
 │   │   │   └── TransactionTable.tsx   # Transaction history table
 │   │   ├── landing/
@@ -185,6 +187,7 @@ aceptabitcoin-org/
 │   │   ├── Card.tsx
 │   │   └── QRCode.tsx
 │   └── ui/                            # shadcn/ui + custom components
+│       ├── Grid3D.tsx                 # 3D grid visual component
 │       ├── MatrixRain.tsx             # Animated <canvas> rain effect (client-only)
 │       ├── ArcadeButton.tsx           # Tron-style CTA button (custom)
 │       ├── Logo.tsx                   # Matrix-styled SVG logo
@@ -211,7 +214,6 @@ aceptabitcoin-org/
 │       └── icons/
 │           └── MatrixPhoneIcon.tsx    # Custom SVG phone icon
 ├── lib/
-│   ├── blink.ts                       # Blink.sv GraphQL API client (tip-jar + ahorro)
 │   ├── juegos.ts                      # Arcade/games data loader
 │   ├── proveedores.ts                 # Provider directory types, stats, data
 │   ├── proveedores.test.ts            # Proveedores unit tests
@@ -236,7 +238,6 @@ aceptabitcoin-org/
 │   │   └── service.ts                 # ✅ Market data service abstraction
 │   ├── ahorro/                        # ✅ Ahorro business logic + Orca SDK
 │   │   ├── access.ts                  # Access control helpers
-│   │   ├── blink.ts                   # Blink.sv integration for ahorro deposits
 │   │   ├── constants.ts               # Ahorro constants (yield rates, tiers, etc.)
 │   │   ├── types.ts                   # Ahorro TypeScript types
 │   │   ├── yield.ts                   # Yield calculation utilities
@@ -250,6 +251,7 @@ aceptabitcoin-org/
 │   ├── juegos.json                    # Arcade games data
 │   ├── proveedores.json               # Provider directory data
 │   ├── proyectos.json                 # Community projects data
+│   ├── historico-ahorro.json          # Ahorro historical LP data
 │   ├── partners.ts                    # ✅ Partners / sponsors data
 │   └── pricing.ts                     # ✅ Pricing plans data
 ├── hooks/                             # Custom React hooks
@@ -315,15 +317,15 @@ aceptabitcoin-org/
 | `/hackathon/[edition]/projects` | **Project Gallery** — ProjectGrid w/ edition data | `app/hackathon/[edition]/projects/page.tsx` | ✅ Functional |
 | `/hackathon/[edition]/resources` | **Resources Hub** — PDFs, docs, workshop recordings | `app/hackathon/[edition]/resources/page.tsx` | ✅ Functional |
 | `/hackathon/[edition]/api` | **Hackathon API** — Info + Submission endpoints | `app/hackathon/[edition]/api/route.ts` | ✅ Functional |
-| `/api/tipjar` | Lightning Tip-Jar API (Blink.sv proxy) | `app/api/tipjar/route.ts` | ✅ Live |
 | `/api/chat` | Bob AI Chat (Groq LLM) | `app/api/chat/route.ts` | ✅ Live |
 | `/api/hackathon/leaderboard` | Hackathon leaderboard data | `app/api/hackathon/leaderboard/route.ts` | ✅ Functional |
 | `/api/hackathon/tips` | Hackathon Lightning tips | `app/api/hackathon/tips/route.ts` | ✅ Functional |
 | `/api/ahorro/stats` | Ahorro savings stats | `app/api/ahorro/stats/route.ts` | 🚧 WIP |
+| `/api/ahorro/history` | Ahorro LP position history | `app/api/ahorro/history/route.ts` | ✅ Active |
 | `/api/ahorro/snapshot` | **Daily LP Snapshot** — Cron endpoint for Orca position snapshots | `app/api/ahorro/snapshot/route.ts` | ✅ Active |
 | `/api/auth/lnauth/challenge` | **LNURL-Auth Challenge** — Generate k1 + LNURL login link | `app/api/auth/lnauth/challenge/route.ts` | ✅ Active |
 | `/api/auth/lnauth/verify` | **LNURL-Auth Verify** — Verify sig, issue JWT session cookie | `app/api/auth/lnauth/verify/route.ts` | ✅ Active |
-| `/api/ahorro/webhook/blink` | Blink.sv deposit webhook | `app/api/ahorro/webhook/blink/route.ts` | 🚧 WIP |
+| `/api/ahorro/webhook/btcpay` | BTCPay Server deposit webhook | `app/api/ahorro/webhook/btcpay/route.ts` | 🚧 WIP |
 | `/api/webhook/lnbits` | LNbits webhook handler | `app/api/webhook/lnbits/route.ts` | 🔧 Legacy |
 
 ## 🏆 Hackathon Editions
@@ -342,13 +344,15 @@ aceptabitcoin-org/
 | **Language** | [TypeScript](https://www.typescriptlang.com/) | Strict mode |
 | **Styling** | [Tailwind CSS](https://tailwindcss.com/) | Custom animations: `scanline`, `blink`, `tilt` |
 | **UI Kit** | [shadcn/ui](https://ui.shadcn.com/) | + custom ArcadeButton, MatrixRain, Logo |
+| **Headless UI** | [@base-ui/react](https://base-ui.com/) | ^1.3.0 — Headless accessible primitives |
 | **Icons** | [Lucide React](https://lucide.dev/) | v1.8.0 |
 | **Animation** | [Framer Motion](https://www.framer.com/motion/) | ^11.18.2 |
+| **Charts** | [Recharts](https://recharts.org/) | ^3.10.1 |
 | **3D / WebGL** | [Three.js](https://threejs.org/) + [@react-three/fiber](https://docs.pmnd.rs/react-three-fiber) | ^0.184.0 / ^8.18.0 |
 | **GSAP** | [GSAP](https://greensock.com/gsap/) + @gsap/react | ^3.15.0 / ^2.1.2 |
 | **Forms** | [React Hook Form](https://react-hook-form.com/) + @hookform/resolvers | ^7.75.0 |
 | **QR Codes** | [qrcode.react](https://github.com/zpao/qrcode.react) | Client-only (`ssr: false`) |
-| **Payments** | [Blink.sv](https://blink.sv) | GraphQL API — Lightning + On-chain |
+| **Payments** | [BTCPay Server](https://btcpayserver.org) | Self-hosted — Lightning + On-chain |
 | **Market Data** | Binance API | BTC/USD via `lib/market/binance` |
 | **AI / LLM** | [Groq](https://groq.com/) SDK | Bob AI agent — `groq-sdk ^0.9.0` |
 | **Vector DB** | [Upstash Vector](https://upstash.com/vector) | Semantic search — `@upstash/vector ^1.1.6` |
@@ -359,11 +363,12 @@ aceptabitcoin-org/
 | **Monitoring** | [Sentry](https://sentry.io) | Error tracking (client + server config) |
 | **Email** | [Resend](https://resend.com) | Transactional email |
 | **PWA** | next-pwa | ^5.6.0 (disabled in dev) |
-| **ORM** | [Prisma](https://www.prisma.io/) | 6.19.3 — PostgreSQL via `@prisma/adapter-pg` |
+| **ORM** | [Prisma](https://www.prisma.io/) | 6.19.3 — `@prisma/client` + PostgreSQL |
 | **Solana** | [@solana/web3.js](https://solana.com/) + [@solana/spl-token](https://solana.com/) | ^1.98.4 / ^0.4.15 |
 | **DeFi** | [@orca-so/whirlpools-sdk](https://www.orca.so/) | ^0.21.0 — Orca Whirlpools LP positions |
 | **Crypto** | [@noble/secp256k1](https://github.com/paulmillr/noble-secp256k1) | ^3.1.0 — LNURL-Auth signature verification |
 | **LNURL** | [lnurl](https://github.com/fiatjaf/lnurl) | ^0.27.0 — LNURL-Auth challenge/verify |
+| **Encoding** | [bech32](https://github.com/bitcoinjs/bech32) | ^2.0.0 — Bitcoin/Lightning address encoding |
 
 ## 🎨 Design System: Cypherpunk Bank / Oracle System
 
