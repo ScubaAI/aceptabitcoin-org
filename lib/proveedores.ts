@@ -16,7 +16,10 @@ export type Categoria =
   | "servicios"
   | "tecnologia"
   | "restaurantes" // ✅ Normalizado a minúsculas
-  | "consultoria"; // ✅ Normalizado a minúsculas y sin tilde
+  | "consultoria" // ✅ Normalizado a minúsculas y sin tilde
+  | "finanzas"
+  | "bienestar"
+  | "seguridad";
 
 export type Tier = "patrocinador" | "partner" | "miembro";
 
@@ -44,6 +47,9 @@ export const CATEGORIAS: { value: Categoria; label: string; icon: string }[] = [
   //  Nuevas categorías para "Comercio Libre" (Values normalizados)
   { value: "restaurantes", label: "Restaurantes", icon: "Utensils" },
   { value: "consultoria", label: "Consultoría", icon: "UserCog" },
+  { value: "finanzas", label: "Finanzas", icon: "Landmark" },
+  { value: "bienestar", label: "Bienestar", icon: "Heart" },
+  { value: "seguridad", label: "Seguridad", icon: "Shield" },
 ];
 
 export const TIER_CONFIG: Record<Tier, {

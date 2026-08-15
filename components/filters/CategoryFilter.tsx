@@ -16,6 +16,9 @@ import {
   LayoutGrid,
   Utensils,    // 🆕 Restaurantes
   UserCog,     // 🆕 Consultoría
+  Landmark,    // Finanzas
+  Heart,       // Bienestar
+  Shield,      // Seguridad
 } from "lucide-react";
 
 interface CategoryFilterProps {
@@ -35,6 +38,9 @@ const ICONS: Record<string, React.ElementType> = {
   // 🆕 Nuevos iconos para categorías del rebrand
   Utensils,    // Restaurantes
   UserCog,     // Consultoría
+  Landmark,    // Finanzas
+  Heart,       // Bienestar
+  Shield,      // Seguridad
 };
 
 export default function CategoryFilter({ active, onChange, counts }: CategoryFilterProps) {

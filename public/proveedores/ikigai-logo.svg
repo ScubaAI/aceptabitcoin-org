@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="100%" height="100%">
+  <!-- Círculo enso (esencia ikigai) con apertura zen -->
+  <path
+    d="M 141.3 61 A 44 44 0 1 1 122 37.9"
+    fill="none" stroke="#FAFAFA" stroke-width="5" stroke-linecap="round"
+  />
+
+  <!-- Hoja que cierra el ciclo (espiritualidad consciente) -->
+  <path d="M 122 38 C 127 29, 137 26, 142 29 C 140 37, 131 42, 123 40 Z" fill="#FAFAFA" />
+
+  <!-- Huitzilin: colibrí con ala de greca puuc -->
+  <g fill="#FAFAFA">
+    <!-- Pico -->
+    <path d="M 62 66 L 86 72 L 86 75 L 62 69 Z" />
+    <!-- Cabeza -->
+    <circle cx="92" cy="72" r="7" />
+    <!-- Cuerpo -->
+    <ellipse cx="104" cy="84" rx="13" ry="9" transform="rotate(35 104 84)" />
+    <!-- Ala escalonada (greca puuc = Mérida) -->
+    <path d="M 100 76 V 70 H 106 V 64 H 112 V 58 H 118 V 52 H 124 V 76 Z" />
+    <!-- Cola -->
+    <path d="M 112 90 L 127 101 L 119 105 Z" />
+  </g>
+  <!-- Ojo calado (técnica de huecos del directorio) -->
+  <circle cx="90.5" cy="70.5" r="1.4" fill="#000000" />
+
+  <!-- Nombre de marca -->
+  <text
+    x="100" y="158"
+    font-family="Montserrat, 'Arial Black', sans-serif"
+    font-weight="900" font-size="22"
+    fill="#FAFAFA" text-anchor="middle" letter-spacing="2"
+  >HUITZILIN</text>
+
+  <!-- Descriptor: conserva el ikigai sin ser genérico -->
+  <text
+    x="100" y="176"
+    font-family="Montserrat, Arial, sans-serif"
+    font-weight="600" font-size="7"
+    fill="#FAFAFA" text-anchor="middle" letter-spacing="1.5"
+  >BIENESTAR IKIGAI • MÉRIDA</text>
+</svg>

@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="100%" height="100%">
+  <!-- Humo estilizado (trazo simple ondulante) -->
+  <path
+    d="M100 32 Q94 24 100 18 Q106 12 100 6"
+    fill="none"
+    stroke="#FAFAFA"
+    stroke-width="3"
+    stroke-linecap="round"
+  />
+
+  <!-- Chimenea -->
+  <rect x="92" y="34" width="16" height="14" fill="#FAFAFA" rx="1" />
+
+  <!-- Cuerpo del horno / ahumador -->
+  <rect x="50" y="48" width="100" height="72" fill="#FAFAFA" rx="2" />
+
+  <!-- Huecos del horno (se funden con el fondo negro del card) -->
+  <path d="M72 120 A 28 28 0 0 1 128 120 Z" fill="#000000" />
+
+  <!-- Líneas de ladrillo (caladas en el cuerpo blanco) -->
+  <g stroke="#000000" stroke-width="1.4">
+    <path d="M50 64 H150 M50 80 H150 M50 96 H150" />
+    <path d="M75 48 V64 M125 48 V64" />
+    <path d="M100 64 V80" />
+    <path d="M75 80 V96 M125 80 V96" />
+    <path d="M65 96 V120 M135 96 V120" />
+  </g>
+
+  <!-- Base del horno -->
+  <rect x="44" y="120" width="112" height="6" fill="#FAFAFA" />
+
+  <!-- Nombre -->
+  <text
+    x="100"
+    y="158"
+    font-family="Montserrat, 'Arial Black', sans-serif"
+    font-weight="900"
+    font-size="22"
+    fill="#FAFAFA"
+    text-anchor="middle"
+    letter-spacing="1"
+  >TEMOZÓN</text>
+
+  <!-- Subtítulo -->
+  <text
+    x="100"
+    y="176"
+    font-family="Montserrat, Arial, sans-serif"
+    font-weight="600"
+    font-size="9"
+    fill="#FAFAFA"
+    text-anchor="middle"
+    letter-spacing="2"
+  >CARNES AHUMADAS</text>
+</svg>

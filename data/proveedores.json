@@ -46,5 +46,82 @@
     "ubicacion": "Mérida, Yucatán",
     "tags": ["deportes", "padel", "tenis", "equipamiento"],
     "destacado": false
+  },
+  {
+    "id": "arcadia",
+    "nombre": "Arcadia",
+    "categoria": "finanzas",
+    "tier": "miembro",
+    "descripcion": "Fintech Bitcoin regulada como SOFOM. Compra, ahorro, préstamos con garantía de BTC y custodia multifirma desde México. La empresa Bitcoin más antigua del país (desde 2017).",
+    "url": "https://www.arcadiab.com/",
+    "logo": "/proveedores/arcadia.svg",
+    "ubicacion": "Ciudad de México",
+    "tags": ["bitcoin", "fintech", "custodia", "multifirma", "sofom", "dca", "préstamos"],
+    "destacado": true
+  },
+  {
+    "id": "tecnologico-software",
+    "nombre": "Tecnológico de Software",
+    "categoria": "educacion",
+    "tier": "miembro",
+    "descripcion": "Institución educativa especializada en ingeniería de software y tecnologías de la información. Formación de desarrolladores con enfoque práctico en Mérida.",
+    "url": "https://tecdesoftware.edu.mx/",
+    "logo": "/proveedores/tecnologico-software.svg",
+    "ubicacion": "Mérida, Yucatán",
+    "tags": ["educacion", "software", "programacion", "tecnologia", "universidad"],
+    "destacado": false
+  },
+  {
+    "id": "huitzilin",
+    "nombre": "Huitzilin",
+    "categoria": "bienestar",
+    "tier": "miembro",
+    "descripcion": "Masajes relajantes y terapia de bienestar consciente. Un espacio acompañado para volver a ti — con raíz maya y esencia ikigai.",
+    "url": "https://instagram.com/ikigaiwellness",
+    "logo": "/proveedores/huitzilin.svg",
+    "ubicacion": "Mérida, Yucatán",
+    "tags": ["bienestar", "masajes", "relajacion", "terapia", "ikigai", "holistico"],
+    "destacado": false,
+    "_meta": {
+      "nombre_anterior": "Ikigai Wellness",
+      "telefono": "9181229558",
+      "email": "shiankg@gmail.com",
+      "instagram": "@ikigaiwellness",
+      "maps": "https://maps.app.goo.gl/JLkXUDiowFiKkKNaA?g_st=ic"
+    }
+  },
+  {
+    "id": "tus-llaves-tus-bitcoin",
+    "nombre": "Tus Llaves, Tus Bitcoin",
+    "categoria": "seguridad",
+    "tier": "miembro",
+    "descripcion": "Consultoría especializada en autocustodia de Bitcoin. Te asistimos hasta que protejas tu Bitcoin con seguridad y sin depender de nadie.",
+    "url": "https://tusllavestusbtc.com/",
+    "logo": "/proveedores/tus-llaves-tus-bitcoin.svg",
+    "ubicacion": "Buenos Aires, Argentina (atención remota global)",
+    "tags": ["bitcoin", "autocustodia", "seguridad", "cold-storage", "multifirma", "consultoria"],
+    "destacado": false,
+    "_meta": {
+      "whatsapp": "+54 9 11 3821-1242",
+      "email": "info@tusllavestusbtc.com"
+    }
+  },
+  {
+    "id": "sns-grills",
+    "nombre": "SNS Grills",
+    "categoria": "comercio",
+    "tier": "miembro",
+    "descripcion": "Distribuidor autorizado de asadores premium en el sureste mexicano. Asadores de doble zona, ahumadores y accesorios para el parrillero serio.",
+    "url": "https://snsgrills.com/",
+    "logo": "/proveedores/sns-grills.svg",
+    "ubicacion": "Mérida, Yucatán",
+    "tags": ["asadores", "bbq", "parrilla", "ahumador", "gastronomia", "outdoor"],
+    "destacado": false,
+    "_meta": {
+      "telefono": "999-123-4567",
+      "email": "merida@snsgrills.com",
+      "horario": "Lun-Sáb 10:00-19:00",
+      "nota": "Datos inventados — reemplazar por los reales cuando el proveedor los proporcione"
+    }
   }
 ]

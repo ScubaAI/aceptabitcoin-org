@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="100%" height="100%">
+  <!-- Cuadro A (eslabón inferior izq.) -->
+  <rect x="56" y="70" width="48" height="48" rx="10"
+        fill="none" stroke="#FAFAFA" stroke-width="7" />
+
+  <!-- Cuadro B: primero cala el trazo de A (efecto eslabón)... -->
+  <rect x="80" y="46" width="48" height="48" rx="10"
+        fill="none" stroke="#000000" stroke-width="13" />
+  <!-- ...y encima su trazo blanco -->
+  <rect x="80" y="46" width="48" height="48" rx="10"
+        fill="none" stroke="#FAFAFA" stroke-width="7" />
+
+  <!-- Cuadrado de acento (cian en el original → blanco sólido) -->
+  <rect x="118" y="34" width="26" height="26" rx="5" fill="#FAFAFA" />
+
+  <!-- Nombre (línea 1) -->
+  <text
+    x="100" y="146"
+    font-family="Montserrat, 'Arial Black', sans-serif"
+    font-weight="900" font-size="21"
+    fill="#FAFAFA" text-anchor="middle" letter-spacing="1"
+  >TECNOLÓGICO</text>
+
+  <!-- Nombre (línea 2) -->
+  <text
+    x="100" y="166"
+    font-family="Montserrat, 'Arial Black', sans-serif"
+    font-weight="900" font-size="21"
+    fill="#FAFAFA" text-anchor="middle" letter-spacing="1"
+  >DE SOFTWARE</text>
+
+  <!-- Categoría / sede -->
+  <text
+    x="100" y="183"
+    font-family="Montserrat, Arial, sans-serif"
+    font-weight="600" font-size="8"
+    fill="#FAFAFA" text-anchor="middle" letter-spacing="2"
+  >EDUCACIÓN • MÉRIDA</text>
+</svg>

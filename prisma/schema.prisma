@@ -1,4 +1,3 @@
-// prisma/schema.prisma
 generator client {
   provider = "prisma-client-js"
 }
@@ -8,11 +7,72 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+// ════════════════════════════════════════════════════════════════
+// ENUMS
+// ════════════════════════════════════════════════════════════════
+
+enum DepositStatus {
+  PENDING     // Factura creada, esperando pago
+  PROCESSING  // Pago detectado en la red, esperando confirmaciones
+  SETTLED     // Pago confirmado y acreditado al usuario
+  EXPIRED     // La factura de BTCPay expiró sin pago
+  INVALID     // Pago rechazado o monto incorrecto
+}
+
+// ════════════════════════════════════════════════════════════════
+// MODELOS EXISTENTES
+// ════════════════════════════════════════════════════════════════
+
 model LpSnapshot {
   id        Int      @id @default(autoincrement())
   timestamp DateTime @default(now()) // Cuándo se tomó el snapshot
   totalUSD  Float    // Valor total en dólares en ese momento
   feesUSD   Float    // Fees acumulados en ese momento
   
-  @@map("lp_snapshots") // Nombre de la tabla en Postgres
+  @@map("lp_snapshots")
+}
+
+// ════════════════════════════════════════════════════════════════
+// NUEVOS MODELOS: Módulo Ahorro (Opción 1)
+// ════════════════════════════════════════════════════════════════
+
+model User {
+  id              String     @id @default(cuid())
+  pubkey          String?    @unique // Null si el usuario entró por código de invitación
+  createdAt       DateTime   @default(now())
+  lastLoginAt     DateTime   @updatedAt
+  
+  // Relaciones
+  inviteCode      InviteCode? @relation("UserInviteCode")
+  deposits        Deposit[]
+  
+  @@map("users")
+}
+
+model InviteCode {
+  code      String    @id // ej. "ABMX-7X9K-2026" o "GENESIS-001"
+  usedBy    String?   @unique // userId del usuario que lo canjeó (null = disponible)
+  createdAt DateTime  @default(now())
+  usedAt    DateTime?
+  
+  // Relación
+  user      User?     @relation("UserInviteCode", fields: [usedBy], references: [id])
+  
+  @@map("invite_codes")
+}
+
+model Deposit {
+  id            String        @id @default(cuid())
+  userId        String
+  invoiceId     String        @unique // ID de la factura en BTCPay Server (para idempotencia)
+  amountSats    Int           // Monto en satoshis (fuente de verdad para cálculos)
+  status        DepositStatus @default(PENDING)
+  btcpayEvent   String?       // Último evento de webhook recibido (ej. "InvoiceSettled")
+  confirmedAt   DateTime?     // Timestamp de cuando el pago se liquidó realmente
+  createdAt     DateTime      @default(now())
+  
+  // Relaciones
+  user          User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@map("deposits")
 }
