@@ -10,7 +10,8 @@
     "ahorro:build": "tsx scripts/build-ahorro-data.ts",
     "check-assets": "node scripts/check-assets.mjs",
     "test": "vitest",
-    "test:coverage": "vitest run --coverage"
+    "test:coverage": "vitest run --coverage",
+    "postinstall": "prisma generate"
   },
   "prisma": {
     "seed": "tsx prisma/seed.ts"
