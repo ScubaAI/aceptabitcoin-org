@@ -29,15 +29,15 @@ vi.mock("@/lib/prisma", () => ({
 }));
 
 // Mock del servicio BTCPay (verificación de firma)
+// Usamos vi.fn() como mock para getBtcpayService y lo configuramos
+// en beforeEach para evitar problemas de TDZ con vi.mock hoisted.
 vi.mock("@/lib/btcpay", () => ({
-  btcpayService: {
-    verifyWebhookSignature: vi.fn(),
-  },
+  getBtcpayService: vi.fn(),
 }));
 
 // Importamos los mocks después del vi.mock
 import { prisma } from "@/lib/prisma";
-import { btcpayService } from "@/lib/btcpay";
+import { getBtcpayService } from "@/lib/btcpay";
 
 // ════════════════════════════════════════════════════════════════
 // HELPERS — Construcción de requests y payloads
@@ -94,8 +94,9 @@ function buildRequest(payload: object, signature: string): NextRequest {
 beforeEach(() => {
   vi.resetAllMocks();
 
-  // Config por defecto: el servicio BTCPay acepta la firma como válida
-  vi.mocked(btcpayService.verifyWebhookSignature).mockReturnValue(true);
+  // Config por defecto: getBtcpayService() devuelve un cliente con verifyWebhookSignature=true
+  const mockClient = { verifyWebhookSignature: vi.fn().mockReturnValue(true) };
+  vi.mocked(getBtcpayService).mockReturnValue(mockClient as any);
 
   // Stub de entorno para el webhook secret
   vi.stubEnv("BTCPAY_WEBHOOK_SECRET", WEBHOOK_SECRET);
@@ -126,7 +127,8 @@ describe("POST /api/ahorro/webhook/btcpay", () => {
     });
 
     it("should return 200 if HMAC signature is invalid", async () => {
-      vi.mocked(btcpayService.verifyWebhookSignature).mockReturnValue(false);
+      const mockClient = { verifyWebhookSignature: vi.fn().mockReturnValue(false) };
+      vi.mocked(getBtcpayService).mockReturnValue(mockClient as any);
 
       const payload = buildPayload();
       const request = buildRequest(payload, "sha256=invalidsignature");

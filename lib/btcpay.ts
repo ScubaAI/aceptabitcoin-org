@@ -102,5 +102,16 @@ export class BTCPayClient implements BTCPayService {
   }
 }
 
-// Singleton export para uso consistente en toda la app
-export const btcpayService = new BTCPayClient();
+// ════════════════════════════════════════════════════════════════
+// Lazy singleton — evitamos instanciar en tiempo de build/carga
+// del módulo para no romper Vercel ni entornos sin env vars.
+// ════════════════════════════════════════════════════════════════
+
+let _btcpayService: BTCPayClient | null = null;
+
+export function getBtcpayService(): BTCPayClient {
+  if (!_btcpayService) {
+    _btcpayService = new BTCPayClient();
+  }
+  return _btcpayService;
+}

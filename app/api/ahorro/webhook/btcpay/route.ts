@@ -18,7 +18,7 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
-import { btcpayService } from '@/lib/btcpay';
+import { getBtcpayService } from '@/lib/btcpay';
 import { 
   BTCPAY_WEBHOOK_EVENTS, 
   BTCPAY_STATUS_EVENTS 
@@ -67,7 +67,8 @@ export async function POST(request: NextRequest) {
     }
 
     // 3. Verificar la firma HMAC-SHA256
-    const isValidSignature = btcpayService.verifyWebhookSignature(rawBody, signature);
+    const btcpayClient = getBtcpayService();
+    const isValidSignature = btcpayClient.verifyWebhookSignature(rawBody, signature);
     
     if (!isValidSignature) {
       console.error('[BTCPAY WEBHOOK] ❌ Invalid HMAC signature — possible spoofing attempt');
